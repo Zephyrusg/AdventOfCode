@@ -1,0 +1,53 @@
+﻿using System;
+using System.Diagnostics;
+
+
+namespace AdventOfCode._2015 // Note: actual namespace depends on the project name.
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            //Console.WriteLine(Day1.Day1A());
+            //Console.WriteLine(Day1.Day1B());
+            //Console.WriteLine(Day2.Day2A());
+            //Console.WriteLine(Day2.Day2B());
+            //Console.WriteLine(Day3.Day3A());
+            //Console.WriteLine(Day3.Day3B());
+            //Console.WriteLine(Day4.Day4A());
+            //Console.WriteLine(Day4.Day4B());
+            //Console.WriteLine(Day5.Day5A());
+            //Console.WriteLine(Day5.Day5B());
+            //Console.WriteLine(Day5.Day6A());
+            //Console.WriteLine(Day5.Day6B());
+            Console.WriteLine(Day7.Day7A());
+            stopWatch.Stop();
+            TimeSpan ts = stopWatch.Elapsed;
+            Console.WriteLine(ts);
+            //stopWatch.Reset();
+            //stopWatch.Start();
+            //Console.WriteLine(Day7.Day7B());
+            //stopWatch.Stop();
+            //ts = stopWatch.Elapsed;
+            //Console.WriteLine(ts);
+            //Console.ReadLine();
+        }
+    }
+}
+
+//namespace AdventOfCode._2018 // Note: actual namespace depends on the project name.
+//{
+//    internal class Program
+//    {
+//        static void Main(string[] args)
+//        {
+//            Console.WriteLine(Day1.Day1A());
+//            Console.WriteLine(Day1.Day1B());
+//            Console.WriteLine(Day8.Day8A());
+//            Console.WriteLine(Day8.Day8B());
+//            //Console.ReadLine();
+//        }
+//    }
+//}

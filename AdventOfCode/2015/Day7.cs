@@ -145,7 +145,6 @@ namespace AdventOfCode._2015
                         break;
 
                     case 4:
-                        ;
                         instructions.Enqueue(new Instruction(result[1], result[0], result[3]));
                         break;
 
@@ -211,7 +210,10 @@ namespace AdventOfCode._2015
 
 
             }
-
+            //foreach (var kvp in Instruction.codex)
+            //{
+            //    Console.WriteLine("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
+            //}
             int answer = Instruction.GetItemFromCodex("a");
             return answer;
         }

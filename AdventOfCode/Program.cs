@@ -8,7 +8,7 @@ namespace AdventOfCode._2015 // Note: actual namespace depends on the project na
     {
         static void Main(string[] args)
         {
-            int answer;
+            //int answer;
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
             //Console.WriteLine(Day1.Day1A());
@@ -21,14 +21,14 @@ namespace AdventOfCode._2015 // Note: actual namespace depends on the project na
             //Console.WriteLine(Day4.Day4B());
             //Console.WriteLine(Day5.Day5A());
             //Console.WriteLine(Day5.Day5B());
-            //Console.WriteLine(Day5.Day6A());
-            //Console.WriteLine(Day5.Day6B());
+            //Console.WriteLine(Day6.Day6A());
+            //Console.WriteLine(Day6.Day6B());
 
-
-            answer = Day7.Day7A();
-            Console.WriteLine("answer 7A:" + answer);
-            answer = Day7.Day7A(answer);
-            Console.WriteLine("answer 7B:" + answer);
+            //answer = Day7.Day7A();
+            //Console.WriteLine("answer 7A: " + answer);
+            //answer = Day7.Day7A(answer);
+            //Console.WriteLine("answer 7B: " + answer);
+            Day8.Day8A();
             stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
             Console.WriteLine(ts);

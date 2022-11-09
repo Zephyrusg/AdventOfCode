@@ -81,11 +81,11 @@ namespace AdventOfCode._2020
                     int length = SumPart.Length;
                     SumLine = SumLine.Remove(0, length);
                     SumLine = Result.ToString() + SumLine;
-                    //SumLine = SumLine.Replace(SumPart, Result.ToString());
+                    
                 }
                 BigInteger Resultsum = BigInteger.Parse(SumLine);
                 Total += Resultsum;
-                //Console.WriteLine("Line: " + Linecounter + " Result: " + Resultsum);
+                Console.WriteLine("Line: " + Linecounter + " Result: " + Resultsum);
                 Linecounter++;
 
 
@@ -109,10 +109,6 @@ namespace AdventOfCode._2020
 
             string MutiplyPattern = @"(\d+[*]\d+)";
             Regex MutiplyRg = new Regex(MutiplyPattern);
-
-            string SumPattern = @"\d+[*+]\d+";
-            Regex SumRg = new Regex(SumPattern);
-
 
             int Linecounter = 1;
             foreach (string line in lines)
@@ -145,17 +141,6 @@ namespace AdventOfCode._2020
 
                         }
 
-                        //while (SumRg.Matches(SubSumLine).Count() > 0)
-                        //{
-                        //    MatchCollection SubSumparts = SumRg.Matches(SubSumLine);
-                        //    string SubSumPart = SubSumparts[0].Value;
-                        //    BigInteger Result = CalculateSum(SubSumPart);
-                        //    int length = SubSumPart.Length;
-                        //    SubSumLine = SubSumLine.Remove(0, length);
-                        //    SubSumLine = Result.ToString() + SubSumLine;
-                        //}
-
-
                         SumLine = SumLine.Replace(SubSum.Value, SubSumLine);
 
                     }
@@ -183,17 +168,6 @@ namespace AdventOfCode._2020
                     }
                 }
 
-
-                //while (SumRg.Matches(SumLine).Count() > 0)
-                //{
-                //    MatchCollection SumParts = SumRg.Matches(SumLine);
-                //    string SumPart = SumParts[0].Value;
-                //    BigInteger Result = CalculateSum(SumPart);
-                //    int length = SumPart.Length;
-                //    SumLine = SumLine.Remove(0, length);
-                //    SumLine = Result.ToString() + SumLine;
-                //    //SumLine = SumLine.Replace(SumPart, Result.ToString());
-                //}
                 BigInteger Resultsum = BigInteger.Parse(SumLine);
                 Total += Resultsum;
                 //Console.WriteLine("Line: " + Linecounter + " Result: " + Resultsum);

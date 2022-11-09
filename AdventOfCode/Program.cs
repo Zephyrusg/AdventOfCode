@@ -14,17 +14,18 @@ namespace AdventOfCode._2020 // Note: actual namespace depends on the project na
             //Console.WriteLine(Day15.Day15A());
             //Console.WriteLine(Day16.Day16A());
             //Console.WriteLine(Day16.Day16B());
-            Console.WriteLine(Day17.Day17A());
+            //Console.WriteLine(Day17.Day17A());
+            Console.WriteLine(Day18.Day18A());
             stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
             Console.WriteLine(ts);
-            stopWatch.Reset();
-            stopWatch.Start();
-            Console.WriteLine(Day17.Day17B());
-            stopWatch.Stop();
-            ts = stopWatch.Elapsed;
-            Console.WriteLine(ts);
-            Console.ReadLine();
+            //stopWatch.Reset();
+            //stopWatch.Start();
+            //Console.WriteLine(Day17.Day17B());
+            //stopWatch.Stop();
+            //ts = stopWatch.Elapsed;
+            //Console.WriteLine(ts);
+            //Console.ReadLine();
         }
     }
 }

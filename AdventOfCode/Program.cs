@@ -1,35 +1,62 @@
-﻿using System;
+﻿using AdventOfCode._2020;
+using System;
 using System.Diagnostics;
+using System.Reflection;
 
-namespace AdventOfCode._2020 // Note: actual namespace depends on the project name.
+
+namespace AdventOfCode._2022 // Note: actual namespace depends on the project name.
 {
     internal class Program
     {
+
         static void Main(string[] args)
         {
-            //int answer;
+
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-
-            //Console.WriteLine(Day15.Day15A());
-            //Console.WriteLine(Day16.Day16A());
-            //Console.WriteLine(Day16.Day16B());
-            //Console.WriteLine(Day17.Day17A());
-            //Console.WriteLine(Day18.Day18A());
-            Console.WriteLine(Day19.Day19A());
+            Console.WriteLine("Answer: " + Day1.Part1());
             stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
-            Console.WriteLine(ts);
-            //stopWatch.Reset();
-            //stopWatch.Start();
-            //Console.WriteLine(Day18.Day18B());
-            //stopWatch.Stop();
-            //ts = stopWatch.Elapsed;
-            //Console.WriteLine(ts);
-            // Console.ReadLine();
+            Console.WriteLine("Completion Time: " + ts);
+            stopWatch.Reset();
+            stopWatch.Start();
+            Console.WriteLine("Answer: " + Day1.Part2());
+            stopWatch.Stop();
+            ts = stopWatch.Elapsed;
+            Console.WriteLine("Completion Time: " + ts);
         }
     }
 }
+
+//namespace AdventOfCode._2020 // Note: actual namespace depends on the project name.
+//{
+//    internal class Program
+//    {
+//        static void Main(string[] args)
+//        {
+//            //int answer;
+//            Stopwatch stopWatch = new Stopwatch();
+//            stopWatch.Start();
+
+//            //Console.WriteLine(Day15.Day15A());
+//            //Console.WriteLine(Day16.Day16A());
+//            //Console.WriteLine(Day16.Day16B());
+//            //Console.WriteLine(Day17.Day17A());
+//            //Console.WriteLine(Day18.Day18A());
+//            Console.WriteLine(Day19.Day19A());
+//            stopWatch.Stop();
+//            TimeSpan ts = stopWatch.Elapsed;
+//           
+//            //stopWatch.Reset();
+//            //stopWatch.Start();
+//            //Console.WriteLine(Day18.Day18B());
+//            //stopWatch.Stop();
+//            //ts = stopWatch.Elapsed;
+//            //Console.WriteLine(ts);
+//            // Console.ReadLine();
+//        }
+//    }
+//}
 
 //namespace AdventOfCode._2015 // Note: actual namespace depends on the project name.
 //{

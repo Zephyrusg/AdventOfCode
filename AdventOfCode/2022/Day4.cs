@@ -22,10 +22,10 @@ namespace AdventOfCode._2022
                 string[] Part2 = Parts[1].Split("-");
                 int[] Elf2 = new int[] { Int32.Parse(Part2[0]), Int32.Parse(Part2[1]) };
 
-                if ((Elf1[0] >= Elf2[0]) & (Elf1[1] <= Elf2[1])) { 
+                if ((Elf1[0] >= Elf2[0]) && (Elf1[1] <= Elf2[1])) { 
                     answer++;
                 }
-                else if((Elf2[0] >= Elf1[0]) & (Elf2[1] <= Elf1[1])){ 
+                else if((Elf2[0] >= Elf1[0]) && (Elf2[1] <= Elf1[1])){ 
                     answer++;
                 }
 
@@ -46,7 +46,7 @@ namespace AdventOfCode._2022
                 string[] Part2 = Parts[1].Split("-");
                 int[] Elf2 = new int[] { Int32.Parse(Part2[0]), Int32.Parse(Part2[1]) };
 
-                if ((Elf1[1] >= Elf2[0]) & (Elf2[1] >= Elf1[0]))
+                if ((Elf1[1] >= Elf2[0]) && (Elf2[1] >= Elf1[0]))
                 {
                     answer++;
                 }

@@ -71,8 +71,8 @@ namespace AdventOfCode._2022
             foreach (string line in Data) {
 
                 int PriorityValue = 0;
-                string s1 = line.Substring(0, (int)(line.Length / 2));
-                string s2 = line.Substring((int)(line.Length / 2), (int)(line.Length / 2));
+                string s1 = line.Substring(0, (line.Length / 2));
+                string s2 = line.Substring((line.Length / 2), (line.Length / 2));
                 char package = FindDouble(s1, s2);
 
                 if (char.IsLower(package))

@@ -81,10 +81,13 @@
     <None Update="2022\Input\InputDay3.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="2022\Input\InputDay5.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="2022\Input\InputDay4.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="2022\Input\InputDay5.txt">
+    <None Update="2022\Input\InputDay5Crates.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="2022\Input\InputDay6.txt">

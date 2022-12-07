@@ -142,7 +142,7 @@ namespace AdventOfCode._2022
             long FreeSpace = Filesystem - UsedSpace;
             long SpaceToFree = NeededSpace- FreeSpace;
 
-            answer = Folder.ListofFolderSizes.Where(folder => folder.Value >= SpaceToFree).Min(x => x.Value); ;
+            answer = Folder.ListofFolderSizes.Where(folder => folder.Value >= SpaceToFree).Min(x => x.Value);
           
             return answer;
         }

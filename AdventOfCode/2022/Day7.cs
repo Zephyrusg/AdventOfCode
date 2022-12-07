@@ -11,33 +11,26 @@ namespace AdventOfCode._2022
     class Folder
     {
         static public Dictionary<Folder, long> ListofFolderSizes = new Dictionary<Folder, long>();
-        static public List<Folder> folders= new List<Folder>();
+        static public Folder Root = new Folder("Root"); 
+        
         string name;
         public Folder ?Parent;
         List<Item> Files = new List<Item>();
         List<Folder> ChildFolders = new List<Folder>();
 
-        public Folder(string name, Folder Parent) {
-
+        public Folder(string name, Folder Parent) 
+        {
             this.name = name;
             this.Parent = Parent;
             ListofFolderSizes.Add(this, 0);
-            folders.Add(this);
         }
         public Folder(string name)
         {
-
             this.name = name;
             this.Parent = null;
             ListofFolderSizes.Add(this, 0);
-            folders.Add(this);
-
         }
 
-        static public Folder GetFolder(string name)
-        {
-            return folders.Single(s => s.name == name);
-        }
         public Folder GetChild(string name)
         {
             return this.ChildFolders.Single(s => s.name == name);
@@ -91,7 +84,7 @@ namespace AdventOfCode._2022
         {
             string[] Data = File.ReadAllLines(Path);
             long answer = 0;
-            Folder Root = new Folder("Root");
+            Folder Root = Folder.Root;
             Folder CurrentFolder = Root;
             foreach (string line in Data) {
 
@@ -134,7 +127,7 @@ namespace AdventOfCode._2022
                 }
 
             }
-            CurrentFolder = Folder.GetFolder("Root");
+            CurrentFolder = Folder.Root;
             CurrentFolder.GetSize();
 
             var result = Folder.ListofFolderSizes.Where(folder => folder.Value <= 100000);
@@ -151,7 +144,7 @@ namespace AdventOfCode._2022
         {
             
             long answer = 70000000;
-            Folder Root = Folder.GetFolder("Root");
+            Folder Root = Folder.Root;
             long UsedSpace = Folder.ListofFolderSizes[Root];
             long Filesystem = 70000000;
             long NeededSpace = 30000000;

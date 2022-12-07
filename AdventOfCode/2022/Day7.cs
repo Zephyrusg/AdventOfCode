@@ -48,10 +48,8 @@ namespace AdventOfCode._2022
         public void GetSize() {
             long size = 0;
             
-            foreach (Item item in this.Files)
-            {
-                size += item.size;
-            }
+            size = this.Files.Sum(s => s.size);
+
             foreach (Folder child in ChildFolders)
             {
                 long subsize;
@@ -118,8 +116,6 @@ namespace AdventOfCode._2022
                 {
                     string[] parts = line.Split(" ");
                     CurrentFolder.AddChildFolder(parts[1], CurrentFolder);
-
-
                 }
                 else {
                     string[] parts = line.Split(" ");
@@ -130,13 +126,8 @@ namespace AdventOfCode._2022
             CurrentFolder = Folder.Root;
             CurrentFolder.GetSize();
 
-            var result = Folder.ListofFolderSizes.Where(folder => folder.Value <= 100000);
-            var list = result.ToList();
-            foreach(var item in list)
-            {
-                answer += item.Value;
-            }
-
+            answer = Folder.ListofFolderSizes.Where(folder => folder.Value <= 100000).Sum(x=>x.Value);
+          
             return answer;
         }
 
@@ -151,15 +142,8 @@ namespace AdventOfCode._2022
             long FreeSpace = Filesystem - UsedSpace;
             long SpaceToFree = NeededSpace- FreeSpace;
 
-            var Result = Folder.ListofFolderSizes.Where(folder => folder.Value >= SpaceToFree);
-            Result.ToList();
-            foreach (var item in Result)
-            {
-                if (item.Value < answer) {
-                    answer = item.Value;
-                }
-            }
-
+            answer = Folder.ListofFolderSizes.Where(folder => folder.Value >= SpaceToFree).Min(x => x.Value); ;
+          
             return answer;
         }
     }

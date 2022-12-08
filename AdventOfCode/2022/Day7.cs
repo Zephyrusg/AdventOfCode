@@ -13,7 +13,7 @@ namespace AdventOfCode._2022
         static public Dictionary<Folder, long> ListofFolderSizes = new Dictionary<Folder, long>();
         static public Folder Root = new Folder("Root"); 
         
-        string name;
+        public string name;
         public Folder ?Parent;
         List<Item> Files = new List<Item>();
         List<Folder> ChildFolders = new List<Folder>();
@@ -137,10 +137,15 @@ namespace AdventOfCode._2022
             long answer = 70000000;
             Folder Root = Folder.Root;
             long UsedSpace = Folder.ListofFolderSizes[Root];
+            //Console.WriteLine("Used Space: "+ UsedSpace);
             long Filesystem = 70000000;
             long NeededSpace = 30000000;
             long FreeSpace = Filesystem - UsedSpace;
             long SpaceToFree = NeededSpace- FreeSpace;
+
+            //foreach(var item in Folder.ListofFolderSizes.Where(folder => folder.Value >= SpaceToFree).ToList()) {
+            //    Console.WriteLine("Folder name " + item.Key.name + " Size: " + item.Value);
+            //} 
 
             answer = Folder.ListofFolderSizes.Where(folder => folder.Value >= SpaceToFree).Min(x => x.Value);
           

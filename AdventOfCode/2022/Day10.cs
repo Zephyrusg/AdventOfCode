@@ -19,7 +19,6 @@ namespace AdventOfCode._2022
             int register = 1;
             foreach (string line in Data) {
 
-
                 int ExecutionTime;
                 int Increase;
                 switch (line)
@@ -73,8 +72,6 @@ namespace AdventOfCode._2022
             int CRTDrawIndex = 0;
             foreach (string line in Data)
             {
-
-
 
                 int ExecutionTime;
                 int Increase;

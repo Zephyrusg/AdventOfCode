@@ -236,7 +236,7 @@ namespace AdventOfCode._2022
                 MoveHead(Line.Split(" ")[0], Int32.Parse(Line.Split(" ")[1]));
             }
 
-            answer = VisitedPoints.Count();
+            answer = VisitedPoints.Count;
 
             return answer;
         }
@@ -265,7 +265,7 @@ namespace AdventOfCode._2022
                 MoveRopes(Line.Split(" ")[0], Int32.Parse(Line.Split(" ")[1]), Ropes, 9);
             }
 
-            answer = VisitedPoints.Count();
+            answer = VisitedPoints.Count;
 
             return answer;
         }

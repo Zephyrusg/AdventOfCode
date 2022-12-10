@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,59 +18,79 @@ namespace AdventOfCode._2020
             static int index = 0;
             static public Dictionary<int,Rule> Rules = new Dictionary<int,Rule>();
 
-            static public bool checkpart(string message, int Ruleid)
+            static public string CheckMessage(string message, int Ruleid, string teststring)
             {
                 if (Rules[Ruleid] is LiteralRule)
                 {
 
                     string literal = (Rules[Ruleid] as LiteralRule).literal;
-
-                    return (message[index].ToString() == literal);
+                    
+                    return teststring + literal;
+                    
                 }
+                else
+                {
 
-
-                else {
-
-                    string[] Subpaths = (Rules[Ruleid] as PathRule).SubPaths;
-
-                    foreach (int[] subpath in Subpaths.Select(s => s.Split(" ").Select(num => Int32.Parse(num))).ToArray())  {
-                        int steps = subpath.Count();
-                        var match = true;
-                        foreach (int path in subpath)
+                    string[] SubPaths = (Rules[Ruleid] as PathRule).SubPaths;
+                    bool match = false;
+                    string result = teststring;
+                    string SubResult = result;
+                    foreach (string SubPath in SubPaths)
+                    {
+                        if (match )
                         {
-                            
-                            
-                            if (checkpart(message, path))
+                            continue;
+                        }
+                        else
+                        {
+                            result = SubResult;
+                        }
+                        
+                        int[] Paths = SubPath.Split(" ").Select(num => Int32.Parse(num)).ToArray();
+                        match = false;
+
+
+                        foreach (int Path in Paths)
+                        {
+
+                            result = CheckMessage(message, Path, result);
+                            if (message.StartsWith(result))
                             {
-
-
-
+                                match = true;
                             }
-                            else { 
-                                match= false;
+                            else if (result == "X") { 
+                                match = false;
+                                result = teststring;
+                                break;
+                            }
+                            else
+                            {
+                                match = false;
                                 break;
                             }
                         }
                         if (match)
                         {
-                            index += steps;
+
+                            SubResult = result;
                         }
+                        else
+                        {
+                            match = false;
+                            continue;
+                        }
+
+                    }
+                    if (match)
+                    {
+                        return SubResult;
+                    }
+                    else{
+                        return "X";
                     }
                 }
-
-
-                return false;
-            }
-
-            static public int GetIndexRule (string message, int Ruleid) {
-                int index = 0;
-
-
-
-
-                return index;
-            }
-            
+                
+            }    
 
         }
 
@@ -93,35 +114,36 @@ namespace AdventOfCode._2020
             }
         }
 
-        class StartRule : Rule
-        {
-            public int[] StartPath;
+        //class StartRule : Rule
+        //{
+        //    public int[] StartPath;
 
-            public StartRule(int[] StartPath) { 
+        //    public StartRule(int[] StartPath) { 
             
-                this.StartPath = StartPath;
+        //        this.StartPath = StartPath;
             
-            }
+        //    }
         
-        }
+        //}
 
 
         public static int Part1()
         {
             int answer = 0;
 
-            string[] Data = File.ReadAllLines(".\\2020\\Input\\InputDay19RulesExample.txt");
-            string[] Entries = File.ReadAllLines(".\\2020\\Input\\InputDay19EntriesExample.txt");
-
-
+            string[] Data = File.ReadAllLines(".\\2020\\Input\\InputDay19Rules.txt");
+            string[] Entries = File.ReadAllLines(".\\2020\\Input\\InputDay19Entries.txt");
+           
+            Array.Sort(Data);
             //Array.Sort(Data);
             foreach (string line in Data)
             {
                 string[] parts = line.Split(": ");
-                if (Int32.Parse(parts[0]) == 0){ 
-                    Rule.Rules.Add(0, new StartRule(parts[1].Split(" ").Select(num => Int32.Parse(num)).ToArray()));
-                } 
-                else if (parts[1].Length == 3)
+                //if (Int32.Parse(parts[0]) == 0){ 
+                //    Rule.Rules.Add(0, new StartRule(parts[1].Split(" ").Select(num => Int32.Parse(num)).ToArray()));
+                //} 
+                //else
+                if (parts[1] == "\"a\"" || parts[1] == "\"b\"")
                 {
                     string part = parts[1].Replace("\"", "");
                     Rule.Rules.Add(Int32.Parse(parts[0]), new LiteralRule(part));
@@ -133,15 +155,11 @@ namespace AdventOfCode._2020
 
             foreach(string Entry in Entries)
             {
-                int[] Subpaths = (Rule.Rules[0] as StartRule).StartPath;
-                foreach (int Subpath in Subpaths) { 
-                
-
-                
-                }
-                
-                answer++;
-                
+                string result = Rule.CheckMessage(Entry, 0, "");
+                if (result == Entry)
+                {
+                    answer++;
+                }               
             }
             
 
@@ -151,9 +169,46 @@ namespace AdventOfCode._2020
         }
         public static int Part2()
         {
-            int test = 0;
+            int answer = 0;
+            
+            string[] Data = File.ReadAllLines(".\\2020\\Input\\InputDay19RulesExample.txt");
+            string[] Entries = File.ReadAllLines(".\\2020\\Input\\InputDay19EntriesExample.txt");
+            Rule.Rules = new Dictionary<int, Rule>();
 
-            return test;
+            Array.Sort(Data);
+            foreach (string line in Data)
+            {
+                string[] parts = line.Split(": ");
+                //if (Int32.Parse(parts[0]) == 0){ 
+                //    Rule.Rules.Add(0, new StartRule(parts[1].Split(" ").Select(num => Int32.Parse(num)).ToArray()));
+                //} 
+                //else
+                if (parts[1] == "\"a\"" || parts[1] == "\"b\"")
+                {
+                    string part = parts[1].Replace("\"", "");
+                    Rule.Rules.Add(Int32.Parse(parts[0]), new LiteralRule(part));
+                }
+                else
+                {
+                    Rule.Rules.Add(Int32.Parse(parts[0]), new PathRule(parts[1]));
+                }
+            }
+
+            Rule.Rules.Remove(8);
+            Rule.Rules.Remove(11);
+
+            Rule.Rules.Add(8, new PathRule("42 | 42 8"));
+            Rule.Rules.Add(11, new PathRule("42 31 | 42 11 31"));
+
+            foreach (string Entry in Entries)
+            {
+                string result = Rule.CheckMessage(Entry, 0, "");
+                if (result == Entry)
+                {
+                    answer++;
+                }
+            }
+            return answer;
         }
     }
 }

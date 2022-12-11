@@ -112,38 +112,38 @@ namespace AdventOfCode._2022
             long[] items = new long[2];
             foreach (string line in Data)
             {
-                switch (line)
+                switch (line.Trim())
                 {
-                    case string s when s.StartsWith("  Starting items:"):
+                    case string s when s.StartsWith("Starting items:"):
                         {
                             string unparsedItems = line.Substring(2).Split(": ")[1];
                             items = unparsedItems.Split(",").Select(num => long.Parse(num)).ToArray();
                             break;
                         }
-                    case string s when s.StartsWith("  Operation"):
+                    case string s when s.StartsWith("Operation"):
                         {
                             operation = line.Split(" = ")[1];
                             break;
                         }
-                    case string s when s.StartsWith("  Test:"):
+                    case string s when s.StartsWith("Test:"):
                         {
                             test = Int32.Parse(line.Split(" by ")[1]);
 
                             break;
                         }
-                    case string s when s.StartsWith("  Test:"):
+                    case string s when s.StartsWith("Test:"):
                         {
                             test = Int32.Parse(line.Split(" by ")[1]);
 
                             break;
                         }
-                    case string s when s.StartsWith("    If true:"):
+                    case string s when s.StartsWith("If true:"):
                         {
                             iftrue = Int32.Parse(line.Split(" monkey ")[1]);
 
                             break;
                         }
-                    case string s when s.StartsWith("    If false:"):
+                    case string s when s.StartsWith("If false:"):
                         {
                             iffalse = Int32.Parse(line.Split(" monkey ")[1]);
 
@@ -194,38 +194,38 @@ namespace AdventOfCode._2022
             long[] items = new long[2];
             foreach (string line in Data)
             {
-                switch (line)
+                switch (line.Trim())
                 {
-                    case string s when s.StartsWith("  Starting items:"):
+                    case string s when s.StartsWith("Starting items:"):
                         {
                             string unparsedItems = line.Substring(2).Split(": ")[1];
                             items = unparsedItems.Split(",").Select(num => long.Parse(num)).ToArray();
                             break;
                         }
-                    case string s when s.StartsWith("  Operation"):
+                    case string s when s.StartsWith("Operation"):
                         {
                             operation = line.Split(" = ")[1];
                             break;
                         }
-                    case string s when s.StartsWith("  Test:"):
+                    case string s when s.StartsWith("Test:"):
                         {
                             test = Int32.Parse(line.Split(" by ")[1]);
 
                             break;
                         }
-                    case string s when s.StartsWith("  Test:"):
+                    case string s when s.StartsWith("Test:"):
                         {
                             test = Int32.Parse(line.Split(" by ")[1]);
 
                             break;
                         }
-                    case string s when s.StartsWith("    If true:"):
+                    case string s when s.StartsWith("If true:"):
                         {
                             iftrue = Int32.Parse(line.Split(" monkey ")[1]);
 
                             break;
                         }
-                    case string s when s.StartsWith("    If false:"):
+                    case string s when s.StartsWith("If false:"):
                         {
                             iffalse = Int32.Parse(line.Split(" monkey ")[1]);
 

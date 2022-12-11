@@ -21,7 +21,6 @@ namespace AdventOfCode._2022 // Note: actual namespace depends on the project na
             stopWatch.Reset();
             stopWatch.Start();
             Console.WriteLine("Answer: " + Day11.Part2());
-            Day10.Part2();
             stopWatch.Stop();
             ts = stopWatch.Elapsed;
             Console.WriteLine("Completion Time: " + ts);

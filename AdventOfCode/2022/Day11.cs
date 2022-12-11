@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,15 +20,30 @@ namespace AdventOfCode._2022
         int throwTrue;
         int throwFalse;
         public long timesInspectItem = 0;
+        long operationValue;
         string operation;
 
-        public Monkey(int number, long[] items, string operartion, int testvalue, int throwTrue, int throwFalse)
+        public Monkey(int number, long[] items, string operartionstring, int testvalue, int throwTrue, int throwFalse)
         {
             this.number = number;
             this.testvalue = testvalue;
             this.throwTrue = throwTrue;
             this.throwFalse = throwFalse;
-            this.operation = operartion;
+
+            long operationValue =0;
+            string[] parts = operartionstring.Split(" ");
+            
+            
+            if (long.TryParse(parts[2], out operationValue))
+            {
+                this.operationValue = long.Parse(parts[2]);
+
+            }
+            else
+            {
+                this.operationValue = -1;
+            }
+            this.operation = parts[1];
 
             foreach (long item in items)
             {
@@ -38,28 +54,23 @@ namespace AdventOfCode._2022
 
         long DoOperation(long item)
         {
-            long old = item;
-            long operationValue = 0;
-            string[] parts = this.operation.Split(" ");
-            if (long.TryParse(parts[2], out operationValue))
-            {
-                operationValue = long.Parse(parts[2]);
-
+            if (this.operationValue == -1) { 
+                this.operationValue = item;
             }
-            else
-            {
-                operationValue = old;
-            }
-            switch (parts[1])
+         
+            
+            
+           
+            switch (this.operation)
             {
                 case "+":
                     {
-                        item = (old + operationValue);
+                        item = (item + this.operationValue);
                         break;
                     }
                 case "*":
                     {
-                        item = (old * operationValue) % commomModulo;
+                        item = (item * this.operationValue) % commomModulo;
                         break;
                     }
 

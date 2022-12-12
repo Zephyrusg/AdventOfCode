@@ -16,12 +16,15 @@ namespace AdventOfCode._2022
     {
         public static point Endpoint;
         public static point Startpoint;
+
         public static int width = 0;
         public static int height = 0;
+
         public static HashSet<point> openList = new HashSet<point>();
         public static HashSet<point> closedList = new HashSet<point>();
         public static PriorityQueue<point, int> priorityList = new PriorityQueue<point, int>();
         public static point[,] map = new point[0, 0];
+        
         public  int x, y;
         public int value;
         public int distance;
@@ -160,8 +163,8 @@ namespace AdventOfCode._2022
 
                     if (neighbourPoint == point.Endpoint)
                     {
-                        answer = neighbourDistance;
-                        goto loop;
+                         
+                        return neighbourDistance;
                     } 
                     int estimatedNeighbourTotalDistance = neighbourDistance + (((point.width - neighbourPoint.x) + (point.height - neighbourPoint.y)) * hNumber);
                     if (openList.Contains(neighbourPoint))
@@ -201,13 +204,7 @@ namespace AdventOfCode._2022
                 }
                 closedList.Add(current);
                 openList.Remove(current);
-
-
             }
-
-        loop:
-
-            var test = closedList.OrderBy(p => p.distance);
 
             return answer;
         }
@@ -215,104 +212,95 @@ namespace AdventOfCode._2022
 
         public static int Part2()
         {
-        //    string[] Data = File.ReadAllLines(Path);
+            //    string[] Data = File.ReadAllLines(Path);
             int answer = 0;
 
             List<int> possibleAnswer = new List<int>();
             int hNumber = 20;
             int[] StartLocations = Enumerable.Range(0, point.height).ToArray();
-            foreach (int starty in StartLocations) {
 
-                for (int i = 0; i < point.height; i++)
+
+            for (int i = 0; i < point.height; i++)
+            {
+
+                for (int j = 0; j < point.width; j++)
                 {
-
-                    for (int j = 0; j < point.width; j++)
-                    {
-                        point.map[i, j].distance = Int32.MaxValue;
-                    }
+                    point.map[i, j].distance = Int32.MaxValue;
                 }
-
-                point.Startpoint = point.map[starty, 0];
-                point.Startpoint.distance = 0;
-                point.Startpoint.estimatedDistance = 0;
-                HashSet<point> openList = new HashSet<point>();
-                HashSet<point> closedList = new HashSet<point>();
-                PriorityQueue<point, int> priorityList = new PriorityQueue<point, int>();
-                
-                openList.Add(point.Startpoint);
-
-                priorityList.Enqueue(point.Startpoint, point.Startpoint.distance);
-                bool endReached = false;
-                int neighbourDistance = Int32.MaxValue;
-
-                while (openList.Count > 0 && !endReached)
-                {
-
-
-                    point current = priorityList.Dequeue();
-                    //Write-host "$($current.x), $($current.y): $($openList.Count) $($closedList.Count)"
-                    foreach (point neighbourPoint in current.GetNeighbours().Where(p => p.value <= current.value || p.value - 1 == current.value))
-                    {
-
-
-                        neighbourDistance = current.distance + 1;
-
-                        if (neighbourPoint == point.Endpoint)
-                        {
-                            possibleAnswer.Add(neighbourDistance);
-                            goto loop;
-                        }
-                        int estimatedNeighbourTotalDistance = neighbourDistance + (((point.width - neighbourPoint.x) + (point.height - neighbourPoint.y)) * hNumber);
-                        if (openList.Contains(neighbourPoint))
-                        {
-                            //estimatedNeighbourTotalDistance < neighbourPoint.estimatedDistance
-                            if (estimatedNeighbourTotalDistance < neighbourPoint.estimatedDistance)
-                            {
-                                neighbourPoint.distance = neighbourDistance;
-                                neighbourPoint.estimatedDistance = estimatedNeighbourTotalDistance;
-                                continue;
-                            }
-                            else
-                            {
-                                continue;
-                            }
-                        }
-
-                        if (closedList.Contains(neighbourPoint))
-                        {
-                            if (estimatedNeighbourTotalDistance < neighbourPoint.estimatedDistance)
-                            {
-
-                                closedList.Remove(neighbourPoint);
-                            }
-                            else
-                            {
-                                continue;
-                            }
-                        }
-
-                        neighbourPoint.distance = neighbourDistance;
-                        neighbourPoint.estimatedDistance = estimatedNeighbourTotalDistance;
-                        openList.Add(neighbourPoint);
-                        priorityList.Enqueue(neighbourPoint, neighbourPoint.distance);
-
-
-                    }
-                    closedList.Add(current);
-                    openList.Remove(current);
-
-
-                }
-            loop:;
-
             }
-       
-            answer = possibleAnswer.Min();
-            return answer;
 
+            point.Startpoint = point.Endpoint;
+            point.Startpoint.distance = 0;
+            point.Startpoint.estimatedDistance = 0;
+            HashSet<point> openList = new HashSet<point>();
+            HashSet<point> closedList = new HashSet<point>();
+            PriorityQueue<point, int> priorityList = new PriorityQueue<point, int>();
+
+            openList.Add(point.Startpoint);
+
+            priorityList.Enqueue(point.Startpoint, point.Startpoint.distance);
+            bool endReached = false;
+            int neighbourDistance = Int32.MaxValue;
+
+            while (openList.Count > 0 && !endReached)
+            {
+
+
+                point current = priorityList.Dequeue();
+                //Write-host "$($current.x), $($current.y): $($openList.Count) $($closedList.Count)"
+                foreach (point neighbourPoint in current.GetNeighbours().Where(p => p.value >= current.value || p.value + 1 == current.value))
+                {
+
+
+                    neighbourDistance = current.distance + 1;
+
+                    if (neighbourPoint.value == 1)
+                    {
+                        answer = neighbourDistance;
+                        return answer;
+                    }
+                    int estimatedNeighbourTotalDistance = neighbourDistance + (((point.width - neighbourPoint.x) + (point.height - neighbourPoint.y)) * hNumber);
+                    if (openList.Contains(neighbourPoint))
+                    {
+                        //estimatedNeighbourTotalDistance < neighbourPoint.estimatedDistance
+                        if (estimatedNeighbourTotalDistance < neighbourPoint.estimatedDistance)
+                        {
+                            neighbourPoint.distance = neighbourDistance;
+                            neighbourPoint.estimatedDistance = estimatedNeighbourTotalDistance;
+                            continue;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (closedList.Contains(neighbourPoint))
+                    {
+                        if (estimatedNeighbourTotalDistance < neighbourPoint.estimatedDistance)
+                        {
+
+                            closedList.Remove(neighbourPoint);
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+
+                    neighbourPoint.distance = neighbourDistance;
+                    neighbourPoint.estimatedDistance = estimatedNeighbourTotalDistance;
+                    openList.Add(neighbourPoint);
+                    priorityList.Enqueue(neighbourPoint, neighbourPoint.distance);
+
+
+                }
+                closedList.Add(current);
+                openList.Remove(current);
+            }
+
+            return answer;
         }
 
-
-    }
-    
+    }   
 }

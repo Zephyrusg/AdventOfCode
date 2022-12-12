@@ -57,9 +57,6 @@ namespace AdventOfCode._2022
             if (this.operationValue == -1) { 
                 this.operationValue = item;
             }
-         
-            
-            
            
             switch (this.operation)
             {
@@ -182,9 +179,8 @@ namespace AdventOfCode._2022
                 }
                 rounds++;
             }
-            List<Monkey> topTwo = Monkey.AllMonkeys.OrderByDescending(m => m.timesInspectItem).Take(2).ToList();
-
-            answer = topTwo[0].timesInspectItem * topTwo[1].timesInspectItem;
+           
+            answer = Monkey.AllMonkeys.OrderByDescending(m => m.timesInspectItem).Take(2).Select(m => m.timesInspectItem).Aggregate((m, x) => m * x);
 
             return answer;
         }
@@ -263,9 +259,7 @@ namespace AdventOfCode._2022
                 }
                 rounds++;
             }
-            List<Monkey> topTwo = Monkey.AllMonkeys.OrderByDescending(m => m.timesInspectItem).Take(2).ToList();
-
-            answer = topTwo[0].timesInspectItem * topTwo[1].timesInspectItem;
+            answer = Monkey.AllMonkeys.OrderByDescending(m => m.timesInspectItem).Take(2).Select(m => m.timesInspectItem).Aggregate((m, x) => m * x);
 
             return answer;
         }

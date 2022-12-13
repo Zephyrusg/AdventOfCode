@@ -9,9 +9,9 @@ namespace AdventOfCode._2022
     internal class Day0
     {
         static string Path = ".\\2022\\Input\\InputDay0.txt";
+        static string[] Data = File.ReadAllLines(Path);
         public static int Part1()
         {
-            string[] Data = File.ReadAllLines(Path);
             int answer = 0;
 
             return answer;

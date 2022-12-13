@@ -155,7 +155,7 @@ namespace AdventOfCode._2022
 
                 point current = priorityList.Dequeue();
                 //Write-host "$($current.x), $($current.y): $($openList.Count) $($closedList.Count)"
-                foreach (point neighbourPoint in current.GetNeighbours().Where(p => p.value <= current.value || p.value - 1 == current.value))
+                foreach (point neighbourPoint in current.GetNeighbours().Where(p => p.value - 1 <= current.value || p.value - 1 == current.value))
                 {
 
                   
@@ -187,7 +187,7 @@ namespace AdventOfCode._2022
                         if (estimatedNeighbourTotalDistance < neighbourPoint.estimatedDistance)
                         {
 
-                            closedList.Remove(neighbourPoint);
+                            _ = closedList.Remove(neighbourPoint);
                         }
                         else
                         {
@@ -202,8 +202,8 @@ namespace AdventOfCode._2022
                     
                     
                 }
-                closedList.Add(current);
-                openList.Remove(current);
+                _ = closedList.Add(current);
+                _ = openList.Remove(current);
             }
 
             return answer;
@@ -214,11 +214,7 @@ namespace AdventOfCode._2022
         {
             //    string[] Data = File.ReadAllLines(Path);
             int answer = 0;
-
-            List<int> possibleAnswer = new List<int>();
-            int hNumber = 20;
-            int[] StartLocations = Enumerable.Range(0, point.height).ToArray();
-
+            int hNumber = 0;
 
             for (int i = 0; i < point.height; i++)
             {

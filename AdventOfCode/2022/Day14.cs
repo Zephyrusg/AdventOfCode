@@ -9,15 +9,15 @@ namespace AdventOfCode._2022
 {
     internal class Day14
     {
-        static HashSet<Tuple<int, int>> SolidRocks= new HashSet<Tuple<int, int>>();
+        static HashSet<(int x, int y)> SolidRocks= new HashSet<(int x, int y)>();
         static int UnmovableSandUnits = 0;
         static int MaxDepth = 0;
         static string Path = ".\\2022\\Input\\InputDay14.txt";
         // Makes line to the right
-        static void BuildHorizontal(Tuple<int, int> PointA, Tuple<int, int> PointB) {
+        static void BuildHorizontal((int x, int y) PointA, (int x, int y) PointB) {
 
             for (int i = PointA.Item1; i <= PointB.Item1; i++) { 
-                SolidRocks.Add(new Tuple<int,int>(i, PointA.Item2));
+                SolidRocks.Add((i, PointA.Item2));
             }
             if(MaxDepth < PointA.Item2)
             {
@@ -25,11 +25,11 @@ namespace AdventOfCode._2022
             }
         }
         //Makes Line Down the Depth
-        static void BuildVertical (Tuple<int, int> PointA, Tuple<int, int> PointB)
+        static void BuildVertical ((int x, int y) PointA, (int x, int y) PointB)
         {
             for (int i = PointA.Item2; i <= PointB.Item2; i++)
             {
-                SolidRocks.Add(new Tuple<int, int>(PointA.Item1, i));
+                SolidRocks.Add((PointA.Item1, i));
             }
             if (MaxDepth < PointB.Item2)
             {
@@ -39,7 +39,7 @@ namespace AdventOfCode._2022
         static bool DropSand() {
             
             bool result = true;
-            Tuple<int, int> FallingSand = new Tuple<int, int>(500, 0);
+            (int x, int y) FallingSand = (500, 0);
 
             while (result)
             {
@@ -47,17 +47,17 @@ namespace AdventOfCode._2022
                 {
                     result = false;
                 }
-                else if (!SolidRocks.Contains(new Tuple<int, int>(FallingSand.Item1, FallingSand.Item2 + 1)))
+                else if (!SolidRocks.Contains((FallingSand.Item1, FallingSand.Item2 + 1)))
                 {
-                    FallingSand = new Tuple<int, int>(FallingSand.Item1, FallingSand.Item2 + 1);
+                    FallingSand = (FallingSand.Item1, FallingSand.Item2 + 1);
                 }
-                else if (!SolidRocks.Contains(new Tuple<int, int>(FallingSand.Item1 - 1, FallingSand.Item2 + 1)))
+                else if (!SolidRocks.Contains((FallingSand.Item1 - 1, FallingSand.Item2 + 1)))
                 {
-                    FallingSand = new Tuple<int, int>(FallingSand.Item1 - 1, FallingSand.Item2 + 1);
+                    FallingSand = (FallingSand.Item1 - 1, FallingSand.Item2 + 1);
                 }
-                else if (!SolidRocks.Contains(new Tuple<int, int>(FallingSand.Item1 + 1, FallingSand.Item2 + 1)))
+                else if (!SolidRocks.Contains((FallingSand.Item1 + 1, FallingSand.Item2 + 1)))
                 {
-                    FallingSand = new Tuple<int, int>(FallingSand.Item1 + 1, FallingSand.Item2 + 1);
+                    FallingSand = (FallingSand.Item1 + 1, FallingSand.Item2 + 1);
                 } 
                 else
                 {
@@ -73,7 +73,7 @@ namespace AdventOfCode._2022
         {
 
             bool result = true;
-            Tuple<int, int> FallingSand = new Tuple<int, int>(500, 0);
+            (int x, int y) FallingSand = (500, 0);
             if (SolidRocks.Contains(FallingSand)) {
                 return false;
             }
@@ -88,17 +88,17 @@ namespace AdventOfCode._2022
                     SolidRocks.Add(FallingSand);
                     break;
                 }
-                else if (!SolidRocks.Contains(new Tuple<int, int>(FallingSand.Item1, FallingSand.Item2 + 1)))
+                else if (!SolidRocks.Contains((FallingSand.Item1, FallingSand.Item2 + 1)))
                 {
-                    FallingSand = new Tuple<int, int>(FallingSand.Item1, FallingSand.Item2 + 1);
+                    FallingSand = (FallingSand.Item1, FallingSand.Item2 + 1);
                 }
-                else if (!SolidRocks.Contains(new Tuple<int, int>(FallingSand.Item1 - 1, FallingSand.Item2 + 1)))
+                else if (!SolidRocks.Contains((FallingSand.Item1 - 1, FallingSand.Item2 + 1)))
                 {
-                    FallingSand = new Tuple<int, int>(FallingSand.Item1 - 1, FallingSand.Item2 + 1);
+                    FallingSand = (FallingSand.Item1 - 1, FallingSand.Item2 + 1);
                 }
-                else if (!SolidRocks.Contains(new Tuple<int, int>(FallingSand.Item1 + 1, FallingSand.Item2 + 1)))
+                else if (!SolidRocks.Contains((FallingSand.Item1 + 1, FallingSand.Item2 + 1)))
                 {
-                    FallingSand = new Tuple<int, int>(FallingSand.Item1 + 1, FallingSand.Item2 + 1);
+                    FallingSand = (FallingSand.Item1 + 1, FallingSand.Item2 + 1);
                 }
                 else
                 {
@@ -119,8 +119,8 @@ namespace AdventOfCode._2022
                 string[] DrawLines = line.Split(" -> ");
                 for (int i = 0; i < DrawLines.Length - 1; i++)
                 {
-                   Tuple<int,int> Direction1 = new Tuple<int, int>(Int32.Parse(DrawLines[i].Split(",")[0]), (Int32.Parse(DrawLines[i].Split(",")[1])));
-                   Tuple<int, int> Direction2 = new Tuple<int, int>(Int32.Parse(DrawLines[i+1].Split(",")[0]), (Int32.Parse(DrawLines[i+1].Split(",")[1])));
+                    (int x, int y) Direction1 = (Int32.Parse(DrawLines[i].Split(",")[0]), (Int32.Parse(DrawLines[i].Split(",")[1])));
+                    (int x, int y) Direction2 = (Int32.Parse(DrawLines[i+1].Split(",")[0]), (Int32.Parse(DrawLines[i+1].Split(",")[1])));
                     if (Direction1.Item2 == Direction2.Item2)
                     {
                         if (Direction1.Item1 < Direction2.Item1)
@@ -164,7 +164,7 @@ namespace AdventOfCode._2022
         public static int Part2()
         {
             int answer = 0;
-            SolidRocks = new HashSet<Tuple<int, int>>();
+            SolidRocks = new HashSet<(int x, int y)>();
             UnmovableSandUnits = 0;
 
             foreach (string line in Data)
@@ -172,8 +172,8 @@ namespace AdventOfCode._2022
                 string[] DrawLines = line.Split(" -> ");
                 for (int i = 0; i < DrawLines.Length - 1; i++)
                 {
-                    Tuple<int, int> Direction1 = new Tuple<int, int>(Int32.Parse(DrawLines[i].Split(",")[0]), (Int32.Parse(DrawLines[i].Split(",")[1])));
-                    Tuple<int, int> Direction2 = new Tuple<int, int>(Int32.Parse(DrawLines[i + 1].Split(",")[0]), (Int32.Parse(DrawLines[i + 1].Split(",")[1])));
+                    (int x, int y) Direction1 = (Int32.Parse(DrawLines[i].Split(",")[0]), (Int32.Parse(DrawLines[i].Split(",")[1])));
+                    (int x, int y) Direction2 = (Int32.Parse(DrawLines[i + 1].Split(",")[0]), (Int32.Parse(DrawLines[i + 1].Split(",")[1])));
                     if (Direction1.Item2 == Direction2.Item2)
                     {
                         if (Direction1.Item1 < Direction2.Item1)

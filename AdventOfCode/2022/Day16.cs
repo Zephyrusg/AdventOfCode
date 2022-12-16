@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -40,8 +42,8 @@ namespace AdventOfCode._2022
                 Flow = flow;
                 Total = total;
             }
-            public int GetFlow() {
-                return (Total + (30 - Minutes + 1) * Flow);
+            public int GetFlow(int Totalminutes) {
+                return (Total + (Totalminutes - Minutes + 1) * Flow);
             }
         }
 
@@ -132,7 +134,7 @@ namespace AdventOfCode._2022
             while (States.Count > 0)
             {
                 State state = States.Pop();
-                max_flow = Math.Max((int)max_flow, state.GetFlow());
+                max_flow = Math.Max((int)max_flow, state.GetFlow(30));
                 Valve valve = AllValves[state.ValveName];
                 if (state.Minutes == 30) {
                     continue;
@@ -169,7 +171,7 @@ namespace AdventOfCode._2022
         public static int Part2()
         {
             string[] Data = File.ReadAllLines(Path);
-            int answer = 0;
+            
 
             List<string> GoodValves = AllValves.Where(V => V.Value.ValvePressure > 0).Select(P => P.Value.ValveName).ToList();
 
@@ -185,11 +187,79 @@ namespace AdventOfCode._2022
                 }
 
             }
+            Dictionary<string,int> BestStates = new Dictionary<string, int>();
+            Dictionary<List<string>,State> AllStates = new Dictionary<List<string>,State>();
+            State StartState = new State(1, "AA", new List<string>(), 0, 0);
+            Stack<State> States = new Stack<State>();
+            States.Push(StartState);
 
+            while (States.Count > 0)
+            {
+                State state = States.Pop();
+                Valve valve = AllValves[state.ValveName];
+                if (state.Minutes == 26)
+                {
+                    continue;
+                }
+                if ((!state.OpenValves.Contains(state.ValveName) && valve.ValvePressure > 0))
+                {
 
+                    List<string> templist = new List<string>();
+                    templist.Add(state.ValveName);
+                    templist = templist.Concat(state.OpenValves).ToList();
 
+                    state = new State(state.Minutes + 1, state.ValveName, templist, state.Flow + valve.ValvePressure, state.Total + state.Flow);
+                    States.Push(state);
+                    List<string> OpenValves = new List<string>();
+                    OpenValves = OpenValves.Concat(state.OpenValves).ToList();
+                    OpenValves.Sort();
+                    string StringOpenValves = string.Join(",", OpenValves);
+                    int BestFlow = 0;
 
-            return answer;
+                    if (BestStates.ContainsKey(StringOpenValves)) {
+                        BestFlow = BestStates[StringOpenValves];
+                    }
+                    if (BestFlow < state.GetFlow(26))
+                    {
+                        BestStates[StringOpenValves] = state.GetFlow(26);
+                        AllStates[OpenValves] = state;
+
+                    }
+                    continue;
+                }
+                foreach (string DestinationValve in GoodValves)
+                {
+                    if (state.OpenValves.Contains(DestinationValve))
+                    {
+                        continue;
+                    }
+                    int distance = Distances[state.ValveName][DestinationValve];
+                    if ((state.Minutes + distance) > 25)
+                    {
+                        continue;
+                    }
+                    States.Push(new State(state.Minutes + distance, DestinationValve, state.OpenValves, state.Flow,
+                                        state.Total + (state.Flow * distance)));
+                }
+            }
+
+            int MaxFlow = 0;
+            foreach (State human in AllStates.Values) {
+                foreach (State elephant in AllStates.Values) {
+                    bool GoodState = true;
+                    foreach (string V in human.OpenValves) {
+                        if (elephant.OpenValves.Contains(V)) {
+                            GoodState = false;
+                            break;
+                        }
+                    }
+                    if (GoodState) {
+                        MaxFlow = Math.Max(MaxFlow, human.GetFlow(26) + elephant.GetFlow(26));
+                    }
+                 
+                }
+            }
+            return MaxFlow;
         }
     }
    

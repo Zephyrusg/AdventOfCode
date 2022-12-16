@@ -14,13 +14,13 @@ namespace AdventOfCode._2022 // Note: actual namespace depends on the project na
 
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            Console.WriteLine("Answer: " + Day14.Part1());
+            Console.WriteLine("Answer: " + Day16.Part1());
             stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
             Console.WriteLine("Completion Time: " + ts);
             stopWatch.Reset();
             stopWatch.Start();
-            Console.WriteLine("Answer: " + Day14.Part2());
+            Console.WriteLine("Answer: " + Day16.Part2());
             stopWatch.Stop();
             ts = stopWatch.Elapsed;
             Console.WriteLine("Completion Time: " + ts);

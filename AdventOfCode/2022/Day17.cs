@@ -196,10 +196,10 @@ namespace AdventOfCode._2022
                         }
                 }
                 bool MoveRock = true;
-                int Recordsteps = 0;
+                
                 while (MoveRock){
                     char direction = Data[index % Data.Length];
-
+                    
                     switch (direction) { 
                     
                         case '<': 
@@ -244,9 +244,12 @@ namespace AdventOfCode._2022
             long times = 0;
             Block Figure = new Square();
             int index = 0;
+            long TempHeight = 0;
+            long TempTimes = 0;
             while (times != 1000000000000)
             {
 
+                
                 string FigureName = List[times % 5];
 
                 switch (FigureName)
@@ -277,29 +280,32 @@ namespace AdventOfCode._2022
                             break;
                         }
                 }
-                string subset = Data.Substring(index, 3);
+                string subset = Data.Substring(index % Data.Length, 3);
                 bool Memory = false;
-                if (Block.Memory[subset].ContainsKey(FigureName))
-                {
-                    HashSet<(int x, long y)> NewLocation = new HashSet<(int, long)>();
-                    foreach ((int x, int y) point in Figure.Figure)
-                    {
-                        (int x, int y) NewPoint = (point.x + Block.Memory[subset][FigureName].x, point.y + Block.Memory[subset][FigureName].y);
-                        NewLocation.Add(NewPoint);
-                    }
-                    Figure.Figure = NewLocation;
-                    Memory = true;
-                }
+                //if (Block.Memory[subset].Contains(FigureName))
+                //{
+                //    HashSet<(int x, long y)> NewLocation = new HashSet<(int, long)>();
+                //    foreach ((int x, int y) point in Figure.Figure)
+                //    {
+                //        (int x, int y) NewPoint = (point.x + Block.Memory[subset][FigureName].x, point.y + Block.Memory[subset][FigureName].y);
+                //        NewLocation.Add(NewPoint);
+                //    }
+                //    Figure.Figure = NewLocation;
+                //    Memory = true;
+                //}
                 int Recordsteps = 0;
                 bool MoveRock = true;
                 while (MoveRock)
                 {
-                    index = index % Data.Length;
-                    if (index % Data.Length == 0) {
-                        Console.WriteLine("MaxHeight: " + Block.MaxHeight);
-                    }
-                    char direction = Data[index];
+                    //index = index % Data.Length;
+                   
+                    char direction = Data[index % Data.Length];
+                    if (index % (Data.Length * 5) == 0)
+                    {
 
+                        Console.WriteLine("Differents: " + (Block.MaxHeight - TempHeight + " Times: " + (times - TempTimes))); TempTimes = times;
+                        TempHeight = Block.MaxHeight;
+                    }
                     switch (direction)
                     {
 

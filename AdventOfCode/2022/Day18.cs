@@ -48,17 +48,18 @@ namespace AdventOfCode._2022
             return EmptySides;
         }
 
-        static public List<Vector3> GetSides(Vector3 Location)
+        static public HashSet<Vector3> GetSides(Vector3 Location)
         {
-            List<Vector3> List = new List<Vector3>();
+            HashSet<Vector3> List = new HashSet<Vector3>
+            {
+                new Vector3(Location.X + 1, Location.Y, Location.Z),
+                new Vector3(Location.X - 1, Location.Y, Location.Z),
+                new Vector3(Location.X, Location.Y + 1, Location.Z),
+                new Vector3(Location.X, Location.Y - 1, Location.Z),
+                new Vector3(Location.X, Location.Y, Location.Z + 1),
+                new Vector3(Location.X, Location.Y, Location.Z - 1)
+            };
 
-            List.Add(new Vector3(Location.X + 1, Location.Y, Location.Z));
-            List.Add(new Vector3(Location.X - 1, Location.Y, Location.Z));
-            List.Add(new Vector3(Location.X, Location.Y + 1, Location.Z));
-            List.Add(new Vector3(Location.X, Location.Y - 1, Location.Z));
-            List.Add(new Vector3(Location.X, Location.Y, Location.Z + 1));
-            List.Add(new Vector3(Location.X, Location.Y, Location.Z - 1));
-            
             return List;
         }
 
@@ -72,9 +73,9 @@ namespace AdventOfCode._2022
 
 
         static public bool IsNotTrapped(Vector3 point) { 
-            HashSet<Vector3> Recorded = new HashSet<Vector3>();
+            HashSet<Vector3> Recorded = new ();
             Recorded.Add(point);
-            Queue<Vector3> ToVisit = new Queue<Vector3>();
+            Queue<Vector3> ToVisit = new();
             ToVisit.Enqueue(point);
             while (ToVisit.Count > 0) {
 
@@ -110,8 +111,8 @@ namespace AdventOfCode._2022
 
         }
 
-        static string Path = ".\\2022\\Input\\InputDay18.txt";
-        static string[] Data = File.ReadAllLines(Path);
+        static readonly string Path = ".\\2022\\Input\\InputDay18.txt";
+        static readonly string[] Data = File.ReadAllLines(Path);
 
 
         public static int Part1()

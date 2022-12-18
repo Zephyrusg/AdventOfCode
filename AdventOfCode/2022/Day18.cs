@@ -14,7 +14,8 @@ namespace AdventOfCode._2022
     internal class Day18
     {
         static HashSet<Vector3> AllLavaCubes = new HashSet<Vector3>();
-
+        static HashSet<Vector3> NotTrappedCubes = new HashSet<Vector3>();
+        static HashSet<Vector3> TrappedCubes = new HashSet<Vector3>();
         static public int CheckSides(Vector3 Location)
         {
             int EmptySides = 0;
@@ -71,7 +72,7 @@ namespace AdventOfCode._2022
 
 
         static public bool IsNotTrapped(Vector3 point) { 
-            List<Vector3> Recorded = new List<Vector3>();
+            HashSet<Vector3> Recorded = new HashSet<Vector3>();
             Recorded.Add(point);
             Queue<Vector3> ToVisit = new Queue<Vector3>();
             ToVisit.Enqueue(point);
@@ -80,6 +81,7 @@ namespace AdventOfCode._2022
                 Vector3 CurrentPoint = ToVisit.Dequeue();
                 if (CurrentPoint == new Vector3(0, 0, 0))
                 {
+                    NotTrappedCubes.UnionWith(Recorded);
                     return true;
                 }
                 foreach (Vector3 Side in GetSides(CurrentPoint))
@@ -88,9 +90,14 @@ namespace AdventOfCode._2022
                     {
                         continue;
                     }
-                    if (IsOutside(Side))
+                    if (IsOutside(Side) || NotTrappedCubes.Contains(Side))
                     {
+                        NotTrappedCubes.UnionWith(Recorded);
                         return true;
+                    }
+                    if (TrappedCubes.Contains(Side)) {
+                        TrappedCubes.UnionWith(Recorded);
+                        return false;
                     }
                     if (!AllLavaCubes.Contains(Side)){
                         Recorded.Add(Side);
@@ -98,6 +105,7 @@ namespace AdventOfCode._2022
                     }
                 }
             }
+            TrappedCubes.UnionWith(Recorded);
             return false;
 
         }

@@ -328,7 +328,7 @@ namespace AdventOfCode._2022
                     }
                     MoveRock = Figure.Godown();
                     index++;
-                    Recordsteps++;
+                    
                     //if (Recordsteps == 3 && Memory == false)
                     //{
     

@@ -131,7 +131,6 @@ namespace AdventOfCode._2022
                 answer += CheckSides(Cube);
              
             }
-
             return answer;
         }
 
@@ -142,10 +141,9 @@ namespace AdventOfCode._2022
 
             foreach (Vector3 Cube in AllLavaCubes) {
                 foreach (Vector3 Side in GetSides(Cube)){
-                    if ((!AllLavaCubes.Contains(Side)) && IsNotTrapped(Side)) {
+                    if ((!AllLavaCubes.Contains(Side)) && (IsNotTrapped(Side)) || NotTrappedCubes.Contains(Side)) {
                         answer++;
-                    }
-                       
+                    } 
                 } 
             }
             return answer;

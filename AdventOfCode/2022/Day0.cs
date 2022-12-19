@@ -20,7 +20,6 @@ namespace AdventOfCode._2022
    
         public static int Part2()
         {
-            string[] Data = File.ReadAllLines(Path);
             int answer = 0;
 
             return answer;

@@ -246,8 +246,14 @@ namespace AdventOfCode._2022
             int index = 0;
             long TempHeight = 0;
             long TempTimes = 0;
-            bool FoundFixPoint = true;
-            while (times != 15100  ||  !FoundFixPoint)
+            long SequenceTimes = 0;
+            long SequenceHeight = 0;
+            bool SequenceFound = false;
+            long TimestoSkip = 0;
+            long TimestoAdd = 0;
+            long HeighttoAdd = 0;
+            long TimesTodo = 7000;
+            while (times != TimesTodo ||  !SequenceFound)
             {   
                 string FigureName = List[times % 5];
 
@@ -279,37 +285,36 @@ namespace AdventOfCode._2022
                             break;
                         }
                 }
-                //string subset = Data.Substring(index % Data.Length, 3);
-                bool Memory = false;
-                //if (Block.Memory[subset].Contains(FigureName))
-                //{
-                //    HashSet<(int x, long y)> NewLocation = new HashSet<(int, long)>();
-                //    foreach ((int x, int y) point in Figure.Figure)
-                //    {
-                //        (int x, int y) NewPoint = (point.x + Block.Memory[subset][FigureName].x, point.y + Block.Memory[subset][FigureName].y);
-                //        NewLocation.Add(NewPoint);
-                //    }
-                //    Figure.Figure = NewLocation;
-                //    Memory = true;
-                //}
-                //int Recordsteps = 0;
+
                 bool MoveRock = true;
                 while (MoveRock)
                 {
                     //index = index % Data.Length;
                    
                     char direction = Data[index % Data.Length];
-                    if ((index % (Data.Length * 5) == 0) && times > 0)
+                    if ((index % (Data.Length) == 0) && times > 0)
                     {
-                        //if (!FoundFixPoint)
-                        //{
-                        Console.WriteLine("Differents: " + (Block.MaxHeight - TempHeight + " Times: " + (times - TempTimes)));
-                        TempTimes = times;
-                        TempHeight = Block.MaxHeight;
-
-                            //FoundFixPoint = true;
-                            //times = 0;
-                        //}
+                        if (!SequenceFound) { 
+                            //{
+                            if (Block.MaxHeight - TempHeight == SequenceHeight && (times - TempTimes) == SequenceTimes) {
+                                TimestoSkip = (1000000000000 - TimesTodo) / SequenceTimes;
+                                TimestoAdd =  (1000000000000 - TimesTodo) % SequenceTimes;
+                                HeighttoAdd = TimestoSkip * SequenceHeight;
+                                //Console.WriteLine("Timestodo: " + times + " / 10000");
+                                TimesTodo += TimestoAdd;
+                                //Console.WriteLine("TimestoAdd: " + TimestoAdd);
+                                //Console.WriteLine("Timestodo: " + times + " / " + TimesTodo);
+                                SequenceFound = true;
+                            }
+                            //Console.WriteLine("Differents: " + (Block.MaxHeight - TempHeight + " Times: " + (times - TempTimes)));
+                            SequenceHeight = TempHeight - SequenceHeight;
+                            SequenceTimes = TempTimes - SequenceTimes;
+                           
+                            TempTimes = times;
+                            TempHeight = Block.MaxHeight;
+                            
+                        }
+    
                     }
                     switch (direction)
                     {
@@ -329,12 +334,6 @@ namespace AdventOfCode._2022
                     MoveRock = Figure.Godown();
                     index++;
                     
-                    //if (Recordsteps == 3 && Memory == false)
-                    //{
-    
-                        
-
-                    //}
                 }
                 Block.MaxHeight = Block.AllBlocks.MaxBy(p => p.y).y;
                 times++;
@@ -350,8 +349,7 @@ namespace AdventOfCode._2022
                 }
 
             }
-            //answer = (Block.MaxHeight - TempHeight) + (((long)13795 * (long)114942527) + (long)13785);
-            answer = Block.MaxHeight + ((long)114942527 * 13795);
+            answer = Block.MaxHeight + HeighttoAdd;
             return answer;
         }
     }

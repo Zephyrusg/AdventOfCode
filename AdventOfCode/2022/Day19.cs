@@ -18,7 +18,7 @@ namespace AdventOfCode._2022
             public int[] OreRobotCosts = new int[] { 0, 0, 0 };
             public int[] ClayRobotCosts = new int[] { 0, 0, 0 };
             public int[] ObsidianRobotCost = new int[] { 0, 0, 0 };
-            public int[] GeodeRpbotCost = new int[] { 0, 0, 0 };
+            public int[] GeodeRobotCost = new int[] { 0, 0, 0 };
 
             public BluePrint(string BlueprintText)
             {
@@ -28,8 +28,8 @@ namespace AdventOfCode._2022
                 ClayRobotCosts[0] = Int32.Parse(Regex.Match(Lines[2], "\\d+").Value);
                 ObsidianRobotCost[0] = Int32.Parse((Regex.Matches(Lines[3], "\\d+")[0]).Value);
                 ObsidianRobotCost[1] = Int32.Parse((Regex.Matches(Lines[3], "\\d+")[1]).Value);
-                GeodeRpbotCost[0] = Int32.Parse((Regex.Matches(Lines[4], "\\d+")[0]).Value);
-                GeodeRpbotCost[2] = Int32.Parse((Regex.Matches(Lines[4], "\\d+")[1]).Value);
+                GeodeRobotCost[0] = Int32.Parse((Regex.Matches(Lines[4], "\\d+")[0]).Value);
+                GeodeRobotCost[2] = Int32.Parse((Regex.Matches(Lines[4], "\\d+")[1]).Value);
 
             }
 
@@ -70,11 +70,11 @@ namespace AdventOfCode._2022
                 TempResources[3] = Robots[3] * 1;
 
 
-                if (CurrentBuildPrint.GeodeRpbotCost[0] <= Resources[0] && CurrentBuildPrint.GeodeRpbotCost[2] <= Resources[2])
+                if (CurrentBuildPrint.GeodeRobotCost[0] <= Resources[0] && CurrentBuildPrint.GeodeRobotCost[2] <= Resources[2])
                 {
                     Robots[3]++;
-                    Resources[2] -= CurrentBuildPrint.GeodeRpbotCost[2];
-                    Resources[0] -= CurrentBuildPrint.GeodeRpbotCost[0];
+                    Resources[2] -= CurrentBuildPrint.GeodeRobotCost[2];
+                    Resources[0] -= CurrentBuildPrint.GeodeRobotCost[0];
 
                 }
                 else if ((CurrentBuildPrint.ObsidianRobotCost[0] <= Resources[0]) && (CurrentBuildPrint.ObsidianRobotCost[1] <= Resources[1]))

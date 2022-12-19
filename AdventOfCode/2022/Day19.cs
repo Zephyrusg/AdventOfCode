@@ -174,10 +174,7 @@ namespace AdventOfCode._2022
                 NumberOfMaxGeode.Add(DoSimulate(State, CurrentBuildPrint, MaxTime));
 
             }
-            else
-            {
-
-                if (BuyObsidianRobot)
+            else if (BuyObsidianRobot)
                 {
                     State State = new State(
                         new int[] { Robots[0], Robots[1], Robots[2] + 1, Robots[3] },
@@ -186,6 +183,8 @@ namespace AdventOfCode._2022
                         );
                     NumberOfMaxGeode.Add(DoSimulate(State, CurrentBuildPrint, MaxTime));
                 }
+            else 
+            { 
                 if (BuyClayRobot)
                 {
                     State State = new State(

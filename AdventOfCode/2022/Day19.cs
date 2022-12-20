@@ -121,6 +121,7 @@ namespace AdventOfCode._2022
             bool BuyObsidianRobot = false;
             bool BuyOreRobot = false;
             bool BuyClayRobot = false;
+            bool FreeMove = true;
             bool SomethingtoBuy = (new bool[]{ BuyGeodeRobot, BuyObsidianRobot, BuyOreRobot, BuyClayRobot}).Any(b=> b == true);
 
 
@@ -149,10 +150,14 @@ namespace AdventOfCode._2022
             if (CurrentBuildPrint.ClayRobotCosts[0] <= Resources[0] && (Resources[1] < (MaxTime - Time) * CurrentBuildPrint.ObsidianRobotCost[1]))
             {
                 BuyClayRobot = true;
+                
+                
             }
             if ((CurrentBuildPrint.ObsidianRobotCost[0] <= Resources[0]) && (CurrentBuildPrint.ObsidianRobotCost[1] <= Resources[1]) && (Resources[2] < (MaxTime - Time) * CurrentBuildPrint.GeodeRobotCost[2]))
             {
                 BuyObsidianRobot = true;
+                BuyOreRobot= false;
+                FreeMove = false;
             }
 
             if (CurrentBuildPrint.GeodeRobotCost[0] <= Resources[0] && CurrentBuildPrint.GeodeRobotCost[2] <= Resources[2])
@@ -174,7 +179,10 @@ namespace AdventOfCode._2022
                 NumberOfMaxGeode.Add(DoSimulate(State, CurrentBuildPrint, MaxTime));
 
             }
-            else if (BuyObsidianRobot)
+            else {  
+            
+            
+                if (BuyObsidianRobot)
                 {
                     State State = new State(
                         new int[] { Robots[0], Robots[1], Robots[2] + 1, Robots[3] },
@@ -183,8 +191,7 @@ namespace AdventOfCode._2022
                         );
                     NumberOfMaxGeode.Add(DoSimulate(State, CurrentBuildPrint, MaxTime));
                 }
-            else 
-            { 
+            
                 if (BuyClayRobot)
                 {
                     State State = new State(
@@ -204,7 +211,7 @@ namespace AdventOfCode._2022
                         );
                     NumberOfMaxGeode.Add(DoSimulate(State, CurrentBuildPrint, MaxTime));
                 }
-                if (Resources[0] <= CurrentBuildPrint.OreMax)
+                if (Resources[0] <= CurrentBuildPrint.OreMax && FreeMove)
                 {
                     State State = new State(
                         (int[])Robots.Clone(),

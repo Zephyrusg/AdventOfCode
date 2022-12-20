@@ -104,8 +104,6 @@ namespace AdventOfCode._2022
             return answer;
         }
 
-        
-
         public static long Part2()
         {
             long answer = 0;

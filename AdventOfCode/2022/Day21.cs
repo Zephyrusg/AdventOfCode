@@ -7,6 +7,7 @@ using System.Numerics;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace AdventOfCode._2022
 {  
@@ -14,88 +15,84 @@ namespace AdventOfCode._2022
     {
         static bool Foundhumn = false;
         static bool MuduloError = false;
-        static BigInteger DoOperation(BigInteger FirstNumber, string Operator, BigInteger SecondNumber)
+        static long DoOperation(long FirstNumber, string Operator, long SecondNumber)
         {
-           
-            BigInteger Result = 0;
-
-
+ 
             switch (Operator)
             {
 
                 case "+":
                     {
-                        Result = FirstNumber + SecondNumber;
-                        break;
+                        return FirstNumber + SecondNumber;
+                        
                     }
                 case "-":
                     {
-                        Result = FirstNumber - SecondNumber;
-                        break;
+                        return FirstNumber - SecondNumber;
+                   
                     }
                 case "*":
                     {
-                        Result = FirstNumber * SecondNumber;
-                        break;
+                        return FirstNumber * SecondNumber;
+                        
                     }
                 case "/":
                     {
-                        Result = FirstNumber / SecondNumber;
-                        if (FirstNumber % SecondNumber != 0) { 
-                            MuduloError= true;
+                        if (FirstNumber % SecondNumber != 0)
+                        {
+                            MuduloError = true;
                         }
-
-                        break;
+                        return FirstNumber / SecondNumber;
+                  
                     }
             }
-            return Result;
+            throw new InvalidOperationException();
         }
 
-        static BigInteger EvaluteMonkey(string monkey) {
-
-            string operation = AllMonkeys[monkey];
+        static long EvaluteMonkey(string monkey) {
 
             if (monkey == "humn") {
                 Foundhumn= true;
             }
-                
-
-            if (BigInteger.TryParse(operation, out BigInteger result)){
-                return result;
-            }
-            else
+            if (IntMonkeys.ContainsKey(monkey)){
+                return IntMonkeys[monkey];
+            }else
             {
+                string operation = OperatorMonkeys[monkey];
                 string[] Parts = operation.Split(" ");
-
-
                 return DoOperation(EvaluteMonkey(Parts[0]), Parts[1], EvaluteMonkey(Parts[2]));
             }
         }
 
-
-
-
-        static Dictionary<string, string> AllMonkeys = new Dictionary<string, string>();
+        static Dictionary<string, string> OperatorMonkeys = new Dictionary<string, string>();
+        static Dictionary<string, long> IntMonkeys= new Dictionary<string, long>();
         static string Path = ".\\2022\\Input\\InputDay21.txt";
         static string[] Data = File.ReadAllLines(Path);
-        public static BigInteger Part1()
+        public static long Part1()
         {
             foreach(string monkey in Data)
             {
-
-                AllMonkeys.Add(monkey.Split(": ")[0], monkey.Split(": ")[1]);
+              
+                if (long.TryParse(monkey.Split(": ")[1], out long result))
+                {
+                    IntMonkeys[monkey.Split(": ")[0]] = result;
+                }
+                else {
+                    OperatorMonkeys.Add(monkey.Split(": ")[0], monkey.Split(": ")[1]);
+                }
+                
             }
 
             return EvaluteMonkey("root");
         }
 
    
-        public static BigInteger Part2()
+        public static long Part2()
         {
             Foundhumn = false;
-            BigInteger answer = 0;
-            BigInteger result = 0;
-            string RootMonkey = AllMonkeys["root"];
+            long answer = 0;
+            long result = 0;
+            string RootMonkey = OperatorMonkeys["root"];
             string[] parts = RootMonkey.Split(" ");
             result = EvaluteMonkey(parts[0]);
             string unkown = parts[2];
@@ -104,41 +101,54 @@ namespace AdventOfCode._2022
                 unkown = parts[0];
                 result = EvaluteMonkey(parts[2]);
             }
-            var Branches = AllMonkeys.Where(M => M.Value.Contains("humn")).Select(v => v.Value).First();
+            var Branches = OperatorMonkeys.Where(M => M.Value.Contains("humn")).Select(v => v.Value).First();
             parts = Branches.Split(" ");
 
             if (parts[0] == "humn")
             {
-                AllMonkeys[parts[0]] = EvaluteMonkey(parts[0]).ToString();
+                OperatorMonkeys[parts[0]] = EvaluteMonkey(parts[0]).ToString();
             }
-            else {
-                AllMonkeys[parts[2]] = EvaluteMonkey(parts[2]).ToString();
+            else
+            {
+                OperatorMonkeys[parts[2]] = EvaluteMonkey(parts[2]).ToString();
             }
 
-            BigInteger Steps = 1;
-            BigInteger i = 1;
+            long Steps = 1;
+            
+            int count = 0;
             bool NotFound = true;
-            while(NotFound) {
-                i += Steps;
-                MuduloError = false;
-                AllMonkeys["humn"] = i.ToString();
-                answer = EvaluteMonkey(unkown);
-                
-                if (result - answer == 0 && MuduloError == false) { 
-                    NotFound= false;
-                    answer = i;
-                    return answer;
-                }else if (result < answer)
-                {
-                    //Console.WriteLine("Need Lower human: " + i + " Answer: " + answer + " == Result: " + result);
-                    Steps *= 2;
+            long imax = 10000000000000;
+            long imin = 0;
+            long i =(imax+ imin) /2;
 
-                }else if(result > answer || (result > answer && MuduloError == true))
+            while (NotFound) {
+               
+              
+                MuduloError = false;
+                IntMonkeys["humn"] = i;
+                answer = EvaluteMonkey(unkown);
+
+                if (result - answer == 0 && MuduloError == false)
+                {
+                    NotFound = false;
+                    answer = i;
+                    
+                }
+                else if (result < answer)
+                {
+                    //Console.WriteLine("Need Higher human: " + i + " Answer: " + answer + " == Result: " + result);
+                
+                    imin = i;
+                    i = (imax + imin) / 2;
+                }
+                else if (result > answer || (result > answer && MuduloError == true))
                 {
                     //Console.WriteLine("Need Lower human: " + i + " Answer: " + answer + " == Result: " + result);
-                    i -= Steps;
-                    Steps = 1;
-                }                       
+                    imax = i;
+                    i = (imax + imin) / 2;
+                }
+                count++;
+
             }
             return answer;
         }

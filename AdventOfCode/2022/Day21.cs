@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -12,10 +13,11 @@ namespace AdventOfCode._2022
     internal class Day21
     {
         static bool Foundhumn = false;
-        static long DoOperation(long FirstNumber, string Operator, long SecondNumber)
+        static bool MuduloError = false;
+        static BigInteger DoOperation(BigInteger FirstNumber, string Operator, BigInteger SecondNumber)
         {
            
-            long Result = 0;
+            BigInteger Result = 0;
 
 
             switch (Operator)
@@ -39,13 +41,17 @@ namespace AdventOfCode._2022
                 case "/":
                     {
                         Result = FirstNumber / SecondNumber;
+                        if (FirstNumber % SecondNumber != 0) { 
+                            MuduloError= true;
+                        }
+
                         break;
                     }
             }
             return Result;
         }
 
-        static long EvaluteMonkey(string monkey) {
+        static BigInteger EvaluteMonkey(string monkey) {
 
             string operation = AllMonkeys[monkey];
 
@@ -54,7 +60,7 @@ namespace AdventOfCode._2022
             }
                 
 
-            if (long.TryParse(operation, out long result)){
+            if (BigInteger.TryParse(operation, out BigInteger result)){
                 return result;
             }
             else
@@ -72,7 +78,7 @@ namespace AdventOfCode._2022
         static Dictionary<string, string> AllMonkeys = new Dictionary<string, string>();
         static string Path = ".\\2022\\Input\\InputDay21.txt";
         static string[] Data = File.ReadAllLines(Path);
-        public static long Part1()
+        public static BigInteger Part1()
         {
             foreach(string monkey in Data)
             {
@@ -84,11 +90,11 @@ namespace AdventOfCode._2022
         }
 
    
-        public static long Part2()
+        public static BigInteger Part2()
         {
             Foundhumn = false;
-            long answer = 0;
-            long result = 0;
+            BigInteger answer = 0;
+            BigInteger result = 0;
             string RootMonkey = AllMonkeys["root"];
             string[] parts = RootMonkey.Split(" ");
             result = EvaluteMonkey(parts[0]);
@@ -98,40 +104,42 @@ namespace AdventOfCode._2022
                 unkown = parts[0];
                 result = EvaluteMonkey(parts[2]);
             }
+            var Branches = AllMonkeys.Where(M => M.Value.Contains("humn")).Select(v => v.Value).First();
+            parts = Branches.Split(" ");
 
-            long Steps = 1;
-            long i = 1;
+            if (parts[0] == "humn")
+            {
+                AllMonkeys[parts[0]] = EvaluteMonkey(parts[0]).ToString();
+            }
+            else {
+                AllMonkeys[parts[2]] = EvaluteMonkey(parts[2]).ToString();
+            }
+
+            BigInteger Steps = 1;
+            BigInteger i = 1;
             bool NotFound = true;
             while(NotFound) {
                 i += Steps;
+                MuduloError = false;
                 AllMonkeys["humn"] = i.ToString();
                 answer = EvaluteMonkey(unkown);
                 
-                if (result - answer == 0) { 
+                if (result - answer == 0 && MuduloError == false) { 
                     NotFound= false;
                     answer = i;
                     return answer;
-                }
-                
-                if (result > answer)
+                }else if (result < answer)
                 {
+                    //Console.WriteLine("Need Lower human: " + i + " Answer: " + answer + " == Result: " + result);
                     Steps *= 2;
 
-                }
-
-                if (result < answer)
+                }else if(result > answer || (result > answer && MuduloError == true))
                 {
-
+                    //Console.WriteLine("Need Lower human: " + i + " Answer: " + answer + " == Result: " + result);
                     i -= Steps;
-                    i--;
-                }
-
-                    
-                    
+                    Steps = 1;
+                }                       
             }
-
-
-
             return answer;
         }
     }

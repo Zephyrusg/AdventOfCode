@@ -76,8 +76,8 @@ namespace AdventOfCode._2022
 		static void MoveTo((int x, int y) Destination){
 			PriorityQueue<(int x, int y, int t), int> States = new PriorityQueue<(int x, int y, int t), int>();
 			(int x, int y, int t) State = CurrentLocation;
-			//int Distance = Math.Abs(Destination.x - State.x) + Math.Abs(Destination.y - State.y);
-			States.Enqueue(State, State.t);
+			int Distance = Math.Abs(Destination.x - State.x) + Math.Abs(Destination.y - State.y) + 0;
+			States.Enqueue(State, Distance);
 			HashSet<(int x, int y, int t)> Recorded = new HashSet<(int x, int y, int t)>();
 
 			while(States.Count > 0)
@@ -98,28 +98,28 @@ namespace AdventOfCode._2022
 
 				if (!BlizzardLocations.Contains((State.x, State.y)) && Map[State.y,State.x] == ".") 
 				{
-					//Distance = Math.Abs(Destination.x - State.x) + Math.Abs(Destination.y - State.y);
-					States.Enqueue((State.x, State.y, State.t + 1), State.t + 1);
+					Distance = Math.Abs(Destination.x - State.x) + Math.Abs(Destination.y - State.y) + (State.t + 1);
+					States.Enqueue((State.x, State.y, State.t + 1), Distance);
 				}
 				if (!BlizzardLocations.Contains((State.x + 1, State.y)) && Map[State.y, State.x + 1] == ".")
 				{
-					//Distance = Math.Abs(Destination.x - (State.x + 1)) + Math.Abs(Destination.y - State.y);
-					States.Enqueue((State.x + 1, State.y, State.t + 1), State.t + 1);
+					Distance = Math.Abs(Destination.x - (State.x + 1)) + Math.Abs(Destination.y - State.y) + (State.t + 1);
+					States.Enqueue((State.x + 1, State.y, State.t + 1), Distance);
 				}
 				if (!BlizzardLocations.Contains((State.x - 1, State.y)) && Map[State.y, State.x - 1] == ".")
 				{
-					//Distance = Math.Abs(Destination.x - (State.x - 1)) + Math.Abs(Destination.y - State.y);
-					States.Enqueue((State.x - 1, State.y, State.t + 1), State.t + 1);
+                    Distance = Math.Abs(Destination.x - (State.x - 1)) + Math.Abs(Destination.y - State.y) + (State.t + 1);
+                    States.Enqueue((State.x - 1, State.y, State.t + 1), Distance);
 				}
 				if (!BlizzardLocations.Contains((State.x, State.y + 1)) && (State.y < height) && Map[State.y + 1, State.x] == ".")
 				{
-					//Distance = Math.Abs(Destination.x - State.x) + Math.Abs(Destination.y - (State.y + 1));
-					States.Enqueue((State.x, State.y + 1, State.t + 1), State.t + 1);
+                    Distance = Math.Abs(Destination.x - State.x) + Math.Abs(Destination.y - (State.y + 1)) + (State.t + 1);
+                    States.Enqueue((State.x, State.y + 1, State.t + 1), Distance);
 				}
 				if (!BlizzardLocations.Contains((State.x, State.y - 1)) && (State.y >= 1) && Map[State.y - 1, State.x] == ".")
 				{
-					//Distance = Math.Abs(Destination.x - State.x) + Math.Abs(Destination.y  - (State.y - 1));
-					States.Enqueue((State.x, State.y - 1, State.t + 1), State.t + 1);
+                    Distance = Math.Abs(Destination.x - State.x) + Math.Abs(Destination.y  - (State.y - 1)) + (State.t + 1);
+                    States.Enqueue((State.x, State.y - 1, State.t + 1), Distance);
 				}
 
 			}

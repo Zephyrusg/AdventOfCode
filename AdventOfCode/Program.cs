@@ -4,23 +4,65 @@ using System.Diagnostics;
 using System.Reflection;
 
 
-namespace AdventOfCode._2022 // Note: actual namespace depends on the project name.
+namespace AdventOfCode // Note: actual namespace depends on the project name.
 {
     internal class Program
     {
+        static string? Check(string? input) {
+            
+            if (input == "" || input == null) {
+                return null;
+            }
+            
+            return input;
+        }
+
+        static Int64 Caller(String PuzzleClass, String mymethod)
+        {
+            // Get a type from the string 
+            Type type = Type.GetType(PuzzleClass);
+            // Create an instance of that type
+            Object obj = Activator.CreateInstance(type);
+            // Retrieve the method you are looking for
+            MethodInfo methodInfo = type.GetMethod(mymethod);
+            // Invoke the method on the instance we created above
+            var output = methodInfo.Invoke(obj, null);
+            Int64 result = (Int64)output;
+            return result;
+        }
 
         static void Main(string[] args)
         {
 
+
+            DateTime now = DateTime.Now;
+            int Day = now.Day;
+            int Year = now.Year;
+
+            Console.WriteLine("Year: " + Year +" Day: " +  Day);
+
+            Console.WriteLine("Enter Year of the Puzzle: default: " + Year);
+            string Puzzleyear = Check(Console.ReadLine()) ?? Year.ToString();
+
+            
+            Console.WriteLine("Enter Day of the Puzzle: default: " + Day);
+            var PuzzleDay = Check(Console.ReadLine()) ?? Day.ToString();
+            Console.WriteLine("Choosen Year: " + Puzzleyear);
+            Console.WriteLine("Choosen Day: " + PuzzleDay);
+
+            string PuzzleClass = "AdventOfCode.Y" + Puzzleyear + "D" + PuzzleDay;
+            
+
+
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            Console.WriteLine("Answer: " + Day24.Part1());
+            Console.WriteLine("Answer:" + Caller(PuzzleClass, "Part1"));
             stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
             Console.WriteLine("Completion Time: " + ts);
             stopWatch.Reset();
             stopWatch.Start();
-            Console.WriteLine("Answer: " + Day24.Part2());
+            Console.WriteLine("Answer: " + Caller(PuzzleClass, "Part2"));
             stopWatch.Stop();
             ts = stopWatch.Elapsed;
             Console.WriteLine("Completion Time: " + ts);

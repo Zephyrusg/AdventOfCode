@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 
-namespace AdventOfCode._2015
+namespace AdventOfCode
 {
-    internal class Day3
+    internal class Y2015D3
     {
-        public static int Day3A() 
+        public static int Part1() 
         {
             string text = File.ReadAllText(".\\2015\\Input\\inputDay3.txt");
             HashSet<Vector2> VisitedHouses = new HashSet<Vector2>(); 
@@ -41,7 +41,7 @@ namespace AdventOfCode._2015
             return VisitedHouses.Count;
 
         }
-        public static int Day3B()
+        public static int Part2()
         {
             string text = File.ReadAllText(".\\2015\\Input\\inputDay3.txt");
             HashSet<Vector2> VisitedHouses = new HashSet<Vector2>();

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdventOfCode._2015
+namespace AdventOfCode
 {
-    internal class Day2
+    internal class Y2015D2
     {
 
-        public static int Day2A() 
+        public static int Part1() 
         {
             int totalWrappingPaper = 0;
             string[] textInput = File.ReadAllLines(".\\2015\\Input\\inputDay2.txt");
@@ -29,7 +29,7 @@ namespace AdventOfCode._2015
             return totalWrappingPaper;
         }
 
-        public static int Day2B()
+        public static int Part2()
         {
             int totalWrappingPaper = 0;
             string[] textInput = File.ReadAllLines(".\\2015\\Input\\inputDay2.txt");

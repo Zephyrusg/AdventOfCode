@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdventOfCode._2015
+namespace AdventOfCode
 {
-    internal class Day1
+    internal class Y2015D1
     {
-        public static int Day1A() 
+        public static int Part1() 
         {
             string text = File.ReadAllText(".\\2015\\Input\\inputDay1.txt");
             int level = 0;
@@ -22,7 +22,7 @@ namespace AdventOfCode._2015
             return level;
         }
 
-        public static int Day1B()
+        public static int Part2()
         {
 
             string text = File.ReadAllText(".\\2015\\Input\\inputDay1.txt");

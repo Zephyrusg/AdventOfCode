@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace AdventOfCode._2018
+namespace AdventOfCode
 {
-    internal class Day1
+    internal class Y2018D1
     {
 
-        public static int Day1A()
+        public static int Part1()
         {
 
             string[] lines = File.ReadAllLines(".\\2018\\Input\\InputDay1.txt");
@@ -22,7 +22,7 @@ namespace AdventOfCode._2018
             return som;
 
         }
-        public static int Day1B()
+        public static int Part2()
         {
             string[] lines = File.ReadAllLines(".\\2018\\Input\\InputDay1.txt");
 

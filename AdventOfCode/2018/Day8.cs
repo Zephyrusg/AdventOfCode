@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdventOfCode._2018
+namespace AdventOfCode
 {
-    internal class Day8
+    internal class Y2018D8
     {
-        public static int Day8A()
+        public static int Part1()
         {
             LicenseNode rootNode = LicenseNode.GetLicenseNodeFromIndex(0);
             int som = 0;
@@ -24,7 +24,7 @@ namespace AdventOfCode._2018
             return som;
         }
 
-        public static int Day8B()
+        public static int Part2()
         {
             LicenseNode rootNode = LicenseNode.GetLicenseNodeFromIndex(0);
 

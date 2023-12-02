@@ -5,21 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Collections;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AdventOfCode
 {
     internal class Y2023D1
     {
-        public static string ReplaceFirst(string str, string term, string replace)
-        {
-            int position = str.IndexOf(term);
-            if (position < 0)
-            {
-                return str;
-            }
-            str = str.Substring(0, position) + replace + str.Substring(position + 1);
-            return str;
-        }
         public static int Part1() 
         {
             string[] lines = File.ReadAllLines(".\\2023\\Input\\inputDay1.txt");
@@ -27,43 +18,24 @@ namespace AdventOfCode
 
             foreach (string line in lines)
             {
-                string digit = "";
-                List<string> Digits = new List<string>();
-                foreach(char ch in line)
+                string Pattern = "\\d";
+        
+                var Match = Regex.Matches(line, Pattern);
+                
+                int value = 0;
+                if (Match.Count == 1)
                 {
-                    
-                    bool result = int.TryParse(ch.ToString(), out _);
-                    if (result)
-                    {
-                        Digits.Add(ch.ToString());
-                        digit = "";
-                    }
+                    value = int.Parse(Match[0].Value + Match[0].Value) ;
                 }
-                if (digit != "")
-                {
-                    Digits.Add(digit);
-                }
-
-
-
-
-                    int value = 0;
-                if (Digits.Count == 1)
-                {
-                    value = int.Parse(Digits[0] + Digits[0]) ;
-                }
-                else { 
-                    string first = Digits[0];
-                    string last = Digits[Digits.Count-1];
+                else {
+                    string first = Match[0].Value;
+                    string last = Match[Match.Count - 1].Value;
                     value = int.Parse(first+last);
                 }
 
                 answer += value;
 
             }
-
-       
-
 
             return answer;
         }
@@ -74,174 +46,68 @@ namespace AdventOfCode
             string[] lines = File.ReadAllLines(".\\2023\\Input\\inputDay1b.txt");
             int answer = 0;
             List<string> parsedlines = new List<string>();
+            string Pattern = "(?=(one|two|three|four|five|six|seven|eight|nine|\\d))";
+            Dictionary<string, string> Numbers = new Dictionary<string, string>() {
+                {"one",   "1"},
+                {"two",   "2"},
+                {"three", "3"},
+                {"four",  "4"},
+                {"five",  "5"},
+                {"six",   "6"},
+                {"seven", "7"},
+                {"eight", "8"},
+                {"nine",  "9"}
+            };
+
             foreach (string line in lines) {
-                string parsedline = line;
 
-                for (int x = 0; x < line.Length; x++) {
-
-                    switch (line[x]) {
-
-
-
-                        case 'o':
-                            if (x + 2 <= line.Length - 1)
-                            {
-                                if (line[x + 1] == 'n' && line[x + 2] == 'e')
-                                {
-                                    parsedline = ReplaceFirst(parsedline, "one", "1");
-                                    //x = x + 2;
-                                }
-                            }
-
-                            break;
-                        case 't':
-                            if (x + 2 <= line.Length - 1)
-                            {
-                                if (line[x + 1] == 'w' && line[x + 2] == 'o')
-                                {
-                                    parsedline = ReplaceFirst(parsedline, "two", "2");
-                                    //parsedline = parsedline.Replace("two", "2");
-                                    //x = x + 2;
-                                    break;
-                                }
-                            }
-                            if (x + 4 <= line.Length - 1)
-                            {
-                                if (line[x + 1] == 'h' && line[x + 2] == 'r' && line[x + 3] == 'e' && line[x + 4] == 'e')
-                                {
-                                    parsedline = ReplaceFirst(parsedline, "three", "3");
-                                    //x = x + 4;
-                                    break;
-                                }
-                            }
-                            break;
-
-
-                        case 'f':
-                            if (x + 3 <= line.Length - 1)
-                            {
-                                if (line[x + 1] == 'o' && line[x + 2] == 'u' && line[x + 3] == 'r')
-                                {
-                                    parsedline = ReplaceFirst(parsedline, "four", "4");
-                                    //x = x + 3;
-                                    break;
-                                }
-                            }
-                            if (x + 3 <= line.Length - 1)
-                            {
-                                if (line[x + 1] == 'i' && line[x + 2] == 'v' && line[x + 3] == 'e')
-                                {
-                                    parsedline = ReplaceFirst(parsedline, "five", "5");
-                                    //x = x + 3;
-                                    break;
-                                }
-                            }
-                            break;
-                        case 's':
-                            if (x + 2 <= line.Length - 1)
-                            {
-                                if (line[x + 1] == 'i' && line[x + 2] == 'x')
-                                {
-                                    parsedline = ReplaceFirst(parsedline, "six", "6");
-                                    //x = x + 2;
-                                    break;
-                                }
-                            }
-                            if (x + 4 <= line.Length - 1)
-                            {
-                                if (line[x + 1] == 'e' && line[x + 2] == 'v' && line[x + 3] == 'e' && line[x + 4] == 'n')
-                                {
-                                    parsedline = ReplaceFirst(parsedline, "seven", "7");
-                                    //x = x + 4;
-                                    break;
-                                }
-                            }
-                            break;
-                        case 'e':
-                            if (x + 4 <= line.Length - 1)
-                            {
-                                if (line[x + 1] == 'i' && line[x + 2] == 'g' && line[x + 3] == 'h' && line[x + 4] == 't')
-                                {
-                                    parsedline = ReplaceFirst(parsedline, "eight", "8");
-                                    //x += 4;
-                                }
-                            }
-                            break;
-                        case 'n':
-                            if (x + 3 <= line.Length - 1)
-                            {
-                                if (line[x + 1] == 'i' && line[x + 2] == 'n' && line[x + 3] == 'e')
-                                {
-                                    parsedline = ReplaceFirst(parsedline, "nine", "9");
-                                    //x = x + 3;
-                                }
-                            }
-                            break;
-
-
-
-                    }
-
-                }
-
-   
-
-                parsedlines.Add(parsedline);
-            }
-
-            using (StreamWriter outputfile = new StreamWriter(".\\2023\\Input\\23output1.txt"))
-            {
-                foreach (string line in parsedlines)
-                {
-                   
-                    outputfile.WriteLine(line);
-                   
-                }
-            }
-
-
-            foreach (string line in parsedlines)
-            {
-                string digit = "";
-                List<string> Digits = new List<string>();
-                foreach (char ch in line)
-                {
-
-                    bool result = int.TryParse(ch.ToString(), out _);
-                    if (result)
-                    {
-                        Digits.Add(ch.ToString());
-                        digit = "";
-                    }
-                }
-                if (digit != "")
-                {
-                    Digits.Add(digit);
-                }
-
-
+                var Match = Regex.Matches(line, Pattern);
 
 
                 int value = 0;
-                if (Digits.Count == 1)
+                if (Match.Count == 1)
                 {
-                    value = int.Parse(Digits[0] + Digits[0]);
+                    string result;
+                    bool test = int.TryParse(Match[0].Groups[1].Value, out _);
+                    if (!test)
+                    {
+                        result = Numbers[Match[0].Groups[1].Value];
+                    }
+                    else
+                    {
+                        result = Match[0].Groups[1].Value;
+                    }
+
+                    value = int.Parse(result + result);
                 }
                 else
                 {
-                    string first = Digits[0];
-                    string last = Digits[Digits.Count - 1];
+                    string first;
+                    string last;
+                    bool firsttest = int.TryParse(Match[0].Groups[1].Value, out _);
+                    bool Secondtest = int.TryParse(Match[Match.Count - 1].Groups[1].Value, out _);
+                    if (!firsttest)
+                    {
+                        first = Numbers[Match[0].Groups[1].Value];
+                    }
+                    else
+                    {
+                        first = Match[0].Groups[1].Value;
+                    }
+                    if (!Secondtest)
+                    {
+                        last = Numbers[Match[Match.Count - 1].Groups[1].Value];
+                    }
+                    else
+                    {
+                        last = Match[Match.Count - 1].Groups[1].Value;
+                    }
                     value = int.Parse(first + last);
                 }
 
                 answer += value;
 
             }
-
-
-
-
-
 
             return answer;
         }

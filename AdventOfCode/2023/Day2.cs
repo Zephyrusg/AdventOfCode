@@ -47,18 +47,18 @@ namespace AdventOfCode
                 foreach (Set set in Sets)
                 {
                     if (set.RedCubes > TotalRed) {
-                        //Console.WriteLine("GameId: " + this.Id + " ToomanyReds");
+                    
                         return false;
                         
                     }
                     if(set.BlueCubes > TotalBlue)
                     {
-                        //Console.WriteLine("GameId: " + this.Id + " ToomanyBlues");
+                    
                         return false;
                     }
                     if(set.GreenCubes > TotalGreen) {
-                        //Console.WriteLine("GameId: " + this.Id + " TooManyGreens");
-                        return false;
+                        
+                        return false;                   
                     
                     }
                 }
@@ -77,11 +77,8 @@ namespace AdventOfCode
             public int GetMutiplyMinimums() {
                 return this.MinimumBlue * this.MinimumRed * this.MinimumGreen;
             }
-
-
-
         }
-        public static int Part1() 
+        public int Part1() 
         {
             string[] lines = File.ReadAllLines(".\\2023\\Input\\inputDay2.txt");
             int answer = 0;
@@ -129,21 +126,16 @@ namespace AdventOfCode
             {
                 if (Game.ValidGame())
                 {
-                    //Console.WriteLine("Game: " + Game.Id + " Possible, Adding GameId: " + Game.Id);
                     answer += Game.Id;
                 }
             }
 
-       
-
-
             return answer;
         }
 
-        public static int Part2()
+        public int Part2()
         {
 
-            //string[] lines = File.ReadAllLines(".\\2023\\Input\\inputDay2.txt"); 
             int answer = 0;
 
             foreach (Game Game in Games)

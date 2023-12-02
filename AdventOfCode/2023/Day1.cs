@@ -20,10 +20,10 @@ namespace AdventOfCode
             str = str.Substring(0, position) + replace + str.Substring(position + 1);
             return str;
         }
-        public static Int64 Part1() 
+        public static int Part1() 
         {
             string[] lines = File.ReadAllLines(".\\2023\\Input\\inputDay1.txt");
-            Int64 answer = 0;
+            int answer = 0;
 
             foreach (string line in lines)
             {
@@ -47,15 +47,15 @@ namespace AdventOfCode
 
 
 
-                    Int64 value = 0;
+                    int value = 0;
                 if (Digits.Count == 1)
                 {
-                    value = Int64.Parse(Digits[0] + Digits[0]) ;
+                    value = int.Parse(Digits[0] + Digits[0]) ;
                 }
                 else { 
                     string first = Digits[0];
                     string last = Digits[Digits.Count-1];
-                    value = Int64.Parse(first+last);
+                    value = int.Parse(first+last);
                 }
 
                 answer += value;
@@ -68,11 +68,11 @@ namespace AdventOfCode
             return answer;
         }
 
-        public static Int64 Part2()
+        public static int Part2()
         {
 
             string[] lines = File.ReadAllLines(".\\2023\\Input\\inputDay1b.txt");
-            Int64 answer = 0;
+            int answer = 0;
             List<string> parsedlines = new List<string>();
             foreach (string line in lines) {
                 string parsedline = line;
@@ -222,16 +222,16 @@ namespace AdventOfCode
 
 
 
-                Int64 value = 0;
+                int value = 0;
                 if (Digits.Count == 1)
                 {
-                    value = Int64.Parse(Digits[0] + Digits[0]);
+                    value = int.Parse(Digits[0] + Digits[0]);
                 }
                 else
                 {
                     string first = Digits[0];
                     string last = Digits[Digits.Count - 1];
-                    value = Int64.Parse(first + last);
+                    value = int.Parse(first + last);
                 }
 
                 answer += value;

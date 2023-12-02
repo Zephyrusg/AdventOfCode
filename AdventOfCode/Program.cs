@@ -17,7 +17,7 @@ namespace AdventOfCode // Note: actual namespace depends on the project name.
             return input;
         }
 
-        static Int64 Caller(String PuzzleClass, String mymethod)
+        static dynamic Caller(String PuzzleClass, String mymethod)
         {
             // Get a type from the string 
             Type type = Type.GetType(PuzzleClass);
@@ -27,8 +27,8 @@ namespace AdventOfCode // Note: actual namespace depends on the project name.
             MethodInfo methodInfo = type.GetMethod(mymethod);
             // Invoke the method on the instance we created above
             var output = methodInfo.Invoke(obj, null);
-            Int64 result = (Int64)output;
-            return result;
+            //int result = (int)output;
+            return output;
         }
 
         static void Main(string[] args)

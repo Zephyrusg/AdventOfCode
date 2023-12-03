@@ -62,8 +62,7 @@ namespace AdventOfCode
             foreach (string line in lines) {
 
                 var Match = Regex.Matches(line, Pattern);
-
-
+                
                 int value = 0;
                 if (Match.Count == 1)
                 {

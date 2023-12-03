@@ -8,7 +8,7 @@ namespace AdventOfCode
 {
     internal class Y2023D0
     {
-        public static int Part1() 
+        public int Part1() 
         {
             string text = File.ReadAllText(".\\2023\\Input\\inputDay1.txt");
             int answer = 0;
@@ -19,7 +19,7 @@ namespace AdventOfCode
             return answer;
         }
 
-        public static int Part2()
+        public int Part2()
         {
 
             string text = File.ReadAllText(".\\2023\\Input\\inputDay1.txt");

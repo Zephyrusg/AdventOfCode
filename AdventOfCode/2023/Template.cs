@@ -8,9 +8,9 @@ namespace AdventOfCode
 {
     internal class Y2023D0
     {
+        public static string[] lines = File.ReadAllLines(".\\2023\\Input\\inputDayX.txt");
         public int Part1() 
         {
-            string text = File.ReadAllText(".\\2023\\Input\\inputDay1.txt");
             int answer = 0;
 
        
@@ -21,8 +21,6 @@ namespace AdventOfCode
 
         public int Part2()
         {
-
-            string text = File.ReadAllText(".\\2023\\Input\\inputDay1.txt");
             int answer = 0;
 
 

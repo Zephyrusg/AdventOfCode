@@ -11,39 +11,11 @@ namespace AdventOfCode
     internal class Y2023D4
     {
         static List<Card> Cards = new List<Card>();
-        static public int LoopCards()
-        {
-            int value = Cards.Count();
-            int ProcessedCards = int.MaxValue;
-            List<Card> ToProcesCards = Cards;
-            List<Card> NewCards = new List<Card>();
-            while (ProcessedCards != 0)
-            {
-                ProcessedCards = 0;
-                foreach (Card Card in ToProcesCards)
-                {
-                    for (int x = 1; x <= Card.MatchingNumbers; x++)
-                    {
-                        int id = Card.id;
-                        NewCards.Add(Cards.Find(y => y.id ==  id +x));
-                        value++;
-                        ProcessedCards++;
-                    }
-                }
-
-
-                ToProcesCards = NewCards;
-                NewCards = new List<Card>();
-            }
-
-
-
-
-            return value;
-        }
+        
         class Card {
             public int id;
             public int MatchingNumbers;
+            public int Quantity = 1;
             List<int> Numbers;
             List<int> WinningNumbers;
 
@@ -53,8 +25,6 @@ namespace AdventOfCode
                 Numbers = numbers;
                 WinningNumbers = winningNumbers;
             }
-
-            
 
             public int Getvalue() { 
                 int value = 0;
@@ -75,10 +45,6 @@ namespace AdventOfCode
 
                 return value;
             }
-
-            
-
-
         }
         public static string[] lines = File.ReadAllLines(".\\2023\\Input\\inputDay4.txt");
         public int Part1() 
@@ -110,10 +76,6 @@ namespace AdventOfCode
             
             }
 
-
-       
-
-
             return answer;
         }
 
@@ -123,9 +85,17 @@ namespace AdventOfCode
             int answer = 0;
 
             foreach (Card Card in Cards) {
-                answer = LoopCards();
+                
+                for (int x = 0; x < Card.MatchingNumbers; x++)
+                {
+                    int id = Card.id;
+                    Cards[id + x].Quantity += Card.Quantity;
+                   
+                }
+                
             }
 
+            answer = Cards.Sum(x => x.Quantity);
 
             return answer;
         }

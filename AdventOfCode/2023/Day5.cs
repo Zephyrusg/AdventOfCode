@@ -118,8 +118,9 @@ namespace AdventOfCode
                 SeedRange Range = new(Seeds[x], Seeds[x+1]);
                 SeedRanges.Add(Range);
             }
-            List<SeedRange> resultRanges = new List<SeedRange>();
 
+            List<SeedRange> Endlist = new List<SeedRange>();
+            List<SeedRange> resultRanges = new List<SeedRange>();
             foreach (var seedRange in SeedRanges)
             {
                 resultRanges = new List<SeedRange> { seedRange};
@@ -130,101 +131,64 @@ namespace AdventOfCode
                     foreach (var conversionRow in conversionTable)
                     {
                         List<SeedRange> tempResultRanges = new List<SeedRange>();
-                        foreach (var inputRange in resultRanges)
+                        foreach (SeedRange inputRange in resultRanges)
                         {
                             if (!processedRanges.Contains(inputRange))
                             {
                                 bool processed = false;
-                                if (inputRange.Start >= conversionRow.Source && inputRange.End <= conversionRow.SourceEnd)
-                                {
-                                    // Perform the conversion based on the mapping rules in the conversion row
-                                
-                                    inputRange.Start = conversionRow.Conversion + inputRange.Start;
-                                    tempResultRanges.Add(new SeedRange(inputRange.Start, inputRange.Range));
+                                SeedRange SeedInput = inputRange;
 
-                                    // Mark the seed range as processed for this conversion row
-                                    processedRanges.Add(inputRange);
+                                if (SeedInput.Start < conversionRow.Source && SeedInput.End >= conversionRow.Source)
+                                {
+                                    Int64 frontOutOfRangeEnd = Math.Min(SeedInput.End, conversionRow.Source - 1);
+                                    tempResultRanges.Add(new SeedRange(SeedInput.Start, frontOutOfRangeEnd - SeedInput.Start + 1));
+                                    //RestPart
+                                    SeedInput = new(frontOutOfRangeEnd + 1, SeedInput.Range - (frontOutOfRangeEnd - SeedInput.Start + 1));
                                     processed = true;
-                                
                                 }
-                                else
+
+                                if (SeedInput.End > conversionRow.SourceEnd && SeedInput.Start <= conversionRow.SourceEnd)
                                 {
-                                    // Handle the out-of-bound parts at the front of the range
-                                    if (inputRange.Start < conversionRow.Source)
-                                    {
-                                        // Check if either the start or end of the seed range is within the range of the conversion row
-                                        if (inputRange.End >= conversionRow.Source)
-                                        {
-                                            long frontOutOfRangeEnd = Math.Min(inputRange.End, conversionRow.Source - 1);
-                                            tempResultRanges.Add(new SeedRange(inputRange.Start, frontOutOfRangeEnd - inputRange.Start + 1));
+                                    // Check if either the start or end of the seed range is within the range of the conversion row
 
-                                            // Mark the seed range as processed for this conversion row
-                                            tempResultRanges.Add(inputRange);
-                                        }
-                                    }
+                                    Int64 endOutOfRangeStart = Math.Max(SeedInput.Start, conversionRow.SourceEnd + 1);
+                                    tempResultRanges.Add(new SeedRange(endOutOfRangeStart, SeedInput.End - endOutOfRangeStart + 1));
+                                    SeedInput = new(SeedInput.Start, seedRange.Range - (SeedInput.End - endOutOfRangeStart + 1));
+                                    processed = true;
 
-                                    // Handle the out-of-bound parts at the end of the range
-                                    if (inputRange.End > conversionRow.SourceEnd)
-                                    {
-                                        // Check if either the start or end of the seed range is within the range of the conversion row
-                                        if (inputRange.Start <= conversionRow.SourceEnd)
-                                        {
-                                            long endOutOfRangeStart = Math.Max(inputRange.Start, conversionRow.SourceEnd + 1);
-                                            tempResultRanges.Add(new SeedRange(endOutOfRangeStart, inputRange.End - endOutOfRangeStart + 1));
-
-                                            // Mark the seed range as processed for this conversion row
-                                            tempResultRanges.Add(inputRange);
-                                        }
-                                    }
-
-                                    // Check if the seed range is partly in the range of the conversion row
-                                    if (inputRange.Start < conversionRow.SourceEnd && inputRange.End > conversionRow.Source)
-                                    {
-                                        // Calculate the intersection between the input range and the source range
-                                        long intersectionStart = Math.Max(inputRange.Start, conversionRow.Source);
-                                        long intersectionEnd = Math.Min(inputRange.End, conversionRow.SourceEnd);
-                                        Int64 conversionNumber = intersectionEnd - conversionRow.Source;
-                                        long convertedStart = conversionRow.Destination + conversionNumber;
-                                        tempResultRanges.Add(new SeedRange(convertedStart, intersectionEnd - intersectionStart + 1));
-
-                                        // Mark the seed range as processed for this conversion row
-                                        processedRanges.Add(inputRange);
-                                        processed = true;
-                                    }
-
-                                    if (inputRange.Start < conversionRow.SourceEnd && inputRange.End > conversionRow.Source)
-                                    {
-                                        // Calculate the intersection between the input range and the source range
-                                        long intersectionStart = Math.Max(inputRange.Start, conversionRow.Source);
-                                        long intersectionEnd = Math.Min(inputRange.End, conversionRow.SourceEnd);
-                                        Int64 conversionNumber = intersectionEnd - conversionRow.Source;
-                                        long convertedStart = conversionRow.Destination + conversionNumber;
-                                        tempResultRanges.Add(new SeedRange(convertedStart, intersectionEnd - intersectionStart + 1));
-
-                                        // Mark the seed range as processed for this conversion row
-                                        processedRanges.Add(inputRange);
-                                        processed = true;
-                                    }
                                 }
-                                // Add the unprocessed seed ranges back to the result ranges
-                                if (processed != true)
+
+                                if (SeedInput.Start >= conversionRow.Source && SeedInput.End <= conversionRow.SourceEnd)
                                 {
-                                    tempResultRanges.Add(inputRange);
+
+                                    SeedInput = new(SeedInput.Start + conversionRow.Conversion, SeedInput.Range);
+                                    tempResultRanges.Add(SeedInput);
+                                    processedRanges.Add(SeedInput);
+                                    processed = true;
+
+
                                 }
+
+                                if (!processed)
+                                {
+                                    tempResultRanges.Add(SeedInput);
+                                }
+                            }
+                            else {
+                                tempResultRanges.Add(inputRange);
                             }
                             
                         }
-
-                        
                         // Set the temporary result as the input for the next iteration or table
                         resultRanges = tempResultRanges;
                     }
                 }
+                Endlist.AddRange(resultRanges);
             }
 
 
 
-
+            answer = Endlist.Min( x => x.Start );
 
 
             return answer;

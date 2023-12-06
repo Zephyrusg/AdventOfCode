@@ -64,7 +64,7 @@ namespace AdventOfCode
             foreach (string s in ConvertionObjList)
             {
                 if (s.EndsWith(':')) {
-                    //Console.WriteLine("Starting with: " + s + " Conversion");
+                    
                     ConversionTable = new List<ConversionRow>();
                     continue;
                 }
@@ -142,15 +142,13 @@ namespace AdventOfCode
                                 {
                                     Int64 frontOutOfRangeEnd = Math.Min(SeedInput.End, conversionRow.Source - 1);
                                     tempResultRanges.Add(new SeedRange(SeedInput.Start, frontOutOfRangeEnd - SeedInput.Start + 1));
-                                    //RestPart
+                                    
                                     SeedInput = new(frontOutOfRangeEnd + 1, SeedInput.Range - (frontOutOfRangeEnd - SeedInput.Start + 1));
                                     processed = true;
                                 }
 
                                 if (SeedInput.End > conversionRow.SourceEnd && SeedInput.Start <= conversionRow.SourceEnd)
                                 {
-                                    // Check if either the start or end of the seed range is within the range of the conversion row
-
                                     Int64 endOutOfRangeStart = Math.Max(SeedInput.Start, conversionRow.SourceEnd + 1);
                                     tempResultRanges.Add(new SeedRange(endOutOfRangeStart, SeedInput.End - endOutOfRangeStart + 1));
                                     SeedInput = new(SeedInput.Start, seedRange.Range - (SeedInput.End - endOutOfRangeStart + 1));
@@ -166,7 +164,6 @@ namespace AdventOfCode
                                     processedRanges.Add(SeedInput);
                                     processed = true;
 
-
                                 }
 
                                 if (!processed)
@@ -179,14 +176,11 @@ namespace AdventOfCode
                             }
                             
                         }
-                        // Set the temporary result as the input for the next iteration or table
                         resultRanges = tempResultRanges;
                     }
                 }
                 Endlist.AddRange(resultRanges);
             }
-
-
 
             answer = Endlist.Min( x => x.Start );
 

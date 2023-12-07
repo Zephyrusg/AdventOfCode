@@ -141,6 +141,11 @@ namespace AdventOfCode
                 return 0;
             }
 
+            public override string ToString()
+            {
+                return this.HandCards;
+            }
+
         }
 
             public static string[] lines = File.ReadAllLines(".\\2023\\Input\\inputDay7.txt");
@@ -166,14 +171,14 @@ namespace AdventOfCode
         public int Part2()
         {
             int answer = 0;
-
+            CardOrder = new char[]{ 'J','2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A'};
             foreach (Hand Handcards in Hands)
             {
                 Handcards.ConvertJoker();
             }
 
             Hands.Sort();
-
+      
             for (int x = 0; x < Hands.Count; x++)
             {
                 answer += Hands[x].bid * (x + 1);

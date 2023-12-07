@@ -91,7 +91,7 @@ namespace AdventOfCode
                 }
             }
 
-            public void ConvertJonker()
+            public void ConvertJoker()
             {
                 
                 char[] Othercards = { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A' };
@@ -169,7 +169,7 @@ namespace AdventOfCode
 
             foreach (Hand Handcards in Hands)
             {
-                Handcards.ConvertJonker();
+                Handcards.ConvertJoker();
             }
 
             Hands.Sort();

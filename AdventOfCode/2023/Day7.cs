@@ -28,9 +28,6 @@ namespace AdventOfCode
 
         }
 
-
-
-
         public class Hand : IComparable
 
         {

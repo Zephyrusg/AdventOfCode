@@ -17,7 +17,6 @@ namespace AdventOfCode
         class Node {
             public string Name;
             public List<Node> NextNodes = new List<Node>();
-            //public List<int> FoundZon = new List<int>();
 
             public Node(string Name) {
                 this.Name = Name;
@@ -163,6 +162,10 @@ namespace AdventOfCode
                
                 foreach (Ghost Ghost in Ghosts)
                 {
+                    if (Ghost.FoundZ == true)
+                    {
+                        continue;
+                    }
                     Ghost.Walked++;
                    
                     string NextNodeName = "";

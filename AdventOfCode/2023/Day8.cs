@@ -13,6 +13,7 @@ namespace AdventOfCode
     internal class Y2023D8
     {
         static List<Node> AllNodes = new List<Node>();
+        static List<Ghost> Ghosts = new List<Ghost>();
         class Node {
             public string Name;
             public List<Node> NextNodes = new List<Node>();
@@ -27,6 +28,36 @@ namespace AdventOfCode
                 return Name;
             }
 
+        }
+
+        class Ghost {
+            public Node Node;
+            public List<int> FoundZon = new List<int>();
+            public int Walked = 0;
+            public List<string> FoundZs = new List<string>();
+            public bool FoundZ = false;
+
+            public Ghost(Node Node)
+            {
+                this.Node = Node;
+            }
+        
+        }
+
+        static public long gcf(long a, long b)
+        {
+            while (b != 0)
+            {
+                long temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
+        static public long lcm(long a, long b)
+        {
+            return (a / gcf(a, b)) * b;
         }
         public static string[] lines = File.ReadAllLines(".\\2023\\Input\\inputDay8.txt");
         public int Part1() 
@@ -69,6 +100,8 @@ namespace AdventOfCode
             }
 
             Node StartNode = AllNodes.Find(x => x.Name == "AAA");
+
+
             Node CurrentNode = StartNode;
             int WalkingIndex = 0;
             int WalkingCounter =  0;
@@ -105,51 +138,60 @@ namespace AdventOfCode
             return answer;
         }
 
-        public BigInteger Part2()
+        public long Part2()
         {
-            BigInteger answer = 0;
+            long answer = 0;
             string WalkingPattern = lines[0];
             List<Node> AllStartNodes = AllNodes.FindAll(x=> x.Name.EndsWith('A')).ToList();
-            List<Node> CurrentNodes = AllStartNodes;
+            
+            foreach(Node Node in AllStartNodes)
+            {
+                Ghost Ghost = new(Node);
+                Ghosts.Add(Ghost);
+            }
+            
+            List<Ghost> CurrentGhosts = Ghosts;
+
+
             int WalkingIndex = 0;
-            BigInteger WalkingCounter = 0;
+            long WalkingCounter = 0;
             int EndState = 0;
-            while (EndState != AllStartNodes.Count())
+            while (!(CurrentGhosts.All(x=>x.FoundZ == true)))
             {
 
                 char Direction = WalkingPattern[WalkingIndex];
-                List<Node>NextNodes = new List<Node>();
-                foreach (Node CurrentNode in CurrentNodes)
+               
+                foreach (Ghost Ghost in Ghosts)
                 {
-                    WalkingCounter++;
+                    Ghost.Walked++;
+                   
                     string NextNodeName = "";
                     Node NextNode = null;
                     switch (Direction)
                     {
                         case 'L':
-                            NextNodeName = CurrentNode.NextNodes[0].Name;
+                            NextNodeName = Ghost.Node.NextNodes[0].Name;
                             NextNode = AllNodes.Find(x => x.Name == NextNodeName);
 
                             break;
                         case 'R':
-                            NextNodeName = CurrentNode.NextNodes[1].Name;
+                            NextNodeName = Ghost.Node.NextNodes[1].Name;
                             NextNode = AllNodes.Find(x => x.Name == NextNodeName);
                             break;
                     }
-                    NextNodes.Add(NextNode);
-                    //if (NextNode.Name[2] == 'Z') {
-                    //    if (NextNode.FoundZon.Count == 0)
-                    //    {
-                    //        NextNode.FoundZon.Add(WalkingCounter);
-                    //    }
-                    //    else { 
-                    //        int previouswalk = NextNode.FoundZon.Last() - WalkingCounter;
-                    //        NextNode.FoundZon.Add(WalkingCounter);
-                    //    }
-                        
-                    //}
+                    Ghost.Node = NextNode;
+                    
+                    
+                    if (NextNode.Name[2] == 'Z')
+                    {
+                        Ghost.FoundZon.Add(Ghost.Walked);
+                        Ghost.FoundZs.Add(NextNode.Name);
+                        Ghost.FoundZ = true;
+
+                    }
+                   
                 }
-                CurrentNodes = NextNodes;
+               
                 
                 if (WalkingIndex == WalkingPattern.Length - 1)
                 {
@@ -159,14 +201,20 @@ namespace AdventOfCode
                 {
                     WalkingIndex++;
                 }
-                EndState = CurrentNodes.FindAll(x => x.Name.EndsWith('Z')).Count();
-                if (WalkingCounter % 1000000000 == 0) {
-                    Console.WriteLine("WalkingPattern = " + WalkingCounter);
-                }
+                //EndState = CurrentNodes.FindAll(x => x.Name.EndsWith('Z')).Count();
+                //if (WalkingCounter % 1000000000 == 0) {
+                //    Console.WriteLine("WalkingPattern = " + WalkingCounter);
+                //}
             }
 
-            answer = WalkingCounter;
+            long lcmd = Ghosts[0].FoundZon[0];
 
+            for(int x=1; x<Ghosts.Count(); x++)
+            {
+               lcmd = lcm(lcmd, Ghosts[x].FoundZon[0]);
+            }
+
+            answer = lcmd;
 
             return answer;
         }

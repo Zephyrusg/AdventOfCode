@@ -204,10 +204,6 @@ namespace AdventOfCode
                 {
                     WalkingIndex++;
                 }
-                //EndState = CurrentNodes.FindAll(x => x.Name.EndsWith('Z')).Count();
-                //if (WalkingCounter % 1000000000 == 0) {
-                //    Console.WriteLine("WalkingPattern = " + WalkingCounter);
-                //}
             }
 
             long lcmd = Ghosts[0].FoundZon[0];

@@ -195,34 +195,27 @@ namespace AdventOfCode
             }
         }
 
-        static bool CheckOutside(int i, int j, string[] data) {
+        static bool CheckOutside(int x, int y, bool[,] data) {
 
-            string Teststring = string.Empty;
             //left
-            Teststring += data[i][j-1];
+            if (data[x - 1, y] == true) { return true; }
             //right
-            Teststring += data[i ][j+1];
+            if (data[x + 1, y]== true) { return true; }
             //up
-            Teststring += data[i-1][j];
+            if (data[x, y-1] ==true) { return true; }
+       
             //down
-            Teststring += data[i + 1][j];
-            //leftup
-            Teststring += data[i - 1][j-1];
-            //rightup
-            Teststring += data[i - 1][j + 1];
-            //left down
-            Teststring += data[i + 1][j - 1];
-            //rigth down
-            Teststring += data[i + 1][j + 1];
+            if(data[x,y+1] == true) { return true; }
+            ////leftup
+            //Teststring += data[i - 1][j-1];
+            ////rightup
+            //Teststring += data[i - 1][j + 1];
+            ////left down
+            //Teststring += data[i + 1][j - 1];
+            ////rigth down
+            //Teststring += data[i + 1][j + 1];
 
-            if (Teststring.Contains('O'))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return false;
         }
         public int Part1() 
         {
@@ -280,90 +273,128 @@ namespace AdventOfCode
         {
             int answer = 0;
             string[] Data = new string[Pipe.height];
-            int i = 0;
-            foreach(string line in lines)  //(int i = 0; i < Pipe.height; i++)
-            {
-                string testline = "";
-                for (int j = 0; j < Pipe.width; j++)
-                {
-                    Pipe ?Testpipe = Pipe.LoopPipes.Find(p=> p.x== j && p.y==i);
+            bool[,] fillmap = new bool[Pipe.width * 2 + 1, Pipe.height * 2 + 1];
+            int distance = 1;
+            Pipe StartPipe = Pipe.AllPipes.Find(x => x.KindofPipe == 'S');
+            fillmap[StartPipe.x * 2 + 1,StartPipe.y * 2 + 1] = true;
 
-                    if (Testpipe != null)
-                    {
-                        testline += '#';
+            Pipe.LoopPipes.Add(StartPipe);
+            Pipe Previous = StartPipe;
+            Pipe NextPipe = Previous.ConnectedPipes[0];
+            fillmap[NextPipe.x * 2 + 1, NextPipe.y * 2 + 1] = true;
+            //(A.x * 2 + B.x *2 + 2 / 2)
+            fillmap[((NextPipe.x * 2) + (StartPipe.x * 2) + 2) / 2, ((NextPipe.y * 2) + (StartPipe.y * 2) + 2) / 2] = true;
 
-                    }
-                    else {
-                        testline += '.';
-                    }
-
-                }
-                Data[i] = testline;
-                i++;
-            }
-
-            bool done = false;
-
-            while (!done)
-            {
-                done = true;
-                i = 0;
-                string[] NewData = new string[Pipe.height];
-                foreach (string line in lines)
-                {
-                    string NewLine = "";
-                    for (int j = 0; j < Pipe.width; j++)
-                    {
-                        if (Data[i][j] == '.')
-                        {
-
-                            if (i == 0 || i == (Pipe.height - 1) || j == 0 || j == Pipe.width-1)  {
-                               NewLine += 'O';
-                               done = false;
-                            }else if(CheckOutside(i, j,Data))
-                            {
-                                NewLine += 'O';
-                                done = false;
-                            }
-                            
-                            
-                            else {
-                                NewLine += "."; 
-                            }
-
-                        }
-                        else
-                        {
-                            NewLine += Data[i][j];
-                        }
-                        
-
-                    }
-                    NewData[i] = NewLine;
-                    i++;
-                }
-                Data = NewData;
-
-                //foreach (string line in Data)
-                //{
-                //    Console.WriteLine(line);
-                //}
-            }
-
-            for( i = 0; i < Pipe.height; i++)
+            while (NextPipe != StartPipe)
             {
 
-                for (int j = 0; j < Pipe.width; j++)
-                {
-                    if (Data[i][j] == '.')
-                    {
-                        answer++;
+                Pipe CurrentPipe = NextPipe;
+                Pipe.LoopPipes.Add(CurrentPipe);
+                CurrentPipe.distance = distance;
+                NextPipe = CurrentPipe.ConnectedPipes.Find(x => x != Previous);
+                fillmap[NextPipe.x * 2 + 1, NextPipe.y * 2 + 1] = true;
+                fillmap[((NextPipe.x * 2) + (CurrentPipe.x * 2) + 2) / 2, ((NextPipe.y * 2) + (CurrentPipe.y * 2) + 2) / 2] = true;
 
-                    }
-
-                }
+                Previous = CurrentPipe;
+                distance++;
 
             }
+            fillmap[((NextPipe.x * 2) + (Previous.x * 2) + 2) / 2, ((NextPipe.y * 2) + (Previous.y * 2) + 2) / 2] = true;
+
+            //for(int x = 0; x < Pipe.width * 2 + 1; x++)
+            //{
+            //    fillmap[x,0] = true;
+            //    fillmap[x, fillmap.GetLength(1) -1] = true;
+            //}
+            //for (int y = 0; y < Pipe.height * 2 + 1; y++) {
+            //    fillmap[0,y] = true;
+            //    fillmap[fillmap.GetLength(0)-1,y] = true;
+            //}
+
+
+
+            //bool done = false;
+
+            //while (!done)
+            //{
+            //    done = true;
+            //    for(int x= 0; x< fillmap.GetLength(0); x++)
+            //    {
+            //        for (int y = 0; y < fillmap.GetLength(1); y++)
+            //        {
+            //            if (fillmap[x, y] == false)
+            //            {
+            //                if (CheckOutside(x, y, fillmap))
+            //                {
+
+            //                    done = false;
+            //                }
+
+
+            //            }
+            //        }
+
+
+
+            //    }
+
+
+
+            //}
+
+            Queue<(int x, int y)> fillqueue = new();
+            fillqueue.Enqueue((0, 0));
+            while (fillqueue.Count > 0)
+            {
+                (int x, int y) fillLocation = fillqueue.Dequeue();
+                if (fillLocation.x > 0 && !fillmap[fillLocation.x - 1, fillLocation.y])
+                {
+                    fillmap[fillLocation.x - 1, fillLocation.y] = true;
+                    fillqueue.Enqueue((fillLocation.x - 1, fillLocation.y));
+                }
+                if (fillLocation.x < fillmap.GetLength(0) - 1 && !fillmap[fillLocation.x + 1, fillLocation.y])
+                {
+                    fillmap[fillLocation.x + 1, fillLocation.y] = true;
+                    fillqueue.Enqueue((fillLocation.x + 1, fillLocation.y));
+                }
+                if (fillLocation.y > 0 && !fillmap[fillLocation.x, fillLocation.y - 1])
+                {
+                    fillmap[fillLocation.x, fillLocation.y - 1] = true;
+                    fillqueue.Enqueue((fillLocation.x, fillLocation.y - 1));
+                }
+                if (fillLocation.y < fillmap.GetLength(1) - 1 && !fillmap[fillLocation.x, fillLocation.y + 1])
+                {
+                    fillmap[fillLocation.x, fillLocation.y + 1] = true;
+                    fillqueue.Enqueue((fillLocation.x, fillLocation.y + 1));
+                }
+            }
+
+            int totalInclusions = 0;
+            for (int y = 1; y < fillmap.GetLength(1); y += 2)
+            {
+                for (int x = 1; x < fillmap.GetLength(0); x += 2)
+                {
+                    if (!fillmap[x, y])
+                        totalInclusions++;
+                }
+            }
+
+            answer = totalInclusions;
+
+            //for( i = 0; i < Pipe.height; i++)
+            //{
+
+            //    for (int j = 0; j < Pipe.width; j++)
+            //    {
+            //        if (Data[i][j] == '.')
+            //        {
+            //            answer++;
+
+            //        }
+
+            //    }
+
+
 
             return answer;
         }

@@ -111,7 +111,7 @@ namespace AdventOfCode
                 }
             }
 
-            long Multiplier = 10;
+            long Multiplier = 999999;
 
             for (int i = 0; i < Galaxyies.Count; i++)
             {

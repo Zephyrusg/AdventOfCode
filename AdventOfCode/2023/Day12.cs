@@ -8,129 +8,111 @@ namespace AdventOfCode
 {
     internal class Y2023D12
     {
+        static Dictionary<string,long> Memory = new Dictionary<string, long>();
         public static string[] lines = File.ReadAllLines(".\\2023\\Input\\inputDay12.txt");
-        static int CountArrangements(string unknownPart, List<int>damagedGroups)
+
+
+        long Calculate(string UnknownPart, List<int> groups)
         {
-            List<char[]> arrangements = new List<char[]>();
-            char[] currentArrangement = new char[unknownPart.Length];
-            int LengthReport = damagedGroups.Sum() + damagedGroups.Count() - 1;
-            if(unknownPart.Length == LengthReport) {
-                return 1;
+            string key = $"{UnknownPart},{string.Join(',', groups)}";  
+
+            if (Memory.TryGetValue(key, out var value))
+            {
+                return value;
             }
 
-            void GenerateArrangements(int index)
-            
+            value = GetCount(UnknownPart, groups);
+            Memory[key] = value;
+
+            return value;
+        }
+
+        long GetCount(string UnknownPart, List<int> groups)
+        {
+            while (true)
             {
-
-                if(currentArrangement.Count(x=> x == '#') > damagedGroups.Sum())
+                if (groups.Count == 0)
                 {
-                    return;
-                }
-
-                if (index == unknownPart.Length)
-                {
-                    if (currentArrangement.Where(x => x == '#').Count() == damagedGroups.Sum()) {
-                        arrangements.Add(currentArrangement.ToArray());
-                    }
-                    return;
-                }
-
-                if (unknownPart[index] == '?')
-                {
-
-
-                    currentArrangement[index] = '.';
-                    GenerateArrangements(index + 1);
-
-                    currentArrangement[index] = '#';
-                    GenerateArrangements(index + 1);
-                }
-            
-                else
-                {
-                    currentArrangement[index] = unknownPart[index];
-                    GenerateArrangements(index + 1);
-                }
-            }
-
-            GenerateArrangements(0);
-
-            int count = arrangements.Count(arrangement =>
-            {
-                if (arrangement.Where(x => x == '#').Count() != damagedGroups.Sum()) {
-                    return false;
-                }
-                
-                int ReportStep = 0;
-                int groupIndex = 0;
-                int DamagedReportLength = arrangement.Count();
-                int NeededLength = LengthReport;
-                int DamagedGroupCounter = 0;
-                //int consecutiveOperational = 0;
-                //int groupIndex = 0;
-
-                for (int i = 0; i < arrangement.Length; i++) {
-
-                    char c = arrangement[i];
-                    if (c == '.')
+                    if (UnknownPart.Contains('#')) 
                     {
-                        
-
-                        if (DamagedGroupCounter > 0)
-                        {
-                            if (DamagedGroupCounter != damagedGroups[groupIndex])
-                            {
-                                return false;
-                            }
-                            else
-                            {
-                                ReportStep++;
-                                groupIndex++;
-                                DamagedGroupCounter = 0;
-                                NeededLength = damagedGroups.Skip(groupIndex).Select(i => i).Sum() + damagedGroups.Skip(groupIndex).Count()-1;
-                            }
-
-                        }
-                        else {
-                            ReportStep++;
-                        }
-
-                        if (DamagedReportLength - ReportStep < NeededLength) {
-                            return false;
-                        }
-                        
-
+                        return 0;
                     }
-                    else { 
-                        DamagedGroupCounter++;
-                        ReportStep++;
+                    else 
+                    { 
+                        return 1;
                     }
+                    
                 }
-            
-                return true;
-            });
 
-            return count;
-            
-        } 
-    
-        public int Part1() 
+                if (string.IsNullOrEmpty(UnknownPart))
+                {
+                    return 0;
+                }
+
+                if (UnknownPart.StartsWith('.'))
+                {
+                    UnknownPart = UnknownPart.Trim('.'); 
+                    continue;
+                }
+
+                if (UnknownPart.StartsWith('?'))
+                {
+                    return Calculate("." + UnknownPart[1..], groups) + Calculate("#" + UnknownPart[1..], groups);
+                }
+
+                if (UnknownPart.StartsWith('#'))                 {
+                    if (groups.Count == 0)
+                    {
+                        return 0;
+                    }
+
+                    if (UnknownPart.Length < groups[0])
+                    {
+                        return 0;
+                    }
+
+                    if (UnknownPart[..groups[0]].Contains('.'))
+                    {
+                        return 0; 
+                    }
+
+                    if (groups.Count > 1)
+                    {
+                        if (UnknownPart.Length < groups[0] + 1 || UnknownPart[groups[0]] == '#')
+                        {
+                            return 0;
+                        }
+
+                        UnknownPart = UnknownPart[(groups[0] + 1)..]; 
+                        groups = groups[1..];
+                        continue;
+                    }
+
+                    UnknownPart = UnknownPart[groups[0]..];
+                    groups = groups[1..];
+                    continue;
+                }
+
+            }
+        }
+        
+        public long Part1() 
         {
-            int answer = 0;
-            int totalArrangements = 0;
+            long answer = 0;
+            long totalArrangements = 0;
 
             foreach (string line in lines)
             {
+
                 string[] parts = line.Split(' ');
 
                 string unknownPart = parts[0];
                 string[] groups = parts[1].Split(',').ToArray();
 
                 List<int> damagedGroups = groups.Select(int.Parse).ToList();
-                var key = $"{unknownPart},{string.Join(',', groups)}";
 
-                int arrangements = CountArrangements(unknownPart, damagedGroups);
-                totalArrangements += arrangements;
+                totalArrangements += Calculate(unknownPart, damagedGroups);
+           
 
                 //Console.WriteLine($"{line} - {arrangements} arrangements");
             }
@@ -140,10 +122,10 @@ namespace AdventOfCode
             return answer;
         }
 
-        public int Part2()
+        public long Part2()
         {
-            int answer = 0;
-            int totalArrangements = 0;
+            long answer = 0;
+            long totalArrangements = 0;
 
             foreach (string line in lines)
             {
@@ -156,16 +138,14 @@ namespace AdventOfCode
                 string[] groups = parts[1].Split(',').ToArray();
 
                 List<int> damagedGroups = groups.Select(int.Parse).ToList();
-                List<int> DamagedGroupx5 = new List<int>();
+                List<int> DamagedGroups5x = new List<int>();
                 for (int i = 0; i < 5; i++)
                 {
-                    DamagedGroupx5 = DamagedGroupx5.Concat(damagedGroups).ToList();
+                    DamagedGroups5x = DamagedGroups5x.Concat(damagedGroups).ToList();
                 }
 
-                int arrangements = CountArrangements(unknownPart5x, DamagedGroupx5);
-                totalArrangements += arrangements;
+                totalArrangements += Calculate(unknownPart5x, DamagedGroups5x);
 
-                Console.WriteLine($"{line} - {arrangements} arrangements");
             }
 
             answer = totalArrangements;

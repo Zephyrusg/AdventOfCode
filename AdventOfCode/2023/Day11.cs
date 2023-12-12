@@ -118,9 +118,7 @@ namespace AdventOfCode
 
                 long Rows = (EmptyRow.FindAll(x => x < Galaxyies[i].Item2).Count()) * Multiplier;
                 long Columns = (EmptyColumn.FindAll(x => x < Galaxyies[i].Item1).Count()) * Multiplier;
-
                 Galaxyies[i] = (Galaxyies[i].Item1 + Columns, Galaxyies[i].Item2 + Rows);
-
 
             }
 

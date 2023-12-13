@@ -41,7 +41,6 @@ namespace AdventOfCode
                     { 
                         return 1;
                     }
-                    
                 }
 
                 if (string.IsNullOrEmpty(UnknownPart))

@@ -183,22 +183,7 @@ namespace AdventOfCode
         {
             int answer = 0;
             part2 = true;
-            List<string> Pattern = new List<string>();
-            foreach (string line in lines)
-            {
-
-                if (line == "")
-                {
-                    Patterns.Add(Pattern);
-                    Pattern = new List<string>();
-                }
-                else
-                {
-                    Pattern.Add(line);
-
-                }
-            }
-            Patterns.Add(Pattern);
+           
             int i = 0;
             foreach (List<string> TestPattern in Patterns)
             {
@@ -244,7 +229,7 @@ namespace AdventOfCode
                     if (TestVertical(TestPattern, FoundPossibeColumn))
                     {
                         answer += (FoundPossibeColumn + 1);
-                        Console.WriteLine("Found Reflection on Column: " + FoundPossibeColumn + "/" + (FoundPossibeColumn + 1));
+                        Console.WriteLine(i + ":Found Reflection on Column: " + FoundPossibeColumn + "/" + (FoundPossibeColumn + 1));
                         Found = true;
                         break;
                     }
@@ -255,13 +240,15 @@ namespace AdventOfCode
                     {
                         if (TestHorizontal(TestPattern, FoundPossibleRow))
                         {
-                            Console.WriteLine("Found Reflection on Rows: " + FoundPossibleRow + "/" + (FoundPossibleRow + 1));
+                            Console.WriteLine(i + ":Found Reflection on Rows: " + FoundPossibleRow + "/" + (FoundPossibleRow + 1));
                             answer += (FoundPossibleRow + 1) * 100;
                             Found = true;
                         }
                     }
                 }
-                if (!Found) { Console.WriteLine("Error not found"); }
+                if (!Found) { Console.WriteLine(i + ": Error not found"); }
+
+                i++;
 
             }
             return answer;

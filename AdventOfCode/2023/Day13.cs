@@ -136,9 +136,7 @@ namespace AdventOfCode
                         
 
                         FoundPossibeColumns.Add(x);
-                        
-                        
-                       
+
                     }
                 }
                 
@@ -169,13 +167,7 @@ namespace AdventOfCode
                         }
                     }
                 }
-
-               
-                
             }
-
-
-
             return answer;
         }
 
@@ -229,7 +221,7 @@ namespace AdventOfCode
                     if (TestVertical(TestPattern, FoundPossibeColumn))
                     {
                         answer += (FoundPossibeColumn + 1);
-                        Console.WriteLine(i + ":Found Reflection on Column: " + FoundPossibeColumn + "/" + (FoundPossibeColumn + 1));
+                        //Console.WriteLine(i + ":Found Reflection on Column: " + FoundPossibeColumn + "/" + (FoundPossibeColumn + 1));
                         Found = true;
                         break;
                     }
@@ -240,7 +232,7 @@ namespace AdventOfCode
                     {
                         if (TestHorizontal(TestPattern, FoundPossibleRow))
                         {
-                            Console.WriteLine(i + ":Found Reflection on Rows: " + FoundPossibleRow + "/" + (FoundPossibleRow + 1));
+                            //Console.WriteLine(i + ":Found Reflection on Rows: " + FoundPossibleRow + "/" + (FoundPossibleRow + 1));
                             answer += (FoundPossibleRow + 1) * 100;
                             Found = true;
                         }

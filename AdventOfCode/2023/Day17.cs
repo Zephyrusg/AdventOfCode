@@ -200,26 +200,18 @@ namespace AdventOfCode
                 }
             }
 
-            //Point exitPoint = map[Width-1, Height-1];
-            //map[0, 0].distance = 0;
-            //map[0, 0].estimatedDistance = 0;
             HashSet<State>openList = new HashSet<State>();
             HashSet<State>closedList = new HashSet<State>();
             PriorityQueue<State, int> priorityList = new PriorityQueue<State, int>();
 
-            State Start1 = new(0, 0, (1, 0), 0);
-            State Start2 = new(0, 0, (0, 1), 0);
-            Start1.distance = 0;
-            Start1.estimatedDistance = 0;
-            Start2.distance = 0;
-            Start2.estimatedDistance = 0;
+            State Start = new(0, 0, (1, 0), 0);
+            Start.distance = 0;
+            Start.estimatedDistance = 0;
 
-            openList.Add(Start1);
-            openList.Add(Start2);
-            
+            openList.Add(Start);
 
-            priorityList.Enqueue(Start1, Start1.distance);
-            priorityList.Enqueue(Start2, Start2.distance);
+
+            priorityList.Enqueue(Start, Start.distance);
             bool endReached = false;
 
             while (openList.Count > 0 && !endReached)
@@ -230,7 +222,7 @@ namespace AdventOfCode
                 {
                     if(neighbourState.x <0  || neighbourState.x >= Width || neighbourState.y < 0 || neighbourState.y >= Height) continue;
                     int neighbourDistance = current.distance + map[neighbourState.x, neighbourState.y];
-                    if (neighbourState.x == Width - 1 && neighbourState.y == Height -1)
+                    if (neighbourState.x == Width - 1 && neighbourState.y == Height -1 )
                     {
                        // Console.WriteLine("Found output" + neighbourDistance);
                         endReached = true;
@@ -282,20 +274,27 @@ namespace AdventOfCode
 
             int answer = 0;
 
-            int hNumber = 30;
+            int hNumber = 2;
 
             HashSet<State> openList = new HashSet<State>();
             HashSet<State> closedList = new HashSet<State>();
             PriorityQueue<State, int> priorityList = new PriorityQueue<State, int>();
 
-            State Start = new(0, 0, (1, 0), 0);
-            Start.distance = 0;
-            Start.estimatedDistance = 0;
+            State Start1 = new(0, 0, (1, 0), 0);
+            State Start2 = new(0, 0, (0, 1), 0);
+            Start1.distance = 0;
+            Start1.estimatedDistance = 0;
+            Start2.distance = 0;
+            Start2.estimatedDistance = 0;
 
-            openList.Add(Start);
+            openList.Add(Start1);
+            openList.Add(Start2);
 
 
-            priorityList.Enqueue(Start, Start.distance);
+            priorityList.Enqueue(Start1, Start1.distance);
+            priorityList.Enqueue(Start2, Start2.distance);
+
+
             bool endReached = false;
 
             while (openList.Count > 0 && !endReached)
@@ -306,7 +305,7 @@ namespace AdventOfCode
                 {
                     if (neighbourState.x < 0 || neighbourState.x >= Width || neighbourState.y < 0 || neighbourState.y >= Height) continue;
                     int neighbourDistance = current.distance + map[neighbourState.x, neighbourState.y];
-                    if (neighbourState.x == Width - 1 && neighbourState.y == Height - 1)
+                    if (neighbourState.x == Width - 1 && neighbourState.y == Height - 1 && neighbourState.SameDirection >= 4)
                     {
                         // Console.WriteLine("Found output" + neighbourDistance);
                         endReached = true;
@@ -343,7 +342,7 @@ namespace AdventOfCode
                     neighbourState.distance = neighbourDistance;
                     neighbourState.estimatedDistance = estimatedNeighbourTotalDistance;
                     openList.Add(neighbourState);
-                    priorityList.Enqueue(neighbourState, neighbourState.distance);
+                    priorityList.Enqueue(neighbourState, neighbourState.estimatedDistance);
                 }
                 closedList.Add(current);
                 openList.Remove(current);

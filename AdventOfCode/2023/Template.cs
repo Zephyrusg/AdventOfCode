@@ -8,7 +8,9 @@ namespace AdventOfCode
 {
     internal class Y2023D0
     {
-        public static string[] lines = File.ReadAllLines(".\\2023\\Input\\inputDayX.txt");
+        public static string[] Lines = File.ReadAllLines(".\\2023\\Input\\inputDayX.txt");
+        static int Height = Lines.Count();
+        static int Width = Lines[0].Length;
         public int Part1() 
         {
             int answer = 0;

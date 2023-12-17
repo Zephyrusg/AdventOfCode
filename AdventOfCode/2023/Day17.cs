@@ -35,7 +35,8 @@ namespace AdventOfCode
             
         //}
 
-        class State : IEquatable<State>
+        class State : IEquatable<State?>
+        //: IEquatable<State>
         {
 
             public int x;
@@ -55,10 +56,25 @@ namespace AdventOfCode
 
             }
 
-            public bool Equals(State otherState)
+            public override bool Equals(object? obj)
             {
-                return ((this.x == otherState.x) && (this.y == otherState.y) && (this.direction == otherState.direction) && this.SameDirection == otherState.SameDirection);
+                return Equals(obj as State);
             }
+
+            public bool Equals(State? other)
+            {
+                return other is not null &&
+                       x == other.x &&
+                       y == other.y &&
+                       direction.Equals(other.direction) &&
+                       SameDirection == other.SameDirection;
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(x, y, direction, SameDirection);
+            }
+
             public List<State> GetNextSteps()
             {
                 List<State> NextSteps = new List<State>();
@@ -174,14 +190,10 @@ namespace AdventOfCode
                 return NextSteps;
             }
 
-            public override int GetHashCode()
-            {
-                return (this.y * Width + this.x + this.SameDirection);
-            }
 
             public override string ToString()
             {
-                string something= "";
+                string something = "";
                 something = "x: " + x.ToString() + " y: " + y.ToString() + " Distance: " + distance.ToString();
                 return something;
             }
@@ -192,7 +204,7 @@ namespace AdventOfCode
         {
             int answer = 0;
            
-            int hNumber = 30;
+            int hNumber = 2;
             for (int y = 0;y < Height;y ++){
 
                 for (int x = 0;x < Width; x++){

@@ -16,27 +16,7 @@ namespace AdventOfCode
         static int Width = Lines[0].Length;
         static int[,] map = new int[Width, Height];
 
-        //class Point 
-        //{
-        //    public int x;
-        //    public int y;
-        //    public int value;
-        //    public int distance;
-        //    public int estimatedDistance;
-        //    bool horizointal = false;
-        //    public Point(int x, int y, int value)
-        //    {
-        //        this.x = x;
-        //        this.y = y;
-        //        this.value = value;
-        //        distance = int.MaxValue;
-        //        estimatedDistance = int.MaxValue;
-        //    }
-            
-        //}
-
         class State : IEquatable<State?>
-        //: IEquatable<State>
         {
 
             public int x;

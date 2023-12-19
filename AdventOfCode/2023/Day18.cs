@@ -23,7 +23,6 @@ namespace AdventOfCode
         public static string[] Lines = File.ReadAllLines(".\\2023\\Input\\inputDay18.txt");
         static int Height = Lines.Count();
         static int Width = Lines[0].Length;
-        static char[,] map = new char[Width, Height];
         public int Part1() 
         {
             int answer = 0;
@@ -64,7 +63,8 @@ namespace AdventOfCode
 
                             currentcorner = (current.x - Step.distance + 1, current.y + 1);
                         }
-                        else {
+                        else 
+                        {
 
                             currentcorner = (current.x - Step.distance, current.y + 1); 
 
@@ -77,13 +77,11 @@ namespace AdventOfCode
 
                         if (nextdirection == "D")
                         {
-
                             currentcorner = (current.x + Step.distance + 1, current.y);
-
                         }
-                        else {
-                            
-                              currentcorner = (current.x + Step.distance, current.y);
+                        else 
+                        {
+                            currentcorner = (current.x + Step.distance, current.y);
                         }
 
                         current= (current.x + Step.distance, current.y);
@@ -149,13 +147,10 @@ namespace AdventOfCode
 
                         if (nextdirection == "D")
                         {
-
-                            currentcorner = (current.x + Step.distance + 1, current.y);
-                            
+                            currentcorner = (current.x + Step.distance + 1, current.y);   
                         }
                         else
                         {
-
                             currentcorner = (current.x + Step.distance, current.y);
                         }
 

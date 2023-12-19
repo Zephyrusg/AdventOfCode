@@ -56,10 +56,10 @@ namespace AdventOfCode
 
                                 case "<":
                                     {
-                                        if (this.Values[conversion[Rule.partvalue]] < Rule.testvalue) { 
+                                        if (this.Values[conversion[Rule.partvalue]] < Rule.testvalue) 
+                                        { 
                                             this.Status = Rule.Path;
                                             goto NextWorkFlow;
-
                                         }
                                         break;
                                     }
@@ -83,8 +83,6 @@ namespace AdventOfCode
 
             }
         }
-
-        
 
         class Rule {
             public string? partvalue;
@@ -114,10 +112,7 @@ namespace AdventOfCode
                 {
                     return (partvalue + " " + symbol + " " + testvalue + " " + Path);
                 }
-
-            }
-
-            
+            } 
         }
 
         public static long[][] CopyArray(long[][] source)
@@ -151,8 +146,6 @@ namespace AdventOfCode
             {               
                 switch (Rule.symbol)
                 {
-                    
-
                     case "<":
                         {
                             int conversionnumber = conversion[Rule.partvalue];
@@ -171,11 +164,9 @@ namespace AdventOfCode
                         }
                     case ">":
                         {
-
                             int conversionnumber = conversion[Rule.partvalue];
                             if (GearRange[conversionnumber][0] > Rule.testvalue)
                             {
-                                Console.WriteLine("Geater " + Rule.testvalue + " " + "[" + GearRange[conversionnumber][0] + "-" + GearRange[conversionnumber][1] + "]");
                                 result += FindCombinations(GearRange, Rule.Path);
                             }
                             else if (GearRange[conversionnumber][0] <= Rule.testvalue && GearRange[conversionnumber][1] > Rule.testvalue)
@@ -189,7 +180,6 @@ namespace AdventOfCode
                                 GearRange[conversionnumber][1] = (long)Rule.testvalue;
                             }
                             break;
-
                         }
                     case null:
                         {
@@ -197,15 +187,10 @@ namespace AdventOfCode
                             break;
                         }
                 }
-                
-
             }
 
             return result;
-
         }
-
-
 
         class WorkFlow {
 
@@ -269,8 +254,6 @@ namespace AdventOfCode
    
                     rules.Add(new(Ruleparts[Ruleparts.Length-1]));
                     Workflows.Add(new(WorkflowName, rules));
-
-
                 }
 
                 foreach(Gear Gear in Gears)
@@ -283,7 +266,6 @@ namespace AdventOfCode
             foreach (Gear Gear in AllowedGears) {
                 answer += Gear.Values.Sum();
             }
-
 
             return answer;
         }
@@ -299,8 +281,6 @@ namespace AdventOfCode
         ];
 
             answer += FindCombinations(GearRange, "in");
-
-
             return answer;
         }
 

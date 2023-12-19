@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net.NetworkInformation;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -82,6 +84,8 @@ namespace AdventOfCode
             }
         }
 
+        
+
         class Rule {
             public string? partvalue;
             public string? symbol;
@@ -115,6 +119,105 @@ namespace AdventOfCode
 
             
         }
+
+        public static long[][] CopyArray(long[][] source)
+        {
+            long[][] destination = new long[source.Length][];
+            // For each Row
+            for (int y = 0; y < source.Length; y++)
+            {
+                destination[y] = (long[])source[y].Clone();
+            }
+            return destination;
+        }
+        public long FindCombinations(long[][] GearRange, string WorkflowName)
+        {
+            long result = 0;
+            if (WorkflowName == "A")
+            {
+                result = (GearRange[0][1] - GearRange[0][0] + 1) * (GearRange[1][1] - GearRange[1][0] + 1) * (GearRange[2][1] - GearRange[2][0] + 1) * (GearRange[3][1] - GearRange[3][0] + 1);
+                return result;  
+            }
+            else if (WorkflowName == "R")
+            {
+                return 0;
+            }
+
+            GearRange = CopyArray(GearRange);
+
+            WorkFlow Workflow = Workflows.Find(w => w.name == WorkflowName);
+
+            foreach (Rule Rule in Workflow.Rules)
+            {
+                //Console.WriteLine(Rule.partvalue + " " + Rule.symbol + " " + Rule.testvalue);
+                
+                switch (Rule.symbol)
+                {
+                    
+
+                    case "<":
+                        {
+                            int conversionnumber = conversion[Rule.partvalue];
+                            if (GearRange[conversionnumber][1] < Rule.testvalue) {
+                                //Console.WriteLine("Lesser "  + Rule.testvalue + " " + "[" + GearRange[conversionnumber][0] + "-" + GearRange[conversionnumber][1] + "]");
+                                result += FindCombinations(GearRange, Rule.Path);
+                            }else if (GearRange[conversionnumber][0] < Rule.testvalue && GearRange[conversionnumber][1] > Rule.testvalue)
+                            {
+                                //Console.WriteLine("Between " + Rule.testvalue + " " + "[" + GearRange[conversionnumber][0] + "-" + GearRange[conversionnumber][1] + "]");
+                                long[][] GearTestRange = CopyArray(GearRange);
+                                GearTestRange[conversionnumber][1] = (long)Rule.testvalue - 1;
+                                //Console.WriteLine("Between: Result " + Rule.testvalue + " " + "[" + GearRange[conversionnumber][0] + "-" + GearTestRange[conversionnumber][1] + "]");
+                                result += FindCombinations(GearTestRange, Rule.Path);
+                                GearRange[conversionnumber][0] = (long)Rule.testvalue;
+
+                            }
+
+                            break;
+                        }
+                    case ">":
+                        {
+
+                            int conversionnumber = conversion[Rule.partvalue];
+                            if (GearRange[conversionnumber][0] > Rule.testvalue)
+                            {
+                                Console.WriteLine("Geater " + Rule.testvalue + " " + "[" + GearRange[conversionnumber][0] + "-" + GearRange[conversionnumber][1] + "]");
+                                result += FindCombinations(GearRange, Rule.Path);
+                            }
+                            else if (GearRange[conversionnumber][0] <= Rule.testvalue && GearRange[conversionnumber][1] > Rule.testvalue)
+                            {
+                                // 6..15
+                                //  7 >
+                                // 8..15
+                                //Console.WriteLine("Between " + Rule.testvalue + " " + "[" + GearRange[conversionnumber][0] + "-" + GearRange[conversionnumber][1] + "]");
+                                long[][] GearTestRange = CopyArray(GearRange);
+                                GearTestRange[conversionnumber][0] = (long)Rule.testvalue + 1;
+                                //Console.WriteLine("Between: Result " + Rule.testvalue + " " + "[" + GearRange[conversionnumber][0] + "-" + GearTestRange[conversionnumber][1] + "]");
+                                result += FindCombinations(GearTestRange, Rule.Path);
+                                GearRange[conversionnumber][1] = (long)Rule.testvalue;
+                            }
+                            break;
+
+                        }
+                    case null:
+                        {
+                            //Console.WriteLine("Rest: ");
+                            //Console.WriteLine("x:[ " + GearRange[0][0] + "-" + GearRange[0][1] + "]");
+                            //Console.WriteLine("m:[ " + GearRange[1][0] + "-" + GearRange[1][1] + "]");
+                            //Console.WriteLine("a:[ " + GearRange[2][0] + "-" + GearRange[2][1] + "]");
+                            //Console.WriteLine("s:[ " + GearRange[3][0] + "-" + GearRange[3][1] + "]");
+                            result += FindCombinations(GearRange, Rule.Path);
+                            break;
+                        }
+                }
+                
+
+            }
+
+            return result;
+
+        }
+
+
 
         class WorkFlow {
 
@@ -197,11 +300,17 @@ namespace AdventOfCode
             return answer;
         }
 
-        public int Part2()
+        public long Part2()
         {
-            int answer = 0;
+            long answer = 0;
+            long[][] GearRange = [
+                [1, 4000],
+                [1, 4000],
+                [1, 4000],
+                [1, 4000]
+        ];
 
-
+            answer += FindCombinations(GearRange, "in");
 
 
             return answer;

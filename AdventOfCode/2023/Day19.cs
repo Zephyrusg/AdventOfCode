@@ -148,9 +148,7 @@ namespace AdventOfCode
             WorkFlow Workflow = Workflows.Find(w => w.name == WorkflowName);
 
             foreach (Rule Rule in Workflow.Rules)
-            {
-                //Console.WriteLine(Rule.partvalue + " " + Rule.symbol + " " + Rule.testvalue);
-                
+            {               
                 switch (Rule.symbol)
                 {
                     
@@ -159,14 +157,11 @@ namespace AdventOfCode
                         {
                             int conversionnumber = conversion[Rule.partvalue];
                             if (GearRange[conversionnumber][1] < Rule.testvalue) {
-                                //Console.WriteLine("Lesser "  + Rule.testvalue + " " + "[" + GearRange[conversionnumber][0] + "-" + GearRange[conversionnumber][1] + "]");
                                 result += FindCombinations(GearRange, Rule.Path);
                             }else if (GearRange[conversionnumber][0] < Rule.testvalue && GearRange[conversionnumber][1] > Rule.testvalue)
                             {
-                                //Console.WriteLine("Between " + Rule.testvalue + " " + "[" + GearRange[conversionnumber][0] + "-" + GearRange[conversionnumber][1] + "]");
                                 long[][] GearTestRange = CopyArray(GearRange);
                                 GearTestRange[conversionnumber][1] = (long)Rule.testvalue - 1;
-                                //Console.WriteLine("Between: Result " + Rule.testvalue + " " + "[" + GearRange[conversionnumber][0] + "-" + GearTestRange[conversionnumber][1] + "]");
                                 result += FindCombinations(GearTestRange, Rule.Path);
                                 GearRange[conversionnumber][0] = (long)Rule.testvalue;
 
@@ -188,10 +183,8 @@ namespace AdventOfCode
                                 // 6..15
                                 //  7 >
                                 // 8..15
-                                //Console.WriteLine("Between " + Rule.testvalue + " " + "[" + GearRange[conversionnumber][0] + "-" + GearRange[conversionnumber][1] + "]");
                                 long[][] GearTestRange = CopyArray(GearRange);
                                 GearTestRange[conversionnumber][0] = (long)Rule.testvalue + 1;
-                                //Console.WriteLine("Between: Result " + Rule.testvalue + " " + "[" + GearRange[conversionnumber][0] + "-" + GearTestRange[conversionnumber][1] + "]");
                                 result += FindCombinations(GearTestRange, Rule.Path);
                                 GearRange[conversionnumber][1] = (long)Rule.testvalue;
                             }
@@ -200,11 +193,6 @@ namespace AdventOfCode
                         }
                     case null:
                         {
-                            //Console.WriteLine("Rest: ");
-                            //Console.WriteLine("x:[ " + GearRange[0][0] + "-" + GearRange[0][1] + "]");
-                            //Console.WriteLine("m:[ " + GearRange[1][0] + "-" + GearRange[1][1] + "]");
-                            //Console.WriteLine("a:[ " + GearRange[2][0] + "-" + GearRange[2][1] + "]");
-                            //Console.WriteLine("s:[ " + GearRange[3][0] + "-" + GearRange[3][1] + "]");
                             result += FindCombinations(GearRange, Rule.Path);
                             break;
                         }

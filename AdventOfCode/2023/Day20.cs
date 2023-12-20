@@ -37,7 +37,7 @@ namespace AdventOfCode
 
         }
 
-        class Module
+        abstract class Module
         {
             public string name;
             public List<string> Outputs;
@@ -98,8 +98,13 @@ namespace AdventOfCode
             {
               
                 WatchList[Pulse.Startingpoint] = Pulse.Pulse;
-
-                if (WatchList.Values.All(P => P == "high"))
+                if (WatchList.Values.All(P => P == "high")){
+                    State = true;
+                }
+                else {
+                    State = false;
+                }
+                if (State)
                 {
                     LowPulses += Outputs.Count;
                     return new("low", Outputs,name);
@@ -215,7 +220,17 @@ namespace AdventOfCode
 
         public long Part2()
         {
-            long answer = 0;
+            long answer = 1;
+
+            Module toRX = Modules.Find(m => m.Outputs.Contains("rx"));
+            List<Module> WatchModules = Modules.Where(m=>m.Outputs.Contains(toRX.name)).ToList();
+
+            Dictionary<string, List<long>> watchlist = new Dictionary<string, List<long>>();
+            foreach(Module Watchmodule in  WatchModules)
+            {
+                watchlist.Add(Watchmodule.name, new List<long>());
+            }
+
             Modules = new();
             foreach(var line in Lines)
             {
@@ -274,6 +289,21 @@ namespace AdventOfCode
                     foreach (var destination in message.Destinations)
                     {
                         Module module = Modules.Find(m => m.name == destination);
+
+                        if (destination == toRX.name && message.Pulse == "high"  )
+                        {
+                            watchlist.TryGetValue(message.Startingpoint, out List<long>? value);
+                            value.Add(times);
+                            if(watchlist.Values.All(l=> l.Count > 0)) {
+                                foreach(var entry in watchlist.Values)
+                                {
+                                    answer *= entry[0];
+                                }
+                                goto done;
+                            }
+                        }
+
+
                         if (module == null)
                         {
                             if (message.Pulse == "low")
@@ -296,11 +326,11 @@ namespace AdventOfCode
 
                     }
                 }
-                times++;
+                ;
             }
             done:
 
-            return times;
+            return answer;
         }
 
     }

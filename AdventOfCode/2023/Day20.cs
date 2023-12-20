@@ -1,34 +1,306 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AdventOfCode
 {
+
     internal class Y2023D20
     {
-        public static string[] Lines = File.ReadAllLines(".\\2023\\Input\\inputDay20.txt");
-        static int Height = Lines.Count();
-        static int Width = Lines[0].Length;
-        public int Part1() 
+        static List<Module> Modules = new();
+        static int LowPulses = 0;
+        static int HighPulses = 0;
+
+        class PulseMessage
         {
-            int answer = 0;
+            public string? Startingpoint;
+            public string Pulse;
+            public List<string> Destinations = new List<string>();
 
-       
+            public PulseMessage(string pulse, List<string> destinations)
+            {
+                Pulse = pulse;
+                Destinations = destinations;
+            }
+
+            public PulseMessage(string pulse, List<string> destinations, string StartingPoint)
+            {
+                Pulse = pulse;
+                Destinations = destinations;
+                Startingpoint = StartingPoint;
+            }
 
 
+        }
+
+        class Module
+        {
+            public string name;
+            public List<string> Outputs;
+            public string type;
+
+            public virtual PulseMessage? SendSignal(PulseMessage Pulse)
+            {
+                return null;
+            }
+        }
+        class Flip : Module
+        {
+            bool state;
+            
+            public Flip(string name, List<string> Outputs)
+            {
+                this.name = name;
+                this.Outputs = Outputs;
+                this.type = "Flip";
+               
+            }
+
+            public override PulseMessage? SendSignal(PulseMessage Pulse) { 
+
+                if(Pulse.Pulse == "high")
+                {
+                    return null;
+                }
+
+                if (state == false)
+                {
+                    state = true;
+                    HighPulses += Outputs.Count;
+                    return new("high", Outputs,name);
+                }
+                else {
+                    state = false;
+                    LowPulses += Outputs.Count;
+                    return new("low", Outputs,name);
+                }
+            
+            }
+
+
+        }
+        class Conjunction : Module
+        {
+
+            public Dictionary<string, string> WatchList = new Dictionary<string, string>();
+            bool State = false;
+            public Conjunction(string name, List<string> Outputs)
+            {
+                this.name = name;
+                this.Outputs = Outputs;
+                this.type = "Con";
+            }
+            public override PulseMessage SendSignal(PulseMessage Pulse)
+            {
+              
+                WatchList[Pulse.Startingpoint] = Pulse.Pulse;
+
+                if (WatchList.Values.All(P => P == "high"))
+                {
+                    LowPulses += Outputs.Count;
+                    return new("low", Outputs,name);
+                }
+                else {
+                    HighPulses += Outputs.Count;
+                    return new("high", Outputs,name);
+                }
+
+            }
+        }
+
+        class Broadcast : Module
+        {
+            public Broadcast(string name, List<string> Outputs)
+            {
+                this.name = name;
+                this.Outputs = Outputs;
+                this.type = "Broad";
+            }
+
+            public override PulseMessage SendSignal(PulseMessage Pulse)
+            {
+               
+                LowPulses += Outputs.Count;
+                return new("low", Outputs, name);
+
+            }
+        }
+
+
+        public static string[] Lines = File.ReadAllLines(".\\2023\\Input\\inputDay20.txt");
+
+        public long Part1()
+        {
+            long answer = 0;
+
+            foreach (var line in Lines)
+            {
+                string name;
+                char type;
+                var part = line.Split(" -> ");
+                if (part[0] == "broadcaster")
+                {
+                    name = "broadcaster";
+                    type = 'B';
+                }
+                else {
+                    name = part[0][1..];
+                    type = part[0][0];
+
+                }
+
+                List<string> Outputs = part[1].Split(", ").ToList();
+
+                switch (type) {
+
+                    case 'B':
+                        {
+                            Modules.Add(new Broadcast(name, Outputs));
+                            break;
+                        }
+                    case '%':
+                        Modules.Add(new Flip(name, Outputs));
+                        break;
+                    case '&':
+                        Modules.Add(new Conjunction(name, Outputs));
+                        break;
+                }
+            }
+
+            foreach (Conjunction conj in Modules.Where(t => t.type == "Con")) {
+                Modules.Where(m => m.Outputs.Contains(conj.name)).ToList().ForEach(t =>
+                {
+                    conj.WatchList.Add(t.name, "low");
+                });
+            }
+
+            
+            long times = 0;
+            while (times < 1000)
+            {
+                Queue<PulseMessage> Messages = new();
+                Messages.Enqueue(new("Low", ["broadcaster"]));
+                LowPulses++;
+                while (Messages.Count > 0)
+                {
+                    PulseMessage message = Messages.Dequeue();
+                    foreach (var destination in message.Destinations)
+                    {
+                        Module module = Modules.Find(m => m.name == destination);
+                        if(module == null)
+                        {
+                            continue;
+                        }
+
+                        PulseMessage? NewMessage = module.SendSignal(new(message.Pulse, [destination], message.Startingpoint));
+
+
+                        if (NewMessage != null)
+                        {
+                            Messages.Enqueue(NewMessage);
+                        }
+
+                    }
+                }
+                times++;
+            }
+
+            answer = HighPulses * LowPulses;
             return answer;
         }
 
-        public int Part2()
+        public long Part2()
         {
-            int answer = 0;
+            long answer = 0;
+            Modules = new();
+            foreach(var line in Lines)
+            {
+                string name;
+                char type;
+                var part = line.Split(" -> ");
+                if (part[0] == "broadcaster")
+                {
+                    name = "broadcaster";
+                    type = 'B';
+                }
+                else
+                {
+                    name = part[0][1..];
+                    type = part[0][0];
+
+                }
+
+                List<string> Outputs = part[1].Split(", ").ToList();
+
+                switch (type)
+                {
+
+                    case 'B':
+                        {
+                            Modules.Add(new Broadcast(name, Outputs));
+                            break;
+                        }
+                    case '%':
+                        Modules.Add(new Flip(name, Outputs));
+                        break;
+                    case '&':
+                        Modules.Add(new Conjunction(name, Outputs));
+                        break;
+                }
+            }
+
+            foreach (Conjunction conj in Modules.Where(t => t.type == "Con"))
+            {
+                Modules.Where(m => m.Outputs.Contains(conj.name)).ToList().ForEach(t =>
+                {
+                    conj.WatchList.Add(t.name, "low");
+                });
+            }
+
+            long times = 0;
+            while (true)
+            {
+                Queue<PulseMessage> Messages = new();
+                Messages.Enqueue(new("Low", ["broadcaster"]));
+                LowPulses++;
+                times++;
+                while (Messages.Count > 0)
+                {
+                    PulseMessage message = Messages.Dequeue();
+                    foreach (var destination in message.Destinations)
+                    {
+                        Module module = Modules.Find(m => m.name == destination);
+                        if (module == null)
+                        {
+                            if (message.Pulse == "low")
+                            {
+                                goto done;
+                            }
+                            else {
+                                continue;
+                            }
+                            
+                        }
+
+                        PulseMessage? NewMessage = module.SendSignal(new(message.Pulse, [destination], message.Startingpoint));
 
 
+                        if (NewMessage != null)
+                        {
+                            Messages.Enqueue(NewMessage);
+                        }
 
+                    }
+                }
+                times++;
+            }
+            done:
 
-            return answer;
+            return times;
         }
 
     }

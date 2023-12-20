@@ -105,14 +105,15 @@ namespace AdventOfCode
 
             public override string ToString()
             {
-                if (partvalue == null) {
+                if (partvalue == null)
+                {
                     return "Default: " + Path;
                 }
                 else
                 {
                     return (partvalue + " " + symbol + " " + testvalue + " " + Path);
                 }
-            } 
+            }
         }
 
         public static long[][] CopyArray(long[][] source)

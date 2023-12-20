@@ -222,15 +222,6 @@ namespace AdventOfCode
         {
             long answer = 1;
 
-            Module toRX = Modules.Find(m => m.Outputs.Contains("rx"));
-            List<Module> WatchModules = Modules.Where(m=>m.Outputs.Contains(toRX.name)).ToList();
-
-            Dictionary<string, List<long>> watchlist = new Dictionary<string, List<long>>();
-            foreach(Module Watchmodule in  WatchModules)
-            {
-                watchlist.Add(Watchmodule.name, new List<long>());
-            }
-
             Modules = new();
             foreach(var line in Lines)
             {
@@ -274,6 +265,15 @@ namespace AdventOfCode
                 {
                     conj.WatchList.Add(t.name, "low");
                 });
+            }
+
+            Module toRX = Modules.Find(m => m.Outputs.Contains("rx"));
+            List<Module> WatchModules = Modules.Where(m => m.Outputs.Contains(toRX.name)).ToList();
+
+            Dictionary<string, List<long>> watchlist = new Dictionary<string, List<long>>();
+            foreach (Module Watchmodule in WatchModules)
+            {
+                watchlist.Add(Watchmodule.name, new List<long>());
             }
 
             long times = 0;

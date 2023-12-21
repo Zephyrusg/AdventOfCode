@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Intrinsics.Arm;
@@ -41,10 +42,10 @@ namespace AdventOfCode
             return Newpoints;
         }
 
-        HashSet<(int x, int y)> DostepP2((int x, int y) currentpoint)
+        List<(int x, int y)> DostepP2((int x, int y) currentpoint)
         {
 
-            HashSet<(int x, int y)> Newpoints = new();
+            List<(int x, int y)> Newpoints = new();
 
             (int x, int y) Testpoint = currentpoint; ;
             int x = currentpoint.x;
@@ -175,37 +176,46 @@ namespace AdventOfCode
         {
             long answer = 0;
             int times = 26501365;
-            HashSet<(int x, int y)> Points = new();
-            Points.Add(Start);
 
             int Maps = times / Width;
             int remaining = times % Width;
-            List<int> sequence = new List<int>();
+            // List<int> sequence = new List<int>();
             // Sequence : Remaining , Width + Remaining, Width * 2 + remaining, ...)
-            for (int n = 0; n < 3; n++)
+            ConcurrentBag<int> sequence = new();
+            Parallel.For(0, 3, (n) =>
             {
-                for (int s = 0; s < (n * Width + remaining); s++) {
-                        
-                        HashSet<(int x, int y)> NextStep = new();
-                        foreach (var point in Points)
-                        {
-                            NextStep.UnionWith(DostepP2(point));
-                        }
+                HashSet<(int x, int y)> Points = new();
+                Points.Add(Start);
+                for (int s = 0; s < (n * Width + remaining); s++)
+                {
 
-                        Points = NextStep;
+                    HashSet<(int x, int y)> NextStep = new();
+                    foreach (var point in Points)
+                    {
+                        List<(int x, int y)> temp= (DostepP2(point));
+                        foreach(var  tempPoint in temp)
+                        {
+                            if (!NextStep.Contains(tempPoint))
+                            {
+                                NextStep.Add(tempPoint);
+                            }
+                        }
+      
+                    }
+
+                    Points = NextStep;
 
                 }
                 sequence.Add(Points.Count);
-                Points = new();
-                Points.Add(Start);
-            }
-
+            });
+            List<int> sequencelist = sequence.ToList();
+            sequencelist.Sort();
             // Sequence[0] = Remaining
-            int c = sequence[0];
+            int c = sequencelist[0];
             //Sequence[1] (A* (1*1) + 1 * B) - c
-            int A1B1 = sequence[1] - c;
+            int A1B1 = sequencelist [1] - c;
             //Sequence[1] (A* (2*2) + 2 * B) - c
-            int A4B2 = sequence[2] - c;
+            int A4B2 = sequencelist[2] - c;
             int A2 = A4B2 - (2 * A1B1);
             int a = A2 / 2;
             int b = A1B1 - a;

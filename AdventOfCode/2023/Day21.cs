@@ -192,8 +192,7 @@ namespace AdventOfCode
                     HashSet<(int x, int y)> NextStep = new();
                     foreach (var point in Points)
                     {
-                        List<(int x, int y)> temp= (DostepP2(point));
-                        foreach(var  tempPoint in temp)
+                        foreach(var  tempPoint in DostepP2(point))
                         {
                             if (!NextStep.Contains(tempPoint))
                             {

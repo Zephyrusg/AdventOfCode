@@ -303,7 +303,6 @@ namespace AdventOfCode
                             }
                         }
 
-
                         if (module == null)
                         {
                             if (message.Pulse == "low")
@@ -317,16 +316,12 @@ namespace AdventOfCode
                         }
 
                         PulseMessage? NewMessage = module.SendSignal(new(message.Pulse, [destination], message.Startingpoint));
-
-
                         if (NewMessage != null)
                         {
                             Messages.Enqueue(NewMessage);
                         }
-
                     }
                 }
-                ;
             }
             done:
 

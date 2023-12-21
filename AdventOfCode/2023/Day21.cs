@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -110,6 +113,11 @@ namespace AdventOfCode
             return Newpoints;
         }
 
+        static long Formule(int a, int b, int c, int n) {
+
+            return a * (long)(Math.Pow(n, 2)) + b * n + c;
+        }
+
         public int Part1() 
         {
             int answer = 0;
@@ -166,29 +174,43 @@ namespace AdventOfCode
         public long Part2()
         {
             long answer = 0;
+            int times = 26501365;
+            HashSet<(int x, int y)> Points = new();
+            Points.Add(Start);
 
-            //HashSet<(int x, int y)> Points = new();
-            //Points.Add(Start);
-            //int times = 26501365;
-            //int counter = 0;
+            int Maps = times / Width;
+            int remaining = times % Width;
+            List<int> sequence = new List<int>();
+            // Sequence : Remaining , Width + Remaining, Width * 2 + remaining, ...)
+            for (int n = 0; n < 3; n++)
+            {
+                for (int s = 0; s < (n * Width + remaining); s++) {
+                        
+                        HashSet<(int x, int y)> NextStep = new();
+                        foreach (var point in Points)
+                        {
+                            NextStep.UnionWith(DostepP2(point));
+                        }
 
-            //while (counter < times)
-            //{
+                        Points = NextStep;
 
-            //    HashSet<(int x, int y)> NextStep = new();
-            //    foreach (var point in Points)
-            //    {
-            //        NextStep.UnionWith(DostepP2(point));
-            //    }
+                }
+                sequence.Add(Points.Count);
+                Points = new();
+                Points.Add(Start);
+            }
 
-            //    Points = NextStep;
-            //    counter++;
-            //}
+            // Sequence[0] = Remaining
+            int c = sequence[0];
+            //Sequence[1] (A* (1*1) + 1 * B) - c
+            int A1B1 = sequence[1] - c;
+            //Sequence[1] (A* (2*2) + 2 * B) - c
+            int A4B2 = sequence[2] - c;
+            int A2 = A4B2 - (2 * A1B1);
+            int a = A2 / 2;
+            int b = A1B1 - a;
 
-            //answer = Points.Count;
-
-
-
+            answer = Formule(a, b, c, Maps);
 
             return answer;
         }

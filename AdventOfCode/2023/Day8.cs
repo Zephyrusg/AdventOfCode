@@ -153,8 +153,6 @@ namespace AdventOfCode
 
 
             int WalkingIndex = 0;
-            long WalkingCounter = 0;
-            int EndState = 0;
             while (!(CurrentGhosts.All(x=>x.FoundZ == true)))
             {
 

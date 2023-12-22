@@ -20,7 +20,7 @@ namespace AdventOfCode
             public bool Connected;
 
 
-            public static Pipe Startpoint;
+            public static Pipe ?Startpoint;
 
             public static int width = 0;
             public static int height = 0;
@@ -33,7 +33,6 @@ namespace AdventOfCode
                 this.x = x;
                 this.y = y;
                 this.KindofPipe = KindofPipe;
-                int distance = int.MaxValue;
             }
 
             public void FindNeighbourPipes() {

@@ -157,7 +157,7 @@ namespace AdventOfCode
                 HashSet<(int x, int y)> NextStep = new();
                 foreach(var point in Points)
                 {
-                    NextStep.UnionWith(DostepP2(point));
+                    NextStep.UnionWith(Dostep(point));
                 }
 
                 Points = NextStep;

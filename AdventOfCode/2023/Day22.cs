@@ -68,10 +68,6 @@ namespace AdventOfCode
                 }
 
             }
-
-
-
-
         }
         
         static public void FallingBlocks(HashSet<int> Falling, int id)
@@ -82,7 +78,6 @@ namespace AdventOfCode
                 FallingBlocks(Falling, i);
             }
         }
-
 
         public int Part1() 
         {
@@ -99,13 +94,10 @@ namespace AdventOfCode
                 SupportList.Add(id, []);
                 SupportedBy.Add(id, []);
                 id++;
-                
-
             }
             Bricks.Sort();
 
             int max = Bricks.Max(b => b.coordinate2.z);
-            bool CanFall = true;
             
             foreach(var b in Bricks)
             {
@@ -121,7 +113,6 @@ namespace AdventOfCode
                 bool CanBeDestroyed = true;
                 foreach (var SupportBrick in SupportList[b.id])
                 {
-
                     if (SupportedBy[SupportBrick].Count == 1)
                     {
                         CanBeDestroyed = false;

@@ -20,7 +20,7 @@ namespace AdventOfCode
             public (int x, int y, int z) coordinate1;
             public (int x, int y, int z) coordinate2;
             int Supports = 0;
-            int id;
+            public int id;
 
             public Brick((int x, int y, int z) coordinate1, (int x, int y, int z) coordinate2, int id)
             {
@@ -103,12 +103,30 @@ namespace AdventOfCode
 
 
             foreach (var b in Bricks) {
-                //SupportList[b.id]
-                foreach(var list in SupportList.Values)
+                if (SupportList[b.id].Count == 0)
                 {
-
+                    answer++;
+                    continue;
                 }
-            
+               
+                foreach (var brick in SupportList[b.id])
+                {
+                    int count = 0;
+                    foreach (var list in SupportList.Values)
+                    {
+                        if (list.Contains(brick))
+                        {
+                            count++;
+                        }
+                    }
+                    if(count == 1)
+                    {
+                        goto NextBrick;
+                    }
+                }
+                answer++;
+
+            NextBrick:;
             }
 
             return answer;

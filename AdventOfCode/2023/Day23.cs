@@ -14,7 +14,6 @@ namespace AdventOfCode
         static bool P2 = false;
         static Dictionary<(int x, int y), int> MaxDistances = new Dictionary<(int x, int y), int>();
         static int Pathsfind = 0;
-        static Dictionary<((int x, int y),(int x, int y))>
 
         static bool IsValidMove((int x, int y) nextlocation, (int x, int y) direction, (int x, int y) PreviousDirection, HashSet<(int x, int y)> visited) 
         {

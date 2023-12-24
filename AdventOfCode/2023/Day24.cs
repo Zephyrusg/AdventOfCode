@@ -19,7 +19,7 @@ namespace AdventOfCode
         static HashSet<(int A, int B)> Pairs = new HashSet<(int, int)>();
         public class Hailstone
         {
-            public decimal x, y, z, dx, dy , dz;
+            public decimal x, y, z, dx, dy, dz;
 
             public Hailstone(decimal x, decimal y, decimal z, decimal dx, decimal dy, decimal dz)
             {
@@ -29,6 +29,7 @@ namespace AdventOfCode
                 this.dx = dx;
                 this.dy = dy;
                 this.dz = dz;
+                
             }
 
             public override string? ToString()
@@ -206,11 +207,11 @@ namespace AdventOfCode
             for (decimal dz = 10; dz > -10; dz--) {
                 List<Hailstone> List = ConvertSpeed(Speed.coordinate.x, Speed.coordinate.y, dz);
                 Hailstone FirstStone = List[0];
-                decimal Z = FirstStone.z + ((( FirstStone.x - Speed.coordinate.x )/ FirstStone.dx) * FirstStone.dz);
+                decimal Z = FirstStone.z - ((( FirstStone.x + Speed.coordinate.x )/ FirstStone.dx) * FirstStone.dz);
                 bool Correctpoint = true;
                 foreach (Hailstone TestStone in List)
                 {
-                    decimal ZTest = TestStone.z + ((( TestStone.x - Speed.coordinate.x) / TestStone.dx) * TestStone.dz);
+                    decimal ZTest = TestStone.z - ((( TestStone.x + Speed.coordinate.x) / TestStone.dx) * TestStone.dz);
 
                     if (!TestZ(Z, ZTest))
                     {

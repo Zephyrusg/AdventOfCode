@@ -133,6 +133,34 @@ namespace AdventOfCode
             return ((0,0),(0,0));
         }
 
+        private decimal GetZ(((decimal x, decimal y) coordinate, (decimal dx, decimal dy) speed) Speed)
+        {
+            for (decimal dz = 10; dz > -10; dz--)
+            {
+                List<Hailstone> List = ConvertSpeed(Speed.speed.dx, Speed.speed.dy, dz);
+                Hailstone FirstStone = List[0];
+                decimal Z = FirstStone.z + (((Speed.coordinate.x - FirstStone.x) / FirstStone.dx) * FirstStone.dz);
+                bool Correctpoint = true;
+                foreach (Hailstone TestStone in List)
+                {
+                    decimal ZTest = TestStone.z + (((Speed.coordinate.x - TestStone.x) / TestStone.dx) * TestStone.dz);
+
+                    if (!TestZ(Z, ZTest))
+                    {
+                        Correctpoint = false;
+                        break;
+                    }
+
+                }
+                if (Correctpoint)
+                {
+                    return Z;
+                }
+            }
+            return 0;
+
+        }
+
         public int Part1() 
         {
             int answer = 0;
@@ -196,39 +224,17 @@ namespace AdventOfCode
             return answer;
         }
 
-        public int Part2()
+        public decimal Part2()
         {
-            int answer = 0;
-            ((decimal x, decimal y) coordinate,(decimal dx, decimal dy) speed) Speed =  FindDX();
+            decimal answer = 0;
+            ((decimal x, decimal y) coordinate, (decimal dx, decimal dy) speed) Speed = FindDX();
 
-            
-            
-
-            for (decimal dz = 10; dz > -10; dz--) {
-                List<Hailstone> List = ConvertSpeed(Speed.coordinate.x, Speed.coordinate.y, dz);
-                Hailstone FirstStone = List[0];
-                decimal Z = FirstStone.z - ((( FirstStone.x + Speed.coordinate.x )/ FirstStone.dx) * FirstStone.dz);
-                bool Correctpoint = true;
-                foreach (Hailstone TestStone in List)
-                {
-                    decimal ZTest = TestStone.z - ((( TestStone.x + Speed.coordinate.x) / TestStone.dx) * TestStone.dz);
-
-                    if (!TestZ(Z, ZTest))
-                    {
-                        Correctpoint = false;
-                        break;
-                    }
-
-                }
-                if (Correctpoint) {
-                    break;
-                }
-            }
-
-
+            decimal Z = GetZ(Speed);
+            answer = Speed.coordinate.x + Speed.coordinate.y + Z;
             return answer;
         }
 
         
+
     }
 }

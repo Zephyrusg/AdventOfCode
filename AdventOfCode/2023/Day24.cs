@@ -135,16 +135,20 @@ namespace AdventOfCode
 
         private decimal GetZ(((decimal x, decimal y) coordinate, (decimal dx, decimal dy) speed) Speed)
         {
-            for (decimal dz = 10; dz > -10; dz--)
+            for (decimal dz = 500; dz > -500; dz--)
             {
                 List<Hailstone> List = ConvertSpeed(Speed.speed.dx, Speed.speed.dy, dz);
                 Hailstone FirstStone = List[0];
                 decimal Z = FirstStone.z + (((Speed.coordinate.x - FirstStone.x) / FirstStone.dx) * FirstStone.dz);
                 bool Correctpoint = true;
                 foreach (Hailstone TestStone in List)
-                {
+                {   
+                    if(TestStone.dx == 0)
+                    {
+                        continue;
+                    }
                     decimal ZTest = TestStone.z + (((Speed.coordinate.x - TestStone.x) / TestStone.dx) * TestStone.dz);
-
+           
                     if (!TestZ(Z, ZTest))
                     {
                         Correctpoint = false;

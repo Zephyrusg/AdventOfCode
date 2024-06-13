@@ -123,6 +123,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="2015\Day10.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Update="2023\Day1.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>

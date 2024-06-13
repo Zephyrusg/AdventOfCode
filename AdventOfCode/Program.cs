@@ -55,7 +55,7 @@ namespace AdventOfCode // Note: actual namespace depends on the project name.
 
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            Console.WriteLine("Answer:" + Caller(PuzzleClass, "Part1"));
+            Console.WriteLine("Answer: " + Caller(PuzzleClass, "Part1"));
             stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
             Console.WriteLine("Completion Time: " + ts);

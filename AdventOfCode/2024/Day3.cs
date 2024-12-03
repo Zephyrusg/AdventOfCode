@@ -26,8 +26,6 @@ namespace AdventOfCode
 
             }
 
-
-
             return answer;
         }
 
@@ -58,8 +56,6 @@ namespace AdventOfCode
                 }
 
             }
-
-
 
             return answer;
         }

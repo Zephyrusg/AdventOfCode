@@ -15,22 +15,16 @@ namespace AdventOfCode
         public static List<Update> UpdateList = new();
         public static List<Update> FailedUpdates = new();
 
-        public class Rule
+        public class Rule(int before, int after)
         {
-            public int before;
-            public int after;
-            public Rule(int before, int after)
-            {
-                this.before = before;
-                this.after = after;
-            }
-           
+            public int before = before;
+            public int after = after;
         }
 
         public class Update 
         {
             public List<int> update;
-            HashSet<Rule> AppliedRules = new();
+            List<Rule> AppliedRules = new();
             public Update(List<int> update)
             {
                 this.update = update;
@@ -38,10 +32,9 @@ namespace AdventOfCode
                 {
                     if(update.Contains(rule.before) && update.Contains(rule.after))
                     {
-                        if (!AppliedRules.Contains(rule))
-                        {
-                            AppliedRules.Add(rule);
-                        }
+                        
+                       AppliedRules.Add(rule);
+                     
                     }
                 }
             }
@@ -133,9 +126,6 @@ namespace AdventOfCode
                 failedupdate.FixUpdate();
                 answer += failedupdate.ReturnMiddle();
             }
-
-
-
 
             return answer;
         }

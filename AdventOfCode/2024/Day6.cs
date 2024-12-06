@@ -98,8 +98,7 @@ namespace AdventOfCode
             possibleBlocks.Remove(startposition);
             Parallel.ForEach(possibleBlocks, possibleBlock =>
             {
-                char[,] newmap = (char[,])map.Clone();
-                newmap[possibleBlock.y, possibleBlock.x] = '#';
+            
                 HashSet<((int x, int y), (int dx, int dy))> Looplist = new();
 
                 bool OnMap = true;
@@ -125,8 +124,8 @@ namespace AdventOfCode
                     }
                     else
                     {
-
-                        while (newmap[Nextlocation.y, Nextlocation.x] == '#')
+                        
+                        while (map[Nextlocation.y, Nextlocation.x] == '#' || Nextlocation == possibleBlock)
                         {
                             direction = Moveright(direction);
                             Nextlocation = (currentposition.x + direction.x, currentposition.y + direction.y);

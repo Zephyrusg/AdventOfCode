@@ -110,7 +110,7 @@ namespace AdventOfCode
 
                     if (Looplist.Contains((currentposition, direction)))
                     {
-                        answer++;
+                        Interlocked.Increment(ref answer);
                         break;
                     }
                     else

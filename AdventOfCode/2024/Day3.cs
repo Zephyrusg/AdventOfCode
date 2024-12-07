@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static AdventOfCode.Y2023D3;
 
 namespace AdventOfCode
 {
@@ -15,15 +16,15 @@ namespace AdventOfCode
         {
             int answer = 0;
             string Pattern = "mul\\(\\d{1,3},\\d{1,3}\\)";
+            Regex Mul = new Regex(Pattern);
             string DigitPattern = "\\d{1,3}";
-            var Match = Regex.Matches(CorruptedData, Pattern);
+            Regex Digit = new Regex(DigitPattern);
+            MatchCollection Match = Mul.Matches(CorruptedData);
 
-            foreach(var instruction in Match)
+            foreach(Match instruction in Match)
             {
-                var DigitMatch = Regex.Matches(instruction.ToString(), DigitPattern);
+                MatchCollection DigitMatch = Digit.Matches(instruction.ToString());
                 answer += int.Parse(DigitMatch[0].ToString()) * int.Parse(DigitMatch[1].ToString());
-
-
             }
 
             return answer;
@@ -33,11 +34,13 @@ namespace AdventOfCode
         {
             int answer = 0;
             string Pattern = "(mul\\(\\d{1,3},\\d{1,3}\\)|do\\(\\)|don't\\(\\))";
+            Regex MulDoDont = new Regex(Pattern);
             string DigitPattern = "\\d{1,3}";
-            var Match = Regex.Matches(CorruptedData, Pattern);
+            Regex Digit = new Regex(DigitPattern);
+            MatchCollection Match = MulDoDont.Matches(CorruptedData);
             bool DoMutiply = true;
 
-            foreach (var instruction in Match)
+            foreach (Match instruction in Match)
             {
                 if (instruction.ToString() == "do()")
                 {
@@ -51,7 +54,7 @@ namespace AdventOfCode
 
                 if (DoMutiply)
                 {
-                    var DigitMatch = Regex.Matches(instruction.ToString(), DigitPattern);
+                    MatchCollection DigitMatch = Digit.Matches(instruction.ToString());
                     answer += int.Parse(DigitMatch[0].ToString()) * int.Parse(DigitMatch[1].ToString());
                 }
 

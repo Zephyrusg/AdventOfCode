@@ -28,7 +28,6 @@ namespace AdventOfCode
         static List<(int Length, bool IsFile, int FileId)> CompactDisk(string diskMap)
         {
             List<(int Length, bool IsFile, int FileId)> Segments = ParseDiskMap(diskMap);
-            //List<string> disk = FlattenSegments(segments);
 
             Segments.Add((1, false, -1));
             int LastFreeSpaceIndex = Segments.Count - 1;
@@ -122,13 +121,8 @@ namespace AdventOfCode
                        
                     }
                 }
-                //if (Segment == Segments.Last(x => x.IsFile == true))
-                //{
-                //    lastone = true;
 
-                //}
             }
-
 
            return Segments;
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace AdventOfCode
 {
@@ -10,45 +11,155 @@ namespace AdventOfCode
     {
         public static string diskMap = File.ReadAllText(".\\2024\\Input\\inputDay9.txt");
 
-        static List<string> CompactDisk(string diskMap)
+        public static int findIndexofFirstFreeSpace(List<(int Length, bool IsFile, int FileId)> Segments)
         {
-            List<(int Length, bool IsFile, int FileId)> segments = ParseDiskMap(diskMap);
-            List<string> disk = FlattenSegments(segments);
-
             
-            for (int readIndex = disk.Count - 1; readIndex >= 0; readIndex--)
-            {
-                if (disk[readIndex] != ".")
-                {
-                    
-                    int writeIndex = 0;
-                    while (writeIndex < disk.Count && disk[writeIndex] != ".")
-                    {
-                        writeIndex++;
-                    }
 
-                    if (writeIndex < readIndex) t
-                    {
-                        disk[writeIndex] = disk[readIndex];
-                        disk[readIndex] = "."; 
-                    }
+            for (int index = 0; index <= Segments.Count; index++){
+                if (Segments[index].IsFile == false)
+                {
+                    return index;
                 }
             }
 
-            return disk;
+            return int.MaxValue;
         }
 
-        static long CalculateChecksum(List<string> compactedDisk)
+        static List<(int Length, bool IsFile, int FileId)> CompactDisk(string diskMap)
+        {
+            List<(int Length, bool IsFile, int FileId)> Segments = ParseDiskMap(diskMap);
+            //List<string> disk = FlattenSegments(segments);
+
+            Segments.Add((1, false, -1));
+            int LastFreeSpaceIndex = Segments.Count - 1;
+            bool lastone = false;
+            for (int readIndex = Segments.Count - 1; readIndex >= 0; readIndex--)
+            {
+                if (Segments[readIndex].IsFile == true && lastone == false)
+                {
+                    (int Length, bool IsFile, int FileId) Segment = Segments[readIndex];
+                    int segmentIndex = Segments.IndexOf(Segment);
+                    bool done = false;
+                    while (!done)
+                    {
+                        LastFreeSpaceIndex = Segments.Count - 1;
+                        var freeSpaceIndex = findIndexofFirstFreeSpace(Segments);
+                        var freeSpace = Segments[freeSpaceIndex];
+                        
+                        if (freeSpace.Length > Segment.Length)
+                        {
+                            Segments[LastFreeSpaceIndex] = (Segment.Length + Segments[LastFreeSpaceIndex].Length, false, -1);
+                            Segments.RemoveAt(freeSpaceIndex);
+                            Segments.Insert(freeSpaceIndex, (freeSpace.Length - Segment.Length, false, -1));
+                            Segments.Insert(freeSpaceIndex, (Segment.Length, true, Segment.FileId));
+                            readIndex++;
+                            done = true;
+                        }
+                        else if (freeSpace.Length == Segment.Length)
+                        {
+                            Segments[LastFreeSpaceIndex] = (freeSpace.Length + Segments[LastFreeSpaceIndex].Length, false, -1);
+                            Segments[freeSpaceIndex] = Segment;
+                            done = true;
+                        }
+                        else
+                        {
+                            Segment.Length -= freeSpace.Length;
+                            Segments[LastFreeSpaceIndex] = (freeSpace.Length + Segments[LastFreeSpaceIndex].Length, false, -1);
+                            Segments.RemoveAt(freeSpaceIndex);
+                            Segments.Insert(freeSpaceIndex, (freeSpace.Length, true, Segment.FileId));
+
+
+                        }
+                        
+
+                    }
+
+                    Segments.RemoveAt(readIndex);
+                    if (Segment == Segments.Last(x=> x.IsFile == true))
+                    {
+                        lastone = true;
+
+                    }
+                    
+                }
+
+               
+            }
+
+            return Segments;
+        }
+
+        static List<(int Length, bool IsFile, int FileId)> CompactDiskV2(string diskMap) {
+
+            List<(int Length, bool IsFile, int FileId)> Segments = ParseDiskMap(diskMap);
+            bool lastone = false;
+            for (int readIndex = Segments.Count - 1; readIndex >= 0; readIndex--)
+            {
+                var Segment = Segments[readIndex];
+                if (Segments[readIndex].IsFile == true && lastone == false)
+                {
+                    
+                    (int Length, bool IsFile, int FileId) freeSpace = Segments.Find(x => x.IsFile == false && x.Length >= Segment.Length);
+                    var freeSpaceIndex = Segments.IndexOf(freeSpace);
+                    var SegmentIndex = Segments.IndexOf(Segment);
+                    if (freeSpace.Length != 0 && freeSpaceIndex < SegmentIndex)
+                    {
+                        if (freeSpace.Length > Segment.Length)
+                        {
+                            
+                            Segments.RemoveAt(freeSpaceIndex);
+                            Segments.Insert(freeSpaceIndex, (freeSpace.Length - Segment.Length, false, -1));
+                            Segments.Insert(freeSpaceIndex, (Segment.Length, true, Segment.FileId));
+                            readIndex++;
+                            Segments[readIndex++] = (Segment.Length, false, -1);
+                            
+                        }
+                        else
+                        {
+                            Segments[freeSpaceIndex] = Segment;
+                            Segments[SegmentIndex] = freeSpace;
+                        }
+                       
+                    }
+                }
+                //if (Segment == Segments.Last(x => x.IsFile == true))
+                //{
+                //    lastone = true;
+
+                //}
+            }
+
+
+           return Segments;
+
+        }
+
+        static long CalculateChecksum(List<(int Length, bool IsFile, int FileId)> compactedDisk)
         {
             long checksum = 0;
             int position = 0;
-            while (compactedDisk[position] != ".")
+            
+            for(int s = 0; s < compactedDisk.Count - 1; s++)
             {
+                
+                (int Length, bool IsFile, int FileId) segment = compactedDisk[s];
+                if (segment.IsFile == true)
+                {
+                    int faculty = 1;
+                    for (int i = segment.Length; i > 0; i--)
+                    {
 
-                int fileId = int.Parse(compactedDisk[position]);
-                checksum += position * fileId;
+                        checksum += position * segment.FileId;
+                        position++;
+                    }
 
-                position++;
+
+
+                }
+                else
+                {
+                    position += segment.Length;
+                }
             }
             return checksum;
         }
@@ -69,48 +180,28 @@ namespace AdventOfCode
             return segments;
         }
 
-        static List<string> FlattenSegments(List<(int Length, bool IsFile, int FileId)> segments)
-        {
-            List<string> disk = new List<string>();
-
-            foreach (var segment in segments)
-            {
-                if (segment.IsFile)
-                {
-                    string fileIdString = segment.FileId.ToString();
-                    for (int i = 0; i < segment.Length; i++)
-                    {
-                        disk.Add(fileIdString);
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < segment.Length; i++)
-                    {
-                        disk.Add(".");
-                    }
-                }
-            }
-
-            return disk;
-        }
+  
 
 
         public long Part1()
         {
             long answer = 0;
 
-            List<string> compactedDisk = CompactDisk(diskMap);
+            List<(int Length, bool IsFile, int FileId)> compactedDisk = CompactDisk(diskMap);
             answer = CalculateChecksum(compactedDisk);
 
             return answer;
         }
 
-        public int Part2()
+        public long Part2()
         {
-            int answer = 0;
 
+            long answer = 0;
 
+            List<(int Length, bool IsFile, int FileId)> compactedDisk = CompactDiskV2(diskMap);
+            answer = CalculateChecksum(compactedDisk);
+
+       
 
 
             return answer;

@@ -37,7 +37,7 @@ namespace AdventOfCode
                 if (Segments[readIndex].IsFile == true && lastone == false)
                 {
                     (int Length, bool IsFile, int FileId) Segment = Segments[readIndex];
-                    int segmentIndex = Segments.IndexOf(Segment);
+                    //int segmentIndex = Segments.IndexOf(Segment);
                     bool done = false;
                     while (!done)
                     {
@@ -48,8 +48,8 @@ namespace AdventOfCode
                         if (freeSpace.Length > Segment.Length)
                         {
                             Segments[LastFreeSpaceIndex] = (Segment.Length + Segments[LastFreeSpaceIndex].Length, false, -1);
-                            Segments.RemoveAt(freeSpaceIndex);
-                            Segments.Insert(freeSpaceIndex, (freeSpace.Length - Segment.Length, false, -1));
+                            //Segments.RemoveAt(freeSpaceIndex);
+                            Segments[freeSpaceIndex] = (freeSpace.Length - Segment.Length, false, -1);
                             Segments.Insert(freeSpaceIndex, (Segment.Length, true, Segment.FileId));
                             readIndex++;
                             done = true;
@@ -64,25 +64,19 @@ namespace AdventOfCode
                         {
                             Segment.Length -= freeSpace.Length;
                             Segments[LastFreeSpaceIndex] = (freeSpace.Length + Segments[LastFreeSpaceIndex].Length, false, -1);
-                            Segments.RemoveAt(freeSpaceIndex);
-                            Segments.Insert(freeSpaceIndex, (freeSpace.Length, true, Segment.FileId));
-
-
+                            //Segments.RemoveAt(freeSpaceIndex);
+                            Segments[freeSpaceIndex] = (freeSpace.Length, true, Segment.FileId);
                         }
                         
 
                     }
-
-                    Segments.RemoveAt(readIndex);
+                    Segments[readIndex] = (Segment.Length,false,-1);
                     if (Segment == Segments.Last(x=> x.IsFile == true))
                     {
                         lastone = true;
 
-                    }
-                    
+                    }                    
                 }
-
-               
             }
 
             return Segments;
@@ -100,14 +94,14 @@ namespace AdventOfCode
                     
                     (int Length, bool IsFile, int FileId) freeSpace = Segments.Find(x => x.IsFile == false && x.Length >= Segment.Length);
                     var freeSpaceIndex = Segments.IndexOf(freeSpace);
-                    var SegmentIndex = Segments.IndexOf(Segment);
-                    if (freeSpace.Length != 0 && freeSpaceIndex < SegmentIndex)
+                    //var SegmentIndex = Segments.IndexOf(Segment);
+                    if (freeSpace.Length != 0 && freeSpaceIndex < readIndex)
                     {
                         if (freeSpace.Length > Segment.Length)
                         {
                             
-                            Segments.RemoveAt(freeSpaceIndex);
-                            Segments.Insert(freeSpaceIndex, (freeSpace.Length - Segment.Length, false, -1));
+                            //Segments.RemoveAt(freeSpaceIndex);
+                            Segments[freeSpaceIndex] = (freeSpace.Length - Segment.Length, false, -1);
                             Segments.Insert(freeSpaceIndex, (Segment.Length, true, Segment.FileId));
                             readIndex++;
                             Segments[readIndex++] = (Segment.Length, false, -1);
@@ -116,7 +110,7 @@ namespace AdventOfCode
                         else
                         {
                             Segments[freeSpaceIndex] = Segment;
-                            Segments[SegmentIndex] = freeSpace;
+                            Segments[readIndex] = freeSpace;
                         }
                        
                     }
@@ -173,9 +167,6 @@ namespace AdventOfCode
 
             return segments;
         }
-
-  
-
 
         public long Part1()
         {

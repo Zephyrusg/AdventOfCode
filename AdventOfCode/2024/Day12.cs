@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +24,7 @@ namespace AdventOfCode
             visited[startx, starty] = true;
 
            
-            List<(int, int)> regionCells = new List<(int, int)>();
+            List<(int, int)> borderCells = new List<(int, int)>();
 
             int[] dx = { -1, 1, 0, 0 };
             int[] dy = { 0, 0, -1, 1 };
@@ -31,71 +33,126 @@ namespace AdventOfCode
             {
                 var (x, y) = queue.Dequeue();
                 area++;
-                regionCells.Add((x, y));
+                //borderCells.Add((x, y));
 
                 for (int i = 0; i < 4; i++)
                 {
                     int newx = x + dx[i];
                     int newy = y + dy[i];
 
-                    if (newx >= 0 && newx < Height && newy >= 0 && newy < Width && gardenMap[newx][newy] == plantType && !visited[newx, newy])
+                    if (newx < 0 || newx >= Width || newy < 0 || newy >= Height || gardenMap[newx][newy] != plantType)
+                    {
+                        // Count this side as part of the perimeter
+                        borderCells.Add((newx,newy));
+                    }
+                    else if (!visited[newx, newy])
                     {
                         visited[newx, newy] = true;
                         queue.Enqueue((newx, newy));
                     }
+                
                 }
             }
 
-            int sides = CountSides(regionCells, gardenMap);
+            int sides = CountSides(borderCells, gardenMap);
             Console.WriteLine("Planttype: " + plantType + " Area: " + area + " Sides: " + sides);
             return (area, sides);
         }
 
-        static int CountSides(List<(int, int)> regionCells, string[] gardenMap)
+        static int CountSides(List<(int x, int y)> borderCells, string[] gardenMap)
         {
             int sides = 0;
+            var rowGroups = new Dictionary<int, List<int>>();
+            var colGroups = new Dictionary<int, List<int>>();
 
-            
-            var rows = new Dictionary<int, List<int>>();
-            var cols = new Dictionary<int, List<int>>();
-
-            foreach (var (x, y) in regionCells)
+            foreach (var (x, y) in borderCells)
             {
-                if (!rows.ContainsKey(x))
-                    rows[x] = new List<int>();
-                if (!cols.ContainsKey(y))
-                    cols[y] = new List<int>();
+                if (!rowGroups.ContainsKey(x))
+                    rowGroups[x] = new List<int>();
+                if (!colGroups.ContainsKey(y))
+                    colGroups[y] = new List<int>();
 
-                rows[x].Add(y);
-                cols[y].Add(x);
+                rowGroups[x].Add(y);
+                colGroups[y].Add(x);
             }
-
-            
-            foreach (var row in rows)
+            List<(int x, int y)> Proccessed = new();
+            // Count horizontal sides (row-wise)
+            foreach (var row in rowGroups)
             {
-                var sortedCols = row.Value;
-                sortedCols.Sort();
-
-               
-                for (int i = 0; i < sortedCols.Count; i++)
+                var cols = row.Value;
+                if(cols.Count < 2)
                 {
-                    if (i == 0 || sortedCols[i] != sortedCols[i - 1] + 1)
-                        sides++; 
+                    continue;
+                }
+                cols.Sort(); // Sort columns in the row
+                int connectedCount = 0;
+                // Count each contiguous segment as one side
+                for (int i = 0; i < cols.Count-1; i++)
+                {
+                    if (cols[i] + 1 == cols[i + 1])
+                    {
+                        if (connectedCount == 0)
+                        {
+                            sides++;
+                            
+                            connectedCount++;
+                        }
+                        Proccessed.Add((row.Key, cols[i]));
+
+                    }
+                    else
+                    {
+                        connectedCount = 0;
+                    }
+                }
+
+                if (cols[cols.Count-1] - 1 == cols[cols.Count -2])
+                {
+                    Proccessed.Add((row.Key, cols[cols.Count - 1]));
+                }
+            } 
+
+            // Count vertical sides (column-wise)
+            foreach (var col in colGroups)
+            {
+                var rows = col.Value;
+                if(rows.Count < 2)
+                {
+                    continue;
+                }
+                rows.Sort(); // Sort rows in the column
+
+                // Count each contiguous segment as one side
+                rows.Sort(); // Sort columns in the row
+                int connectedCount = 0;
+                // Count each contiguous segment as one side
+                for (int i = 0; i < rows.Count - 1; i++)
+                {
+                    if (rows[i] + 1 == rows[i + 1])
+                    {
+                        if (connectedCount == 0)
+                        {
+                            sides++;
+
+                            connectedCount++;
+                        }
+                        Proccessed.Add((rows[i], col.Key));
+
+                    }
+                    else
+                    {
+                        connectedCount = 0;
+                    }
+                }
+                if (rows[rows.Count - 1] - 1 == rows[rows.Count - 2])
+                {
+                    Proccessed.Add((rows[rows.Count - 1], col.Key));
                 }
             }
 
-           
-            foreach (var col in cols)
-            {
-                var sortedRows = col.Value;
-                sortedRows.Sort();
-
-                
-                for (int i = 0; i < sortedRows.Count; i++)
-                {
-                    if (i == 0 || sortedRows[i] != sortedRows[i - 1] + 1)
-                        sides++;                 }
-            }
+            //var notproccessed = borderCells.Except(Proccessed).ToList();
+            var notproccessed = borderCells.Where(item => !Proccessed.Any(item2 => item2 == item)).ToList();
+            sides += notproccessed.Count;
 
             return sides;
         }

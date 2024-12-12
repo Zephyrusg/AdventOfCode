@@ -21,7 +21,7 @@ namespace AdventOfCode
             queue.Enqueue((startx, starty));
             visited[startx, starty] = true;
 
-            // Store all cells in the region
+           
             List<(int, int)> regionCells = new List<(int, int)>();
 
             int[] dx = { -1, 1, 0, 0 };
@@ -46,7 +46,6 @@ namespace AdventOfCode
                 }
             }
 
-            // Calculate sides
             int sides = CountSides(regionCells, gardenMap);
             Console.WriteLine("Planttype: " + plantType + " Area: " + area + " Sides: " + sides);
             return (area, sides);
@@ -56,7 +55,7 @@ namespace AdventOfCode
         {
             int sides = 0;
 
-            // Track which rows and columns to process
+            
             var rows = new Dictionary<int, List<int>>();
             var cols = new Dictionary<int, List<int>>();
 
@@ -71,32 +70,31 @@ namespace AdventOfCode
                 cols[y].Add(x);
             }
 
-            // Count horizontal sides
+            
             foreach (var row in rows)
             {
                 var sortedCols = row.Value;
                 sortedCols.Sort();
 
-                // Count gaps and edges as sides
+               
                 for (int i = 0; i < sortedCols.Count; i++)
                 {
                     if (i == 0 || sortedCols[i] != sortedCols[i - 1] + 1)
-                        sides++; // Start of a new horizontal segment
+                        sides++; 
                 }
             }
 
-            // Count vertical sides
+           
             foreach (var col in cols)
             {
                 var sortedRows = col.Value;
                 sortedRows.Sort();
 
-                // Count gaps and edges as sides
+                
                 for (int i = 0; i < sortedRows.Count; i++)
                 {
                     if (i == 0 || sortedRows[i] != sortedRows[i - 1] + 1)
-                        sides++; // Start of a new vertical segment
-                }
+                        sides++;                 }
             }
 
             return sides;

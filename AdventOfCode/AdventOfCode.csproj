@@ -240,6 +240,9 @@
     <Compile Update="2024\Day11.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+    <Compile Update="2024\Day12.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Update="2024\Template.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
@@ -488,6 +491,9 @@
     </None>
     <None Update="2023\Input\inputDay1.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="2024\Input\inputDay12.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="2024\Input\inputDay11.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

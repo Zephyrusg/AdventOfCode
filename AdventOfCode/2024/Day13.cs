@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +11,8 @@ namespace AdventOfCode
     {
         public static string[] Lines = File.ReadAllLines(".\\2024\\Input\\inputDay13.txt");
         static List<(int ax ,int ay,int bx ,int by,long px,long py)> machines = new();
-        static List<(int id, long P1Tokens, long P2Tokens)> Tokens = new();
-        public static void SolveMachine(int ax, int ay, int bx, int by, long px, long py,int id)
+        static ConcurrentBag<(int id, long P1Tokens, long P2Tokens)> Tokens = new();
+        public static void SolveMachine(int ax, int ay, int bx, int by, long px, long py, int id)
         {
             long P1Tokens = 0;
             long P2Tokens = 0;
@@ -28,13 +29,11 @@ namespace AdventOfCode
             if (A >= 0 && B >= 0 && B * bx + A * ax == px && B * by + A * ay == py) P2Tokens = A * 3 + B;
 
             Tokens.Add((id, P1Tokens, P2Tokens));
-            
         }
 
         public long Part1()
         {
             long answer = 0;
-            
 
             for (int i = 0; i < Lines.Length; i += 4)
             {
@@ -55,14 +54,11 @@ namespace AdventOfCode
                 machines.Add((ax, ay, bx, by, px, py));
             }
 
-           
-            int id = 0;
-            foreach (var machine in machines)
+            Parallel.For(0,machines.Count(),id=>  
             {
-                SolveMachine(machine.ax, machine.ay, machine.bx, machine.by, machine.px, machine.py, id);
-
-                id++;             
-            }
+                var machine = machines[id];
+                SolveMachine(machine.ax, machine.ay, machine.bx, machine.by, machine.px, machine.py,id);   
+            });
 
             answer = Tokens.Sum(t => t.P1Tokens);
             return answer;
@@ -71,8 +67,6 @@ namespace AdventOfCode
         public long Part2()
         {
             long answer = 0;
-       
-          
 
             answer = Tokens.Sum(t => t.P2Tokens);
             return answer;

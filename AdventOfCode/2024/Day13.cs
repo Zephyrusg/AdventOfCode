@@ -10,34 +10,25 @@ namespace AdventOfCode
     {
         public static string[] Lines = File.ReadAllLines(".\\2024\\Input\\inputDay13.txt");
         static List<(int ax ,int ay,int bx ,int by,long px,long py)> machines = new();
-        public static long SolveMachine(int ax, int ay, int bx, int by, long px, long py, bool Part2)
+        static List<(int id, long P1Tokens, long P2Tokens)> Tokens = new();
+        public static void SolveMachine(int ax, int ay, int bx, int by, long px, long py,int id)
         {
+            long P1Tokens = 0;
+            long P2Tokens = 0;
             var B = (py * ax - px * ay) / (by * ax - bx * ay);
             var A = (px - B * bx) / ax;
-            if (!Part2)
-            {
-                
-                if (A >= 0 && B >= 0 && B * bx + A * ax == px && B * by + A * ay == py)
-                {
-                    return  A * 3 + B;
-                    
-                }
-                else
-                {
-                    return -1;
-                }
-            }
-            if (Part2)
-            {
-                px += 10000000000000;
-                py += 10000000000000;
-                B = (py * ax - px * ay) / (by * ax - bx * ay);
-                A = (px - B * bx) / ax;
-                if (A >= 0 && B >= 0 && B * bx + A * ax == px && B * by + A * ay == py) return A * 3 + B;
 
-                return -1;
-            }
-            return -1;
+            if (A >= 0 && B >= 0 && B * bx + A * ax == px && B * by + A * ay == py) P1Tokens = A * 3 + B;
+                   
+ 
+            px += 10000000000000;
+            py += 10000000000000;
+            B = (py * ax - px * ay) / (by * ax - bx * ay);
+            A = (px - B * bx) / ax;
+            if (A >= 0 && B >= 0 && B * bx + A * ax == px && B * by + A * ay == py) P2Tokens = A * 3 + B;
+
+            Tokens.Add((id, P1Tokens, P2Tokens));
+            
         }
 
         public long Part1()
@@ -64,49 +55,26 @@ namespace AdventOfCode
                 machines.Add((ax, ay, bx, by, px, py));
             }
 
-            long totalTokens = 0;
-            int prizesWon = 0;
-
+           
+            int id = 0;
             foreach (var machine in machines)
             {
-                long tokens = SolveMachine(machine.ax, machine.ay, machine.bx, machine.by, machine.px, machine.py, false);
+                SolveMachine(machine.ax, machine.ay, machine.bx, machine.by, machine.px, machine.py, id);
 
-                if (tokens > 0)
-                {
-                    prizesWon++;
-                    totalTokens += tokens;
-                }
+                id++;             
             }
 
-            answer = totalTokens;
+            answer = Tokens.Sum(t => t.P1Tokens);
             return answer;
         }
 
         public long Part2()
         {
             long answer = 0;
-            
+       
+          
 
-            long totalTokens = 0;
-            int prizesWon = 0;
-
-            foreach (var machine in machines)
-            {
-                long tokens = SolveMachine(machine.ax, machine.ay, machine.bx, machine.by, machine.px, machine.py, true);
-
-                if (tokens > 0)
-                {
-                    prizesWon++;
-                    totalTokens += tokens;
-
-                }
-               
-            }
-
-            Console.WriteLine($"Prizes won: {prizesWon}");
-            Console.WriteLine($"Total tokens spent: {totalTokens}");
-
-            answer = totalTokens;
+            answer = Tokens.Sum(t => t.P2Tokens);
             return answer;
         }
     }

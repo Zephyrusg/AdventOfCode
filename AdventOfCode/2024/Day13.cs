@@ -10,8 +10,11 @@ namespace AdventOfCode
     internal class Y2024D13
     {
         public static string[] Lines = File.ReadAllLines(".\\2024\\Input\\inputDay13.txt");
-        static List<(int ax ,int ay,int bx ,int by,long px,long py)> machines = new();
-        static ConcurrentBag<(int id, long P1Tokens, long P2Tokens)> Tokens = new();
+        static readonly List<(int ax ,int ay,int bx ,int by,long px,long py)> machines = [];
+        static readonly ConcurrentBag<(int id, long P1Tokens, long P2Tokens)> Tokens = [];
+        internal static readonly string[] separator = ["+", ","];
+        internal static readonly string[] separator1 = ["=", ","];
+
         public static void SolveMachine(int ax, int ay, int bx, int by, long px, long py, int id)
         {
             long P1Tokens = 0;
@@ -31,7 +34,7 @@ namespace AdventOfCode
             Tokens.Add((id, P1Tokens, P2Tokens));
         }
 
-        public long Part1()
+        public static long Part1()
         {
             long answer = 0;
 
@@ -39,32 +42,32 @@ namespace AdventOfCode
             {
                 if (string.IsNullOrWhiteSpace(Lines[i])) continue;
 
-                var buttonA = Lines[i].Split(new[] { "+", "," }, StringSplitOptions.RemoveEmptyEntries);
+                var buttonA = Lines[i].Split(separator, StringSplitOptions.RemoveEmptyEntries);
                 var ax = int.Parse(buttonA[1]);
                 var ay = int.Parse(buttonA[3]);
 
-                var buttonB = Lines[i + 1].Split(new[] { "+", "," }, StringSplitOptions.RemoveEmptyEntries);
+                var buttonB = Lines[i + 1].Split(separator, StringSplitOptions.RemoveEmptyEntries);
                 var bx = int.Parse(buttonB[1]);
                 var by = int.Parse(buttonB[3]);
 
-                var prize = Lines[i + 2].Split(new[] { "=", "," }, StringSplitOptions.RemoveEmptyEntries);
+                var prize = Lines[i + 2].Split(separator1, StringSplitOptions.RemoveEmptyEntries);
                 var px = long.Parse(prize[1]);
                 var py = long.Parse(prize[3]);
 
                 machines.Add((ax, ay, bx, by, px, py));
             }
 
-            Parallel.For(0,machines.Count(),id=>  
+            Parallel.For(0,machines.Count,id=>  
             {
-                var machine = machines[id];
-                SolveMachine(machine.ax, machine.ay, machine.bx, machine.by, machine.px, machine.py,id);   
+                var (ax, ay, bx, by, px, py) = machines[id];
+                SolveMachine(ax, ay, bx, by, px, py,id);   
             });
 
             answer = Tokens.Sum(t => t.P1Tokens);
             return answer;
         }
 
-        public long Part2()
+        public static long Part2()
         {
             long answer = 0;
 

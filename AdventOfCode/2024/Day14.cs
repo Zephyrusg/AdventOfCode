@@ -192,20 +192,21 @@ namespace AdventOfCode
                 foreach (var robot in robots)
                 {
                     robot.Move();
-                    Seconds++;
-                    int connected = CheckNumberConnected();
-                    if(connected > 50 && Seconds > 7129)
-                    {
-                        int minX = robots.Min(r => r.x);
-                        int maxX = robots.Max(r => r.x);
-                        int minY = robots.Min(r => r.y);
-                        int maxY = robots.Max(r => r.y);
+                    
+                }
+                Seconds++;
+                int connected = CheckNumberConnected();
+                if (connected > 50 && Seconds > 7129)
+                {
+                    int minX = robots.Min(r => r.x);
+                    int maxX = robots.Max(r => r.x);
+                    int minY = robots.Min(r => r.y);
+                    int maxY = robots.Max(r => r.y);
 
-                        DisplayGrid();
-                        SaveGridAsImage(Seconds);
-                        Console.WriteLine("Seconds: " + Seconds);
-                        //noChristmasThree = true;
-                    }
+                    DisplayGrid();
+                    SaveGridAsImage(Seconds);
+                    Console.WriteLine("Seconds: " + Seconds);
+                    //noChristmasThree = true;
                 }
             }
 

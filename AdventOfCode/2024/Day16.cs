@@ -13,43 +13,30 @@ namespace AdventOfCode
         static int Height = Lines.Count();
         static int Width = Lines[0].Length;
         static Point[,] map = new Point[Height, Width];
+        static (Point Point, int dir) endstate = new();
+        static (Point Point, int dir) startstate = new();
+        static Dictionary<(Point Point, int dir), List<(Point Point, int dir)>> PreviousDir = new();
         class Point
         {
             public int X { get; }
             public int Y { get; }
-            public int Distance { get; set; }
-            public int EstimatedDistance { get; set; }
-            public int Direction { get; set; } // 0 = East, 1 = South, 2 = West, 3 = North
 
             public Point(int x, int y)
             {
                 X = x;
                 Y = y;
-                Distance = int.MaxValue;
-                EstimatedDistance = int.MaxValue;
-                Direction = -1; // Unknown initial direction
+
             }
 
             public override bool Equals(object obj)
             {
-                return obj is Point other && X == other.X && Y == other.Y && Direction == other.Direction;
+                return obj is Point other && X == other.X && Y == other.Y;
             }
 
             public override int GetHashCode()
             {
-                return HashCode.Combine(X, Y, Direction);
+                return HashCode.Combine(X, Y);
             }
-
-            public List<Point> GetNeighbours() {
-                
-                  var neighbourPoints = new List<Point>();
-                if (this.X > 0) neighbourPoints.Add(map[this.Y, this.X - 1]);
-                if (this.X < Width - 1) neighbourPoints.Add(map[this.Y, this.X + 1]);
-                if (this.Y > 0) neighbourPoints.Add(map[this.Y - 1, this.X]);
-                if (this.Y < Height - 1) neighbourPoints.Add(map[this.Y + 1,this.X ]);
-
-                return neighbourPoints;
-            } 
 
         }
         public int Part1()
@@ -72,85 +59,57 @@ namespace AdventOfCode
                     if (Lines[y][x] == 'E') end = map[y, x];
                 }
             }
-
-            // Initialize start point
-            start.Distance = 0;
-            start.EstimatedDistance = 0;
-            start.Direction = 0; // Initially facing East
-
-            // A* search
-            var openList = new HashSet<Point>();
-            var priorityList = new PriorityQueue<Point, int>();
-            var closedList = new HashSet<Point>();
-            openList.Add(start);
-            priorityList.Enqueue(start, start.EstimatedDistance);
-
+           
+            var DistanceDir = new Dictionary<(Point Point, int dir),int>();
+            var priorityList = new PriorityQueue<(Point Point, int dir), int>();
+            var closedList = new HashSet<(Point Point, int dir)>();
+            DistanceDir.Add((start, 0), 0);
+            priorityList.Enqueue((start,0), 0);
+            startstate = (start, 0);
+            
             int[][] directions = { new[] { 0, 1 }, new[] { 1, 0 }, new[] { 0, -1 }, new[] { -1, 0 } }; // East, South, West, North
 
 
             while (priorityList.Count > 0)
             {
-                Point current = priorityList.Dequeue();
-                
-                if (current == end)
+                var currentState = priorityList.Dequeue();
+                Point current = currentState.Point;
+                int Direction = currentState.dir;
+                int currentDistance = DistanceDir[currentState];
+                if (current.X == end.X && current.Y == end.Y)
                 {
-                    answer = current.Distance;
-                    Console.WriteLine($"Lowest score: {current.Distance}");
+                    endstate = currentState;
+                    answer = DistanceDir[currentState];
                     break;
                 }
 
                 for (int dir = 0; dir < directions.Length; dir++)
                 {
-                    var neighbourPoint = map[(current.Y + directions[dir][1]), (current.X + directions[dir][0])];
+                    var neighbourPoint = map[(current.Y + directions[dir][0]), (current.X + directions[dir][1])];
                     int newX = neighbourPoint.X;
                     int newY = neighbourPoint.Y;
-                    int turnCost = current.Direction == -1 || current.Direction == dir ? 0 : 1000;
+                    int turnCost = Direction == dir ? 0 : 1000;
 
-                    if (newX < 0 || newX >= cols || newY < 0 || newY >= rows || Lines[newY][newX] == '#')
+                    if (Lines[newY][newX] == '#')
                         continue;
 
+                    int neighbourDistance = currentDistance + 1 + turnCost;
 
-                    int neighbourDistance = current.Distance + 1 + turnCost; // Moving forward costs 1, turning costs 1000 if needed
-                    int estimatedNeighbourTotalDistance = neighbourDistance + Math.Abs(end.X - neighbourPoint.X) + Math.Abs(end.Y - neighbourPoint.Y) * hNumber;
-
-
-                    if (openList.Contains(neighbourPoint))
+                    if (!DistanceDir.TryGetValue((neighbourPoint, dir), out int estimatedNeighbourTotalDistance) || neighbourDistance <= estimatedNeighbourTotalDistance)
                     {
-                        if (estimatedNeighbourTotalDistance < neighbourPoint.EstimatedDistance)
-                        {
-                            neighbourPoint.Distance = neighbourDistance;
-                            neighbourPoint.EstimatedDistance = estimatedNeighbourTotalDistance;
-                            continue;
+                        if(!DistanceDir.ContainsKey((neighbourPoint, dir)) || (neighbourDistance < estimatedNeighbourTotalDistance)){
+                            PreviousDir[(neighbourPoint, dir)] = [currentState];
+                            DistanceDir[(neighbourPoint, dir)] = neighbourDistance;
+                            priorityList.Enqueue((neighbourPoint, dir), neighbourDistance);
                         }
                         else
                         {
-                            continue;
+                            PreviousDir[(neighbourPoint, dir)].Add(currentState);
                         }
+
                     }
-
-                    if (closedList.Contains(neighbourPoint))
-                    {
-                        if (estimatedNeighbourTotalDistance < neighbourPoint.EstimatedDistance)
-                        {
-                            closedList.Remove(neighbourPoint);
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-
-
-                    neighbourPoint.Distance = neighbourDistance;
-                    neighbourPoint.EstimatedDistance = estimatedNeighbourTotalDistance;
-                    neighbourPoint.Direction = dir;
-                    priorityList.Enqueue(neighbourPoint, neighbourPoint.Distance);
-
-
                 }
-                closedList.Add(current);
-                openList.Remove(current);
-                
+                closedList.Add((current, Direction));
             }
             return answer;
         }
@@ -158,11 +117,27 @@ namespace AdventOfCode
         public int Part2()
         {
             int answer = 0;
+            var endPrevious = PreviousDir[endstate];
+            HashSet<(int x, int y)> PointVisited = new();
+            Queue<(Point Point , int dir)> Openlist = new();
+            Openlist.Enqueue(endstate);
+            while(Openlist.Count > 0)
+            {
+                var state = Openlist.Dequeue();
+                PointVisited.Add((state.Point.X, state.Point.Y));
+                if (state != startstate)
+                {
+                    foreach (var previousState in PreviousDir[state])
+                    {
 
+                        Openlist.Enqueue(previousState);
+                    }
+                }
+            }
 
-
-
+            answer = PointVisited.Count();
             return answer;
+        
         }
 
     }

@@ -32,24 +32,13 @@ namespace AdventOfCode
 
             public override bool Equals(object obj)
             {
-                return obj is Point other && X == other.X && Y == other.Y && Direction == other.Direction;
+                return obj is Point other && X == other.X && Y == other.Y;
             }
 
             public override int GetHashCode()
             {
-                return HashCode.Combine(X, Y, Direction);
+                return HashCode.Combine(X, Y);
             }
-
-            public List<Point> GetNeighbours() {
-                
-                  var neighbourPoints = new List<Point>();
-                if (this.X > 0) neighbourPoints.Add(map[this.Y, this.X - 1]);
-                if (this.X < Width - 1) neighbourPoints.Add(map[this.Y, this.X + 1]);
-                if (this.Y > 0) neighbourPoints.Add(map[this.Y - 1, this.X]);
-                if (this.Y < Height - 1) neighbourPoints.Add(map[this.Y + 1,this.X ]);
-
-                return neighbourPoints;
-            } 
 
         }
         public int Part1()
@@ -101,15 +90,16 @@ namespace AdventOfCode
 
                 for (int dir = 0; dir < directions.Length; dir++)
                 {
-                    var neighbourPoint = map[(current.Y + directions[dir][1]), (current.X + directions[dir][0])];
-                    int newX = neighbourPoint.X;
-                    int newY = neighbourPoint.Y;
-                    int turnCost = current.Direction == -1 || current.Direction == dir ? 0 : 1000;
 
+                    int newX = current.X + directions[dir][0];
+                    int newY = current.Y + directions[dir][1];
+
+                    // Check boundaries and walls
                     if (newX < 0 || newX >= cols || newY < 0 || newY >= rows || Lines[newY][newX] == '#')
                         continue;
 
-
+                    Point neighbourPoint = map[newY, newX];
+                    int turnCost = current.Direction == -1 || current.Direction == dir ? 0 : 1000;
                     int neighbourDistance = current.Distance + 1 + turnCost; // Moving forward costs 1, turning costs 1000 if needed
                     int estimatedNeighbourTotalDistance = neighbourDistance + Math.Abs(end.X - neighbourPoint.X) + Math.Abs(end.Y - neighbourPoint.Y) * hNumber;
 

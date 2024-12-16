@@ -256,7 +256,7 @@ namespace AdventOfCode
                 }
             }
 
-            Console.WriteLine($"Sum of GPS coordinates of all boxes: {sumGPS}");
+           
             answer = sumGPS;
 
 

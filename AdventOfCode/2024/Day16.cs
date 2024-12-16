@@ -62,7 +62,6 @@ namespace AdventOfCode
            
             var DistanceDir = new Dictionary<(Point Point, int dir),int>();
             var priorityList = new PriorityQueue<(Point Point, int dir), int>();
-            var closedList = new HashSet<(Point Point, int dir)>();
             DistanceDir.Add((start, 0), 0);
             priorityList.Enqueue((start,0), 0);
             startstate = (start, 0);
@@ -109,7 +108,6 @@ namespace AdventOfCode
 
                     }
                 }
-                closedList.Add((current, Direction));
             }
             return answer;
         }

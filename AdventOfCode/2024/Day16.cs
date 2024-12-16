@@ -59,12 +59,12 @@ namespace AdventOfCode
                     if (Lines[y][x] == 'E') end = map[y, x];
                 }
             }
-           
+
+            startstate = (start, 0);
             var DistanceDir = new Dictionary<(Point Point, int dir),int>();
             var priorityList = new PriorityQueue<(Point Point, int dir), int>();
-            DistanceDir.Add((start, 0), 0);
-            priorityList.Enqueue((start,0), 0);
-            startstate = (start, 0);
+            DistanceDir.Add(startstate,0);
+            priorityList.Enqueue(startstate, 0);
             
             int[][] directions = { new[] { 0, 1 }, new[] { 1, 0 }, new[] { 0, -1 }, new[] { -1, 0 } }; // East, South, West, North
 
@@ -94,9 +94,9 @@ namespace AdventOfCode
 
                     int neighbourDistance = currentDistance + 1 + turnCost;
 
-                    if (!DistanceDir.TryGetValue((neighbourPoint, dir), out int estimatedNeighbourTotalDistance) || neighbourDistance <= estimatedNeighbourTotalDistance)
+                    if (!DistanceDir.TryGetValue((neighbourPoint, dir), out int currentNeighbourDistance) || neighbourDistance <= currentNeighbourDistance)
                     {
-                        if(!DistanceDir.ContainsKey((neighbourPoint, dir)) || (neighbourDistance < estimatedNeighbourTotalDistance)){
+                        if(!DistanceDir.ContainsKey((neighbourPoint, dir)) || (neighbourDistance < currentNeighbourDistance)){
                             PreviousDir[(neighbourPoint, dir)] = [currentState];
                             DistanceDir[(neighbourPoint, dir)] = neighbourDistance;
                             priorityList.Enqueue((neighbourPoint, dir), neighbourDistance);

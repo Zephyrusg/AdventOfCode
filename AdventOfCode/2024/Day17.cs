@@ -10,7 +10,6 @@ namespace AdventOfCode
     {
         public static string[] Lines = File.ReadAllLines(".\\2024\\Input\\inputDay17.txt");
         static Dictionary<string, long> registers = new();
-        static string result = "";
         static long GetComboValue(int operand)
         {
             return operand switch
@@ -27,8 +26,7 @@ namespace AdventOfCode
         {
             int ip = 0; 
             List<int>output = new List<int>();
-            bool CorrectResult = true;
-            while (ip < program.Count && CorrectResult)
+            while (ip < program.Count)
             {
                 int opcode = program[ip];
                 int operand = program[ip + 1];
@@ -87,9 +85,7 @@ namespace AdventOfCode
 
         public string Part1()
         {
-          
             var program = new List<int>();
-
             foreach (var line in Lines)
             {
                 if (line.StartsWith("Register A:"))
@@ -158,8 +154,7 @@ namespace AdventOfCode
                 }
 
                 if (notfound)
-                {
-                    
+                {   
                     a = foundOutput[i-1].output + 1;
                     initialA = foundOutput[i-1].FoundA;
                     i -= 2;
@@ -168,8 +163,6 @@ namespace AdventOfCode
                 {
                     a = 0;
                 }
-                         
-                
             }
             return answer;
         }

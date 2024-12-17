@@ -25,7 +25,7 @@ namespace AdventOfCode
         static List<int> RunProgram(List<int> program)
         {
             int ip = 0; 
-            List<int>Output = new List<int>();
+            List<int>output = new List<int>();
             bool CorrectResult = true;
             while (ip < program.Count && CorrectResult)
             {
@@ -61,7 +61,7 @@ namespace AdventOfCode
                         break;
 
                     case 5: // out: output combo_operand % 8
-                        output.Add(GetComboValue(operand) % 8);
+                        output.Add((int)(GetComboValue(operand) % 8));
 
                         break;
 
@@ -81,7 +81,7 @@ namespace AdventOfCode
                 ip += 2;
             }
 
-            return Output;
+            return output;
         }
 
         public string Part1()
@@ -129,27 +129,41 @@ namespace AdventOfCode
             List<int> testoutput = new List<int>();
             int a = 0;
             long initialA = 0;
-            List<int> foundOutput = new();
+            (int output, long FoundA)[] foundOutput = new (int a, long InitialA)[program.Count];
             for(int i = 0; i < program.Count; i++) 
             {
-                   
-                    for (a = 0; a  < a + 8; a++)
+                    bool notfound = true;
+                    
+                    for (; a < 8; a++)
                     {
                         long testA = initialA + a;
                         registers = new Dictionary<string, long> { { "A", testA }, { "B", 0 }, { "C", 0 } };
                         testoutput = RunProgram(program);
                         if(program.TakeLast(i+1).SequenceEqual(testoutput))
                         {
-                            foundOutput.Add(a);
+                            foundOutput[i] = (a, initialA);
                             initialA = testA << 3;
+                            notfound = false;
                             break;
                         }
 
                     }
+
+                if (notfound)
+                {
+                    
+                    a = foundOutput[i-1].output + 1;
+                    initialA = foundOutput[i-1].FoundA;
+                    i -= 2;
+                }
+                else
+                {
+                    a = 0;
+                }
                          
                 
             }
-            return answer;
+            return initialA;
         }
     }
 }

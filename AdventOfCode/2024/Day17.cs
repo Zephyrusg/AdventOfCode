@@ -22,10 +22,10 @@ namespace AdventOfCode
             };
         }
 
-        static string RunProgram(List<int> program, bool part2)
+        static List<int> RunProgram(List<int> program)
         {
             int ip = 0; 
-            List<long> output = new List<long>();
+            List<int>Output = new List<int>();
             bool CorrectResult = true;
             while (ip < program.Count && CorrectResult)
             {
@@ -45,6 +45,7 @@ namespace AdventOfCode
 
                     case 2: // bst: B = combo_operand % 8
                         registers["B"] = GetComboValue(operand) % 8;
+                        
                         break;
 
                     case 3: // jnz: if A != 0, jump to literal_operand
@@ -61,13 +62,6 @@ namespace AdventOfCode
 
                     case 5: // out: output combo_operand % 8
                         output.Add(GetComboValue(operand) % 8);
-
-                        if (part2)
-                        {
-                            if (!CheckOutput(string.Join(",", output))){
-                                CorrectResult = false;
-                            }
-                        }
 
                         break;
 
@@ -87,16 +81,7 @@ namespace AdventOfCode
                 ip += 2;
             }
 
-            return string.Join(",", output);
-        }
-
-        static bool CheckOutput(string partOutput)
-        {
-            if (!result.StartsWith(partOutput))
-            {
-                return false;
-            }
-            return true;
+            return Output;
         }
 
         public string Part1()
@@ -108,7 +93,7 @@ namespace AdventOfCode
             {
                 if (line.StartsWith("Register A:"))
                 {
-                    registers.Add("A",int.Parse(line.Split(":")[1].Trim()));
+                    registers.Add("A",long.Parse(line.Split(":")[1].Trim()));
                 }
                 else if (line.StartsWith("Register B:"))
                 {
@@ -124,8 +109,9 @@ namespace AdventOfCode
                 }
             }
 
-            result = RunProgram(program, false);
-            return result; 
+            var result = RunProgram(program);
+            string answer = string.Join(",", result);
+            return answer; 
         }
 
         public long Part2()
@@ -140,31 +126,26 @@ namespace AdventOfCode
                     program = line.Substring(8).Split(',').Select(int.Parse).ToList();
                 }
             }
-            Results.Add(63687530, result);
-            long initialA = 10579880298; // Start searching from 1
-            while (true)
+            List<int> testoutput = new List<int>();
+            long a = 0;
+            long initialA = 0; 
+            for(int i = 0; i < program.Count; i++) 
             {
-                registers = new Dictionary<string, long> { { "A", initialA }, { "B", 0 }, { "C", 0 } };
-                if (initialA % 8 == 2)
-                {
-                    string output = RunProgram(program, true);
-                    string expectedOutput = result;
-                    if (output == expectedOutput)
+                   
+                    for (a = 0; a  < a + 8; a++)
                     {
-
-                        answer = initialA;
-                        break;
-                    }
-                    else
-                    {
-                        if(output.Length > 15)
-                            
+                        long testA = initialA + a;
+                        registers = new Dictionary<string, long> { { "A", testA }, { "B", 0 }, { "C", 0 } };
+                        testoutput = RunProgram(program);
+                        if(program.TakeLast(i+1).SequenceEqual(testoutput))
                         {
-                            Console.WriteLine("initialA: " + initialA + " output: " + output);
+                            initialA = testA << 3;
+                            break;
                         }
+
                     }
-                }
-                initialA++;
+                         
+                
             }
             return answer;
         }

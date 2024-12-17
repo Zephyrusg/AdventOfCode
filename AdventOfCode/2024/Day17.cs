@@ -15,10 +15,11 @@ namespace AdventOfCode
         {
             return operand switch
             {
-                <= 3 => operand,       
+                <= 3 => operand,
                 4 => registers["A"],
                 5 => registers["B"],
                 6 => registers["C"],
+                _ => throw new NotImplementedException(),
             };
         }
 
@@ -130,24 +131,31 @@ namespace AdventOfCode
             int a = 0;
             long initialA = 0;
             (int output, long FoundA)[] foundOutput = new (int a, long InitialA)[program.Count];
+            int run = 0;
             for(int i = 0; i < program.Count; i++) 
             {
-                    bool notfound = true;
+                bool notfound = true;
                     
-                    for (; a < 8; a++)
+                for (; a < 8; a++)
+                {
+                    long testA = initialA + a;
+                    registers = new Dictionary<string, long> { { "A", testA }, { "B", 0 }, { "C", 0 } };
+                    testoutput = RunProgram(program);
+                    run++;
+                    if(program.TakeLast(i+1).SequenceEqual(testoutput))
                     {
-                        long testA = initialA + a;
-                        registers = new Dictionary<string, long> { { "A", testA }, { "B", 0 }, { "C", 0 } };
-                        testoutput = RunProgram(program);
-                        if(program.TakeLast(i+1).SequenceEqual(testoutput))
-                        {
-                            foundOutput[i] = (a, initialA);
-                            initialA = testA << 3;
-                            notfound = false;
+                        notfound = false;
+                        if (testoutput.Count == program.Count) {
+                            answer =  testA;
                             break;
                         }
 
+                        foundOutput[i] = (a, initialA);
+                        initialA = testA << 3;
+                        break;
                     }
+
+                }
 
                 if (notfound)
                 {
@@ -163,7 +171,7 @@ namespace AdventOfCode
                          
                 
             }
-            return initialA;
+            return answer;
         }
     }
 }

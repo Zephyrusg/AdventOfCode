@@ -127,8 +127,9 @@ namespace AdventOfCode
                 }
             }
             List<int> testoutput = new List<int>();
-            long a = 0;
-            long initialA = 0; 
+            int a = 0;
+            long initialA = 0;
+            List<int> foundOutput = new();
             for(int i = 0; i < program.Count; i++) 
             {
                    
@@ -139,6 +140,7 @@ namespace AdventOfCode
                         testoutput = RunProgram(program);
                         if(program.TakeLast(i+1).SequenceEqual(testoutput))
                         {
+                            foundOutput.Add(a);
                             initialA = testA << 3;
                             break;
                         }

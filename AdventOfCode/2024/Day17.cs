@@ -61,7 +61,7 @@ namespace AdventOfCode
                         break;
 
                     case 5: // out: output combo_operand % 8
-                        output.Add(GetComboValue(operand) % 8);
+                        output.Add((int)GetComboValue(operand) % 8);
 
                         break;
 

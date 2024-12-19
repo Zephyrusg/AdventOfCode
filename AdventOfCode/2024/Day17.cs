@@ -10,15 +10,15 @@ namespace AdventOfCode
     {
         public static string[] Lines = File.ReadAllLines(".\\2024\\Input\\inputDay17.txt");
         static Dictionary<string, long> registers = new();
+        static string result = "";
         static long GetComboValue(int operand)
         {
             return operand switch
             {
-                <= 3 => operand,
+                <= 3 => operand,       
                 4 => registers["A"],
                 5 => registers["B"],
                 6 => registers["C"],
-                _ => throw new NotImplementedException(),
             };
         }
 
@@ -26,7 +26,8 @@ namespace AdventOfCode
         {
             int ip = 0; 
             List<int>output = new List<int>();
-            while (ip < program.Count)
+            bool CorrectResult = true;
+            while (ip < program.Count && CorrectResult)
             {
                 int opcode = program[ip];
                 int operand = program[ip + 1];
@@ -60,7 +61,7 @@ namespace AdventOfCode
                         break;
 
                     case 5: // out: output combo_operand % 8
-                        output.Add((int)(GetComboValue(operand) % 8));
+                        output.Add(GetComboValue(operand) % 8);
 
                         break;
 
@@ -85,7 +86,9 @@ namespace AdventOfCode
 
         public string Part1()
         {
+          
             var program = new List<int>();
+
             foreach (var line in Lines)
             {
                 if (line.StartsWith("Register A:"))
@@ -126,43 +129,25 @@ namespace AdventOfCode
             List<int> testoutput = new List<int>();
             int a = 0;
             long initialA = 0;
-            (int output, long FoundA)[] foundOutput = new (int a, long InitialA)[program.Count];
-            int run = 0;
+            List<int> foundOutput = new();
             for(int i = 0; i < program.Count; i++) 
             {
-                bool notfound = true;
-                    
-                for (; a < 8; a++)
-                {
-                    long testA = initialA + a;
-                    registers = new Dictionary<string, long> { { "A", testA }, { "B", 0 }, { "C", 0 } };
-                    testoutput = RunProgram(program);
-                    run++;
-                    if(program.TakeLast(i+1).SequenceEqual(testoutput))
+                   
+                    for (a = 0; a  < a + 8; a++)
                     {
-                        notfound = false;
-                        if (testoutput.Count == program.Count) {
-                            answer =  testA;
+                        long testA = initialA + a;
+                        registers = new Dictionary<string, long> { { "A", testA }, { "B", 0 }, { "C", 0 } };
+                        testoutput = RunProgram(program);
+                        if(program.TakeLast(i+1).SequenceEqual(testoutput))
+                        {
+                            foundOutput.Add(a);
+                            initialA = testA << 3;
                             break;
                         }
 
-                        foundOutput[i] = (a, initialA);
-                        initialA = testA << 3;
-                        break;
                     }
-
-                }
-
-                if (notfound)
-                {   
-                    a = foundOutput[i-1].output + 1;
-                    initialA = foundOutput[i-1].FoundA;
-                    i -= 2;
-                }
-                else
-                {
-                    a = 0;
-                }
+                         
+                
             }
             return answer;
         }

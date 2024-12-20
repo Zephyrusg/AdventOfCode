@@ -104,8 +104,10 @@ namespace AdventOfCode
 
             foreach (var cheatStart in Positions)
             {
-                foreach (var cheatEnd in Positions)
+                List<Position> CheatsToTest = Positions.Where(cheatEnd => Math.Abs(cheatStart.X - cheatEnd.X) + Math.Abs(cheatStart.Y - cheatEnd.Y) <= 20).ToList();
+                foreach (var cheatEnd in CheatsToTest)
                 {
+
                     if (cheatStart == cheatEnd) continue;
 
                     int manhattanDistance = Math.Abs(cheatStart.X - cheatEnd.X) + Math.Abs(cheatStart.Y -  cheatEnd.Y);

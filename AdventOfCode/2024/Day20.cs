@@ -12,7 +12,7 @@ namespace AdventOfCode
 
         public record Position(int X, int Y);
         static List<Position> Positions = new();
-
+        static Dictionary<Position, int> distances = new Dictionary<Position, int>();
         public int Part1()
         {
             var map = Lines;
@@ -20,7 +20,7 @@ namespace AdventOfCode
             var end = FindPosition(map, 'E');
 
             var distances = CalculateDistances(map, end);
-            var cheats = FindCheatOptions(map, distances);
+            var cheats = FindCheatOptions(map);
 
             return cheats.Count(c => c.TimeSaved >= 100);
         }
@@ -44,10 +44,9 @@ namespace AdventOfCode
             int height = map.Length;
             int width = map[0].Length;
 
-            Dictionary<Position, int> distances = new Dictionary<Position, int>();
-           
             var queue = new Queue<Position>();
             queue.Enqueue(end);
+            Positions.Add(end);
             distances.Add(end, 0);
 
             var directions = new[] { new Position(0, 1), new Position(1, 0), new Position(0, -1), new Position(-1, 0) };
@@ -70,8 +69,8 @@ namespace AdventOfCode
 
             return distances;
         }
-
-        private List<(Position Start, Position End, int TimeSaved)> FindCheatOptions(string[] map, Dictionary<Position, int> distances)
+        
+        private List<(Position Start, Position End, int TimeSaved)> FindCheatOptions(string[] map)
         {
             var cheats = new List<(Position Start, Position End, int TimeSaved)>();
 
@@ -83,12 +82,12 @@ namespace AdventOfCode
 
                     if (!IsValidCheat(map, cheatStart, cheatEnd)) continue;
 
-                    int distanceWithoutCheat = distances[cheatEnd] + 2;
+                    int distanceAfterCheat = distances[cheatEnd] + 2;
                     int directDistance = distances[cheatStart];
 
-                    if (distanceWithoutCheat < directDistance)
+                    if (distanceAfterCheat < directDistance)
                     {
-                        int timeSaved = directDistance - distanceWithoutCheat;
+                        int timeSaved = directDistance - distanceAfterCheat;
                         cheats.Add((cheatStart, cheatEnd, timeSaved));
                     }
                 }
@@ -96,6 +95,36 @@ namespace AdventOfCode
 
             return cheats;
         }
+
+        private Dictionary<int , int > FindCheatOptionsV2(string[] map)
+        {
+            var cheats = new Dictionary<int, int>();
+
+            foreach (var cheatStart in Positions)
+            {
+                foreach (var cheatEnd in Positions)
+                {
+                    if (cheatStart == cheatEnd) continue;
+
+                    int manhattanDistance = Math.Abs(cheatStart.X - cheatEnd.X) + Math.Abs(cheatStart.Y -  cheatEnd.Y);
+
+                    if (manhattanDistance > 20) continue;
+
+                    int distanceAfterCheat = distances[cheatEnd] + manhattanDistance;
+                    int directDistance = distances[cheatStart];
+
+                    if (distanceAfterCheat < directDistance)
+                    {
+                        int timeSaved = directDistance - distanceAfterCheat;
+                        if (cheats.ContainsKey(timeSaved)) cheats[timeSaved]++;
+                        else cheats.Add(timeSaved,1);
+                    }
+                }
+            }
+
+            return cheats;
+        }
+
 
         private bool IsValidCheat(string[] map, Position cheatStart, Position cheatEnd)
         {
@@ -121,9 +150,11 @@ namespace AdventOfCode
 
         public int Part2()
         {
-            int answer = 0;
-
-            return answer;
+            
+            var map = Lines;
+            var cheats = FindCheatOptionsV2(map);
+            return cheats.Where(c=>c.Key >= 100).Sum(c=> c.Value);
+          
 
         }
     }

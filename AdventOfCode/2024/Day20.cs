@@ -108,12 +108,7 @@ namespace AdventOfCode
                 foreach (var cheatEnd in CheatsToTest)
                 {
 
-                    if (cheatStart == cheatEnd) continue;
-
                     int manhattanDistance = Math.Abs(cheatStart.X - cheatEnd.X) + Math.Abs(cheatStart.Y -  cheatEnd.Y);
-
-                    if (manhattanDistance > 20) continue;
-
                     int distanceAfterCheat = distances[cheatEnd] + manhattanDistance;
                     int directDistance = distances[cheatStart];
 

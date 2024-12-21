@@ -56,7 +56,7 @@ namespace AdventOfCode
             foreach (char target in code)
             {
                 string path = GenerateShortestSequence(currentPos, target, NumericKeypad);
-                sequence.Add(String.Concat(path.Substring(0,path.Length-1).OrderBy(c => c))+'A');
+                sequence.Add(path);
                 currentPos = FindPosition(NumericKeypad, target);
             }
 
@@ -72,7 +72,7 @@ namespace AdventOfCode
             foreach (char target in robot2Commands)
             {
                 string path = GenerateShortestSequence(currentPos, target, DirectionalKeypad);
-                sequence.Add(String.Concat(path.Substring(0, path.Length - 1).OrderBy(c => c)) + 'A');
+                sequence.Add(path);
                 currentPos = FindPosition(DirectionalKeypad, target);
             }
 
@@ -88,29 +88,57 @@ namespace AdventOfCode
             foreach (char target in robot3commands)
             {
                 string path = GenerateShortestSequence(currentPos, target, DirectionalKeypad);
-                sequence.Add(String.Concat(path.Substring(0, path.Length - 1).OrderBy(c => c)) + 'A');
+                sequence.Add(path);
                 currentPos = FindPosition(DirectionalKeypad, target);
             }
 
             return string.Join("", sequence);
         }
 
+        static string GetPathLeastVariation(List<string> ShortestPaths)
+        {
+            string path = "";
+
+            Dictionary<string, int> Variants = new();
+            foreach(var ShortestPath in ShortestPaths)
+            {
+                int Tempvariant = 0;
+                for (int i = 0; i < ShortestPath.Length - 1; i++)
+                {
+                    if (ShortestPath[i] != ShortestPath[i + 1])
+                    {
+                        Tempvariant++;
+                    }
+                }
+                Variants.Add(ShortestPath, Tempvariant);
+            }
+
+            path = Variants.MinBy(p => p.Value).Key;
+
+            return path;
+        }
+
         private string GenerateShortestSequence((int Row, int Col) start, char target, char[,] keypad)
         {
             var queue = new Queue<((int Row, int Col) Position, string Path, HashSet<(int, int)> VisitedPath)>();
             queue.Enqueue((start, "", new HashSet<(int, int)> { start }));
-
+            List<string> ShortestPaths = new();
+            int pathlength = int.MaxValue;
             while (queue.Count > 0)
             {
+                
                 var (position, path, visitedPath) = queue.Dequeue();
 
                 if (keypad[position.Row, position.Col] == target)
-                    return path + "A";
-
+                {
+                    ShortestPaths.Add(path + 'A');
+                    pathlength = path.Length;
+                    //return path + "A";
+                }
                 foreach (var (dRow, dCol, direction) in GetDirections())
                 {
                     var neighbor = (position.Row + dRow, position.Col + dCol);
-                    if (IsValid(neighbor, keypad)) //&& !visitedPath.Contains(neighbor))
+                    if (IsValid(neighbor, keypad) && !visitedPath.Contains(neighbor) && path.Length <= pathlength)
                     {
                         var newVisitedPath = new HashSet<(int, int)>(visitedPath) { neighbor };
                         queue.Enqueue((neighbor, path + direction, newVisitedPath));
@@ -118,7 +146,11 @@ namespace AdventOfCode
                 }
             }
 
-            throw new InvalidOperationException("Target not reachable");
+            if (ShortestPaths.Count == 1) return ShortestPaths[0];
+            else
+            {
+                return GetPathLeastVariation(ShortestPaths);
+            }
         }
 
         private IEnumerable<(int Row, int Col, char Direction)> GetDirections()

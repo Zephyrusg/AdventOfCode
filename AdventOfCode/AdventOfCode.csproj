@@ -220,6 +220,9 @@
     <Compile Update="2024\Day2.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+    <Compile Update="2024\Day21new.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Update="2024\Day3.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>

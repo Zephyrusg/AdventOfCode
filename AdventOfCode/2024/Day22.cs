@@ -65,7 +65,7 @@ namespace AdventOfCode
         public int Part2()
         {
             int answer = 0;
-            Dictionary<(int change1 , int change2 , int chang3 , int change4, int changeindex), int> prices = new();
+            Dictionary<(int change4 , int chang3 , int change2 , int change1, int changeindex), int> prices = new();
             int listindex = 0;
             foreach(var list in ListofProccessedSecrets)
             {
@@ -79,9 +79,10 @@ namespace AdventOfCode
                     var change2 = list[i - 3].secret - list[i - 2].secret;
                     var change3 = list[i - 2].secret - list[i - 1].secret;
                     var change4 = list[i - 1].secret - list[i - 0].secret;
-                    int temprice = startsecret + change4 + change3 + change2 + change1;
-                    if (!prices.ContainsKey((change1,change2,change3,change4, changeindex))) prices.Add((change1, change2, change3, change4, changeindex), 0);
-                    prices[(change1, change2, change3, change4, changeindex)] += temprice;
+                    int tempprice = list[i].secret;
+                    //int temprice = startsecret + change4 + change3 + change2 + change1;
+                    if (!prices.ContainsKey((change4,change3,change2,change1, changeindex))) prices.Add((change4, change3, change2, change1, changeindex), 0);
+                    prices[(change4, change3, change2, change1, changeindex)] += tempprice;
                     changeindex++;
                    
                 }

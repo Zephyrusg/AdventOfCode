@@ -37,7 +37,7 @@ namespace AdventOfCode
                         if (neighbor1 != neighbor2 && graph[neighbor1].Contains(neighbor2))
                         {
                             var triangle = new[] { node, neighbor1, neighbor2 }.OrderBy(x => x).ToArray();
-                            if(!triangles.Contains((triangle[0], triangle[1], triangle[2]))) triangles.Add((triangle[0], triangle[1], triangle[2]));
+                            triangles.Add((triangle[0], triangle[1], triangle[2]));
 
                         }
                     }

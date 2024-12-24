@@ -29,7 +29,6 @@
     <Compile Remove="2020\Day16.cs" />
     <Compile Remove="2020\Day17.cs" />
     <Compile Remove="2020\Day18.cs" />
-    <Compile Remove="2020\Day19.cs" />
     <Compile Remove="2022\Day0.cs" />
     <Compile Remove="2022\Day1.cs" />
     <Compile Remove="2022\Day10.cs" />
@@ -89,7 +88,6 @@
     <None Include="2020\Day16.cs" />
     <None Include="2020\Day17.cs" />
     <None Include="2020\Day18.cs" />
-    <None Include="2020\Day19.cs" />
     <None Include="2022\Day0.cs" />
     <None Include="2022\Day1.cs" />
     <None Include="2022\Day10.cs" />

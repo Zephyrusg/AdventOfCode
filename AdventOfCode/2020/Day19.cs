@@ -1,214 +1,103 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace AdventOfCode._2020
+namespace AdventOfCode
 {
-    internal class Day19
+    internal class Y2020D19
     {
-        class RuleProcessing{
+        public static string[] Rules = File.ReadAllLines(".\\2020\\Input\\InputDay19Rules.txt");
+        public static string[] Messages = File.ReadAllLines(".\\2020\\Input\\InputDay19Entries.txt");
 
-        }
-        class Rule {
-            static int index = 0;
-            static public Dictionary<int,Rule> Rules = new Dictionary<int,Rule>();
-
-            static public string CheckMessage(string message, int Ruleid, string teststring)
-            {
-                if (Rules[Ruleid] is LiteralRule)
-                {
-
-                    string literal = (Rules[Ruleid] as LiteralRule).literal;
-                    
-                    return teststring + literal;
-                    
-                }
-                else
-                {
-
-                    string[] SubPaths = (Rules[Ruleid] as PathRule).SubPaths;
-                    bool match = false;
-                    string result = teststring;
-                    string SubResult = result;
-                    foreach (string SubPath in SubPaths)
-                    {
-                        if (match )
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            result = SubResult;
-                        }
-                        
-                        int[] Paths = SubPath.Split(" ").Select(num => Int32.Parse(num)).ToArray();
-                        match = false;
-
-
-                        foreach (int Path in Paths)
-                        {
-
-                            result = CheckMessage(message, Path, result);
-                            if (message.StartsWith(result))
-                            {
-                                match = true;
-                            }
-                            else if (result == "X") { 
-                                match = false;
-                                result = teststring;
-                                break;
-                            }
-                            else
-                            {
-                                match = false;
-                                break;
-                            }
-                        }
-                        if (match)
-                        {
-
-                            SubResult = result;
-                        }
-                        else
-                        {
-                            match = false;
-                            continue;
-                        }
-
-                    }
-                    if (match)
-                    {
-                        return SubResult;
-                    }
-                    else{
-                        return "X";
-                    }
-                }
-                
-            }    
-
-        }
-
-        class LiteralRule : Rule
+        public int Part1()
         {
-            public string literal;
-            public LiteralRule(string literal)
-            {
-                this.literal = literal;
-            }
+            // Parse the rules into a dictionary
+            Dictionary<int, string> rules = ParseRules(Rules);
+
+            // Generate regex pattern for rule 0
+            string rule0Pattern = "^" + ResolveRule(rules, 0) + "$";
+
+            // Count valid messages for rule 0
+            int validCount = Messages.Count(message => Regex.IsMatch(message, rule0Pattern));
+
+            return validCount;
         }
 
-        class PathRule : Rule {
-
-            public string[] SubPaths = new string[2];
-
-            public PathRule(string Data)
-            {
-                SubPaths = Data.Split(" | ");
-                
-            }
-        }
-
-        //class StartRule : Rule
-        //{
-        //    public int[] StartPath;
-
-        //    public StartRule(int[] StartPath) { 
-            
-        //        this.StartPath = StartPath;
-            
-        //    }
-        
-        //}
-
-
-        public static int Part1()
+        public int Part2()
         {
-            int answer = 0;
+            // Parse the rules into a dictionary
+            Dictionary<int, string> rules = ParseRules(Rules);
 
-            string[] Data = File.ReadAllLines(".\\2020\\Input\\InputDay19Rules.txt");
-            string[] Entries = File.ReadAllLines(".\\2020\\Input\\InputDay19Entries.txt");
-           
-            Array.Sort(Data);
-            //Array.Sort(Data);
-            foreach (string line in Data)
-            {
-                string[] parts = line.Split(": ");
-                //if (Int32.Parse(parts[0]) == 0){ 
-                //    Rule.Rules.Add(0, new StartRule(parts[1].Split(" ").Select(num => Int32.Parse(num)).ToArray()));
-                //} 
-                //else
-                if (parts[1] == "\"a\"" || parts[1] == "\"b\"")
-                {
-                    string part = parts[1].Replace("\"", "");
-                    Rule.Rules.Add(Int32.Parse(parts[0]), new LiteralRule(part));
-                }
-                else {
-                    Rule.Rules.Add(Int32.Parse(parts[0]), new PathRule(parts[1]));
-                }
-            }
+            // Update rules for part 2
+            rules[8] = "42 | 42 8";
+            rules[11] = "42 31 | 42 11 31";
 
-            foreach(string Entry in Entries)
-            {
-                string result = Rule.CheckMessage(Entry, 0, "");
-                if (result == Entry)
-                {
-                    answer++;
-                }               
-            }
-            
+            // Generate regex patterns for rules 42 and 31
+            string rule42 = ResolveRule(rules, 42);
+            string rule31 = ResolveRule(rules, 31);
 
+            // Count valid messages for rule 0 with recursive rules
+            int validCount = Messages.Count(message => MatchesRule0(message, rule42, rule31));
 
-
-            return answer;
+            return validCount;
         }
-        public static int Part2()
+
+        static Dictionary<int, string> ParseRules(string[] rulesInput)
         {
-            int answer = 0;
-            
-            string[] Data = File.ReadAllLines(".\\2020\\Input\\InputDay19RulesExample.txt");
-            string[] Entries = File.ReadAllLines(".\\2020\\Input\\InputDay19EntriesExample.txt");
-            Rule.Rules = new Dictionary<int, Rule>();
-
-            Array.Sort(Data);
-            foreach (string line in Data)
+            var rules = new Dictionary<int, string>();
+            foreach (var line in rulesInput)
             {
-                string[] parts = line.Split(": ");
-                //if (Int32.Parse(parts[0]) == 0){ 
-                //    Rule.Rules.Add(0, new StartRule(parts[1].Split(" ").Select(num => Int32.Parse(num)).ToArray()));
-                //} 
-                //else
-                if (parts[1] == "\"a\"" || parts[1] == "\"b\"")
-                {
-                    string part = parts[1].Replace("\"", "");
-                    Rule.Rules.Add(Int32.Parse(parts[0]), new LiteralRule(part));
-                }
-                else
-                {
-                    Rule.Rules.Add(Int32.Parse(parts[0]), new PathRule(parts[1]));
-                }
+                var parts = line.Split(": ", 2);
+                rules[int.Parse(parts[0])] = parts[1];
+            }
+            return rules;
+        }
+
+        static string ResolveRule(Dictionary<int, string> rules, int ruleId)
+        {
+            string rule = rules[ruleId];
+            if (rule.Contains('"')) // Base case: single character rule
+            {
+                return rule.Trim('"');
             }
 
-            Rule.Rules.Remove(8);
-            Rule.Rules.Remove(11);
+            // Resolve sub-rules
+            var options = rule.Split(" | ")
+                              .Select(part => string.Join("",
+                                  part.Split(' ').Select(subRule => ResolveRule(rules, int.Parse(subRule)))));
 
-            Rule.Rules.Add(8, new PathRule("42 | 42 8"));
-            Rule.Rules.Add(11, new PathRule("42 31 | 42 11 31"));
+            return options.Count() > 1 ? $"({string.Join("|", options)})" : options.First();
+        }
 
-            foreach (string Entry in Entries)
+        static bool MatchesRule0(string message, string rule42, string rule31)
+        {
+            int chunkSize = Regex.Match(message, rule42).Value.Length;
+
+            // Split the message into chunks of size matching rule 42
+            var chunks = Enumerable.Range(0, message.Length / chunkSize)
+                                    .Select(i => message.Substring(i * chunkSize, chunkSize))
+                                    .ToArray();
+
+            // Match chunks with rules 42 and 31
+            var matches42 = chunks.Select(chunk => Regex.IsMatch(chunk, $"^{rule42}$")).ToArray();
+            var matches31 = chunks.Select(chunk => Regex.IsMatch(chunk, $"^{rule31}$")).ToArray();
+
+            // Ensure all rule 31 matches follow rule 42 matches
+            int first31 = Array.IndexOf(matches31, true);
+            if (first31 == -1) return false;
+
+            if (!matches42.Take(first31).All(x => x) || !matches31.Skip(first31).All(x => x))
             {
-                string result = Rule.CheckMessage(Entry, 0, "");
-                if (result == Entry)
-                {
-                    answer++;
-                }
+                return false;
             }
-            return answer;
+
+            int count42 = first31;
+            int count31 = matches31.Count(x => x);
+
+            return count42 > count31;
         }
     }
 }

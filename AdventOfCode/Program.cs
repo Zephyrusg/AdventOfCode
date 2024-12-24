@@ -33,25 +33,20 @@ namespace AdventOfCode // Note: actual namespace depends on the project name.
         static void Main(string[] args)
         {
 
-
             DateTime now = DateTime.Now;
             int Day = now.Day;
             int Year = now.Year;
 
             Console.WriteLine("Year: " + Year +" Day: " +  Day);
-
             Console.WriteLine("Enter Year of the Puzzle: default: " + Year);
             string Puzzleyear = Check(Console.ReadLine()) ?? Year.ToString();
 
-            
             Console.WriteLine("Enter Day of the Puzzle: default: " + Day);
             var PuzzleDay = Check(Console.ReadLine()) ?? Day.ToString();
             Console.WriteLine("Choosen Year: " + Puzzleyear);
             Console.WriteLine("Choosen Day: " + PuzzleDay);
 
             string PuzzleClass = "AdventOfCode.Y" + Puzzleyear + "D" + PuzzleDay;
-            
-
 
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();

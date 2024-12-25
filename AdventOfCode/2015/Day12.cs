@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.JavaScript;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -11,57 +12,56 @@ namespace AdventOfCode
 {
     internal class Y2015D12
     {
-        public static string Jsondata = File.ReadAllText(".\\2015\\Input\\inputDay12.txt");
-        
-        public int Part1() 
+        public static string Lines = File.ReadAllText(".\\2015\\Input\\inputDay12.txt");
+
+        public int Part1()
         {
-            int answer = 0;
-
-            string pattern = "-?\\d+";
-            var Match = Regex.Matches(Jsondata, pattern);
-
-            foreach (Match m in Match)
+            int SumNumbers(JsonElement json)
             {
-                answer += int.Parse(m.ToString());
+                switch (json.ValueKind)
+                {
+                    case JsonValueKind.Number:
+                        return json.GetInt32();
+                    case JsonValueKind.Array:
+                        return json.EnumerateArray().Sum(SumNumbers);
+                    case JsonValueKind.Object:
+                        return json.EnumerateObject().Sum(property => SumNumbers(property.Value));
+                    default:
+                        return 0;
+                }
             }
 
+            var input = string.Join("", Lines);
+            var json = JsonDocument.Parse(input).RootElement;
 
-            return answer;
+            return SumNumbers(json);
         }
 
         public int Part2()
         {
-            int answer = 0;
+            int SumNumbersIgnoreRed(JsonElement json)
+            {
+                switch (json.ValueKind)
+                {
+                    case JsonValueKind.Number:
+                        return json.GetInt32();
+                    case JsonValueKind.Array:
+                        return json.EnumerateArray().Sum(SumNumbersIgnoreRed);
+                    case JsonValueKind.Object:
+                        if (json.EnumerateObject().Any(property => property.Value.ValueKind == JsonValueKind.String && property.Value.GetString() == "red"))
+                        {
+                            return 0;
+                        }
+                        return json.EnumerateObject().Sum(property => SumNumbersIgnoreRed(property.Value));
+                    default:
+                        return 0;
+                }
+            }
 
-            var json = JsonObject.Parse(Jsondata);
-            //int red = 0;
+            var input = string.Join("", Lines);
+            var json = JsonDocument.Parse(input).RootElement;
 
-            //string pattern = "\\{[^{}]*\\}";
-
-            //var Match = Regex.Matches(Json, pattern);
-
-            //foreach (Match m in Match)
-            //{
-            //    if (m.Value.Contains("red")){
-            //        string Digitpattern = "-?\\d+";
-            //        var DigitMatch = Regex.Matches(m.Value, Digitpattern);
-            //        foreach (Match d in DigitMatch)
-            //        {
-            //            red += int.Parse(d.ToString());
-            //        }
-            //    }
-            //}
-
-            //pattern = "-?\\d+";
-            //Match = Regex.Matches(Json, pattern);
-
-            //foreach (Match m in Match)
-            //{
-            //    answer += int.Parse(m.ToString());
-            //}
-            //if (Json is JsonObject) { }
-
-            return answer; 
+            return SumNumbersIgnoreRed(json);
         }
 
     }

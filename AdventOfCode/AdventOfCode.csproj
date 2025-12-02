@@ -361,6 +361,9 @@
     <Compile Update="2025\Day1.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
+    <Compile Update="2025\Day2.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -681,6 +684,9 @@
     </None>
     <None Update="2024\Input\inputDay8.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="2025\Input\inputDay2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="2025\Input\inputDay1.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -29,7 +29,6 @@
     <Compile Remove="2022\Day0.cs" />
     <Compile Remove="2023\Template.cs" />
     <Compile Remove="2024\Template.cs" />
-    <Compile Remove="2025\Template.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -91,9 +90,6 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Include="2024\Template.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Include="2025\Template.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -372,6 +368,12 @@
     </Compile>
     <Compile Update="2025\Day5.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="2025\Day6.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="2025\Template.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
 
@@ -692,6 +694,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="2024\Input\inputDay8.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="2025\Input\inputDay6.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="2025\Input\inputDay5.txt">

@@ -18,85 +18,93 @@ namespace AdventOfCode
         public static char[][] grid = Lines.Select(line => line.ToCharArray()).ToArray();
         public static int rows = grid.Length;
         public static int cols = grid[0].Length;
-        public int Part1() 
+        public int Part1()
         {
             int answer = 0;
-
+            List<(int r, int c)> Beams = new();
             
-            List<(int r , int c) > Beams = new();
+            int startCol = -1;
+            for (int c = 0; c < cols; c++) if (grid[0][c] == 'S') { startCol = c; break; }
+            Beams.Add((0, startCol));
 
-            for (int r = 0; r < rows -1; r++)
+            for (int r = 0; r < rows - 1; r++)
             {
-                if (Beams.Count == 0 && r == 0)
-                {
+                var NextBeams = new List<(int r, int c)>();
+                var added = new bool[cols];
 
-                    for (int c = 0; c < cols; c++)
-                    {
-                        if (grid[r][c] == 'S')
-                        {
-                            Beams.Add((r, c));
-                            break;
-                        }
-
-                    }
-                }
-
-                foreach (var beam in Beams.Where(x=>x.r== r).ToList())
+                foreach (var beam in Beams)
                 {
                     char onedown = grid[beam.r + 1][beam.c];
                     if (onedown == '^')
                     {
                         answer++;
-                        if (!Beams.Contains((beam.r + 1, beam.c + 1)))
-                            Beams.Add((beam.r + 1, beam.c + 1));
-                        if (!Beams.Contains((beam.r + 1, beam.c - 1)))
-                            Beams.Add((beam.r + 1, beam.c - 1));
+                        int rc = beam.c + 1;
+                        if (rc < cols && !added[rc]) { added[rc] = true; NextBeams.Add((beam.r + 1, rc)); }
+                        rc = beam.c - 1;
+                        if (rc >= 0 && !added[rc]) { added[rc] = true; NextBeams.Add((beam.r + 1, rc)); }
                     }
                     else if (onedown == '.')
                     {
-                        if (!Beams.Contains((beam.r + 1, beam.c)))
-                            Beams.Add((beam.r + 1, beam.c));
+                        int rc = beam.c;
+                        if (!added[rc]) { added[rc] = true; NextBeams.Add((beam.r + 1, rc)); }
                     }
                 }
+
+                Beams = NextBeams;
             }
-            
+
             return answer;
         }
 
         public long Part2()
         {
-         
+            long answer = 0;
             int startCol = -1;
             for (int c = 0; c < cols; c++) if (grid[0][c] == 'S') { startCol = c; break; }
+            if (startCol == -1) return 0;
 
-            var TimelinesperCell = new long[rows, cols];
-            TimelinesperCell[0, startCol] = 1;
+            var Gridrow = new long[cols];
+            Gridrow[startCol] = 1;
+            var Beams = new List<int> { startCol };
 
             for (int r = 0; r < rows - 1; r++)
             {
-                for (int c = 0; c < cols; c++)
+                var NextGridRow = new long[cols];
+                var NextRowBeams = new List<int>();
+                var added = new bool[cols];
+
+                foreach (var c in Beams)
                 {
-                    long PossibleTimelines = TimelinesperCell[r, c];
-                    if (PossibleTimelines == 0) continue;
+                    long Timelines = Gridrow[c];
                     char onedown = grid[r + 1][c];
                     if (onedown == '^')
                     {
                         int rc = c + 1;
-                        if (rc < cols) TimelinesperCell[r + 1, rc] += PossibleTimelines;
+                        if (rc < cols)
+                        {
+                            NextGridRow[rc] += Timelines;
+                            if (!added[rc]) { added[rc] = true; NextRowBeams.Add(rc); }
+                        }
                         rc = c - 1;
-                        if (rc >= 0) TimelinesperCell[r + 1, rc] += PossibleTimelines;
+                        if (rc >= 0)
+                        {
+                            NextGridRow[rc] += Timelines;
+                            if (!added[rc]) { added[rc] = true; NextRowBeams.Add(rc); }
+                        }
                     }
                     else if (onedown == '.')
                     {
-                        TimelinesperCell[r + 1, c] += PossibleTimelines;
+                        NextGridRow[c] += Timelines;
+                        if (!added[c]) { added[c] = true; NextRowBeams.Add(c); }
                     }
                 }
 
+                Gridrow = NextGridRow;
+                Beams = NextRowBeams;
+                if (Beams.Count == 0) break;
             }
-
-            long answer = 0;
-            for (int c = 0; c < cols; c++) answer += TimelinesperCell[rows - 1, c];
-
+  
+            foreach (var Beam in Beams) answer += Gridrow[Beam];
             return answer;
         }
 

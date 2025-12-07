@@ -61,7 +61,6 @@ namespace AdventOfCode
             long answer = 0;
             int startCol = -1;
             for (int c = 0; c < cols; c++) if (grid[0][c] == 'S') { startCol = c; break; }
-            if (startCol == -1) return 0;
 
             var Gridrow = new long[cols];
             Gridrow[startCol] = 1;
@@ -101,7 +100,6 @@ namespace AdventOfCode
 
                 Gridrow = NextGridRow;
                 Beams = NextRowBeams;
-                if (Beams.Count == 0) break;
             }
   
             foreach (var Beam in Beams) answer += Gridrow[Beam];

@@ -15,7 +15,7 @@ namespace AdventOfCode
         public record Connection(
             (int x, int y, int z) A,
             (int x, int y, int z) B,
-            long DistanceSquared
+            long Distance
         );
 
         
@@ -123,7 +123,7 @@ namespace AdventOfCode
                 }
             }
 
-            pairs.Sort((p1, p2) => p1.DistanceSquared.CompareTo(p2.DistanceSquared));
+            pairs.Sort((p1, p2) => p1.Distance.CompareTo(p2.Distance));
             
             int toProcess = 0;
             if (JunctionBoxes.Count == 20) {

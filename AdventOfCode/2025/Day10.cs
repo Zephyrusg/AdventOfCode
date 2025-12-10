@@ -522,7 +522,7 @@ namespace AdventOfCode
             foreach (var m in Machines)
             {
                 string line = Lines[i];
-                Console.WriteLine("Starting with machine: " + line);
+                // Console.WriteLine("Starting with machine: " + line);
                 int presses = SolveJoltageMachine(m.JoltageTargets, m.ButtonCounters);
                 if (presses < 0)
                     throw new InvalidOperationException("Machine has no solution (part 2).");

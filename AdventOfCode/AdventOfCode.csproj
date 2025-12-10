@@ -735,7 +735,7 @@
     <None Update="2025\Input\inputDay2.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="2025\Input\inputDay1.txt">
+    <None Update="2025\Input\inputDay10.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Cookie.txt">
